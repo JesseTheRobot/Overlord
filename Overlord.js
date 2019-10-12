@@ -65,7 +65,7 @@ function getRandomInt(min, max) {
 setInterval(function(){if (fs.existsSync("./SHUTDOWN.txt")){client.isShuttingDown = true; }},5000); 
 //setInterval(function(){console.log(client.isShuttingDown);},50);
 
-console.log(client);
+setTimeout(function(){console.log(client.ws);},5000);
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory. */
 client.login(client.config.token);
 client.on("ready",()=>{

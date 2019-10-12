@@ -94,7 +94,7 @@ module.exports = (client) => {
 			}
 		}
 		if (!type) type = "Log";
-		console.log(`[${type}] ${title} ${message}`);
+		console.log(`[${type}] ${title} ${JSON.stringify(message)}`);
 	};
 
 	client.loadCommand = (command,guildid) =>{ //loads either a specified command for a guild or loads a command for *all* guilds. 

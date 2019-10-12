@@ -30,7 +30,8 @@ module.exports = (client, message) => {
 	check if the command exists
 	check if the command requires a guild or not
 	check the level of the user executing the command
-	check other restrictions (blacklist(s)),etc.
+	check command context (cooldowns,)
+	
 	
 
 	*/
