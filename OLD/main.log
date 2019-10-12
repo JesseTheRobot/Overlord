@@ -1,0 +1,18 @@
+a
+2019-03-12 22:20:13: c:\Users\Jesse\Documents
+2019-03-12 22:20:13: !BEGIN INIT!
+2019-03-12 22:20:14: !== Jesse v 2.0 Intialisation starting. current date/time is Tue Mar 12 2019 22:20:14 GMT+0000 (Greenwich Mean Time) ==! 
+2019-03-12 22:20:14: Ready to serve in 6 channels on 1 servers, for a total of 6 users.
+2019-03-12 22:20:14: TypeError: client.getChannelLogs is not a function
+2019-03-12 22:20:14:     at guild.channels.forEach.channel (c:\Users\Jesse\Documents\NCBot\events\ready.js:56:12)
+2019-03-12 22:20:14:     at Map.forEach (<anonymous>)
+2019-03-12 22:20:14:     at client.guilds.forEach.guild (c:\Users\Jesse\Documents\NCBot\events\ready.js:55:19)
+2019-03-12 22:20:14:     at Map.forEach (<anonymous>)
+2019-03-12 22:20:14:     at Object.exports.run (c:\Users\Jesse\Documents\NCBot\events\ready.js:44:17)
+2019-03-12 22:20:14:     at Client.client.on.args (c:\Users\Jesse\Documents\NCBot\NCBot.js:45:73)
+2019-03-12 22:20:14:     at Client.emit (events.js:187:15)
+2019-03-12 22:20:14:     at WebSocketConnection.triggerReady (c:\Users\Jesse\Documents\NCBot\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:125:17)
+2019-03-12 22:20:14:     at Promise.all.then (c:\Users\Jesse\Documents\NCBot\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:145:26)
+2019-03-12 22:20:14:     at process._tickCallback (internal/process/next_tick.js:68:7)
+2019-03-12 22:20:14: Init Complete!
+2019-03-12 22:20:14: init: 4.689ms
