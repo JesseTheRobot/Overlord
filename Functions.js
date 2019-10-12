@@ -3,7 +3,7 @@ const fs = require("fs");
 const basedir = process.cwd();
 const version = "0.1.9"; //release.major.minor
 /**
- * @exports init
+ * @exports init 
  * @exports log
  * @exports loadCommand
  * @exports reloadCommand
@@ -14,7 +14,7 @@ const version = "0.1.9"; //release.major.minor
  * @exports getLevel
  * @exports evalClean
  * @exports checkThrottle
- * @exports dStats
+ * @exports dStats **LEGACY** 
  * @exports getRandomInt
  */
 module.exports = (client) => {
@@ -34,9 +34,7 @@ module.exports = (client) => {
 		fs.unlink(`${basedir}\\SHUTDOWN.txt`, err => {
 			if (err) client.log("Log","Shutdown operation locking file does not exist - expected.","LFensureRem");
 		});
-		/** iterates over each guild that the bot has access to (all the guilds it's invited to) 
-		 * 
-		*/
+		// iterates over each guild that the bot has access to (all the guilds it's invited to) 
 		client.guilds.forEach(guild=>{
 			client.commands.ensure(guild.id,new Object);
 			client.trecent[`${guild.id}`] = new Set();
@@ -102,7 +100,7 @@ module.exports = (client) => {
 	client.loadCommand = (command,guildid) =>{ //loads either a specified command for a guild or loads a command for *all* guilds. 
 		client.log("Log",`Loading ${command} from ${process.cwd()}/commands/`,"CommandInit");
 		try{
-			var cmdObj = require(`${process.cwd()}/commands/${command}.js`)
+			var cmdObj = require(`${process.cwd()}/commands/${command}.js`);
 			return cmdObj;
 		}catch(err){
 			client.log("Error",`Error in loading command ${command} from ${process.cwd()}/commands/ - \n${err}`);
@@ -116,8 +114,8 @@ module.exports = (client) => {
 				client.log("Log",`bound alias ${alias} to command ${command} in guild ${client.guilds.get(guildid).name}`,"CommandBind");
 			});
 			client.commands.ensure(guildid,cmdAliases,command);
-		if(!guildid){ client.guilds.forEach(guild =>{loadCmd(command,guild.id);});
-		}else{loadCmd(command,guildid);}}
+			if(!guildid){ client.guilds.forEach(guild =>{loadCmd(command,guild.id);});
+			}else{loadCmd(command,guildid);}}
 
 	};
 	
@@ -153,7 +151,7 @@ module.exports = (client) => {
 			if (guildCommands.hasOwnProperty(cmdarr)) { 
 				console.log(cmdarr);
 				if (!client.commands.includes(command)){ //checks if the command has been loaded into the client. if not, tries to load it. if it fails, the command does not exist.
-					var cmdLoader = client.loadCommand(command,message.guild.id)
+					var cmdLoader = client.loadCommand(command,message.guild.id);
 					if( cmdLoader== "failed"){ //"failed" is only returned if, well, the command cannot be loaded in the guild for any reason.
 					//attempt load of a custom command here 
 						message.channel.send({embed:{
@@ -165,7 +163,7 @@ module.exports = (client) => {
 							timestamp: new Date(),
 						}});
 					}else{
-						cmdObj = cmdLoader
+						cmdObj = cmdLoader;
 					}
 				}
 			}
@@ -180,7 +178,7 @@ module.exports = (client) => {
 	};
 	client.checkBlacklist = (client,message) =>{
 		
-	}
+	};
 		
 	client.getLevel = (client,message) =>{//gets the permission integer for the user: 1, base user. 2, moderator, 3 Server admin. 4 bot owner
 		const config = require(`${basedir}\\config.js`);

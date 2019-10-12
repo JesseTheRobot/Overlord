@@ -35,7 +35,7 @@ module.exports = (client, message) => {
 
 	*/
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
-	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
+	//if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
 	
 	const BotMentionRegEx = new RegExp(`^<@!?${client.user.id}>( |)$`);
 	if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx) && message.guild){ //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.

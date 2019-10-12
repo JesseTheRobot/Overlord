@@ -1,25 +1,22 @@
 ﻿const Discord = require("discord.js");
 const client = new Discord.Client({autoReconnect:true, messageCacheMaxSize:-1,messageCacheLifetime:0,messageSweepInterval:0,fetchAllMembers:true});
 const fs = require("fs");
-var download = require("download-file");
-var path = require("path");
-const config = require("./config.js");
+client.config = require("./config.js");
 const enmap = require("enmap");
-var trecent =[];
-const basedir =((__dirname).split("\\").slice(0,-1)).join("\\")+"\\Overlord";
 //const { inspect } = require("util");
-
+client.isShuttingDown = false;
 
 /** assigns the client Object a New enmap instance ("DB")*/
-Object.assign(client, new enmap({ 
+client.DB = new enmap({ 
 	name: "DB",
 	autoFetch: true,
 	fetchAll: true,
 	polling: true
-}));
+});
 
+client.commands = new enmap();
 /** Bind the exportable functions from Functions.js to the client object as methods. */
-require(`${basedir}\\Functions.js`)(client); 
+require("./Functions.js")(client); 
 
 /** process error catching with custom stacktrace formatting for ease of reading */
 process.on("uncaughtException", (err) => {
@@ -32,13 +29,12 @@ process.on("uncaughtException", (err) => {
  * also uses setImmediate to wait for any I/O operations to prevent things such as DB corruption etc.
  */
 function gracefulShutdown(){
-	fs.writeFile(`${basedir}\\SHUTDOWN.txt`, "SHUTDOWN",{ flag: "w" }, function(err){
+	fs.writeFile("./SHUTDOWN.txt", "SHUTDOWN",{ flag: "w" }, function(err){
 		if (err) console.log(err);
 		console.log("Successfully Written Shutdown File.");
 	});
-	setImmediate(() => {
-		process.exit(0);
-	});
+	setTimeout(function(){setImmediate(() => {process.exit(0);});},5500); //after 5.5 seconds, and after all I/O activity has finished, quit the application.
+	
 }
 
 /** PM2 SIGINT and Message handling for invoking a graceful shutdown through PM2 on both UNIX and windows systems */
@@ -63,17 +59,23 @@ function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	return Math.floor(Math.random() * (Math.floor(max) - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
+/**
+ * every 5000ms (5 seconds), checks if the operation locking file is present. if it is, signal to the rest of the application via client variable
+ */
+setInterval(function(){if (fs.existsSync("./SHUTDOWN.txt")){client.isShuttingDown = true; }},5000); 
+//setInterval(function(){console.log(client.isShuttingDown);},50);
 
-/** authenticates the bot to the discord backend through useage of a Token via Discord.js */
-client.login(config.token).then(client =>{
-	client.init(client);
+console.log(client);
+/** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory. */
+client.login(client.config.token);
+client.on("ready",()=>{
+	client.DB.defer.then(client.init(client));
 });
 
-/** if the client disconnects, gracefully shutdown - this is suboptimal. */
+/** if the client disconnects, report the disconnection */
 client.on("disconnect", function(event){
-	console.error(event)
-	gracefulShutdown()
-})
+	console.error(event);
+});
 
 /* try{
 	console.log("EventHandler Init Sucessful!");
