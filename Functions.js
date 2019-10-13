@@ -224,9 +224,7 @@ module.exports = (client) => {
 		}else{
 			trecent.push(mobj);
 		}
-
-		if(message.guild){
-			console.log("do blacklist and stuffs here");
+		
 
 		}
 	};
