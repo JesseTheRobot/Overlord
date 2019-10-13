@@ -1,4 +1,4 @@
-module.exports = (client, message) => {
+module.exports = async(client, message) => {
 	if (message.author.bot || !message.channel.type == ("dm" || "text")) return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
 	function objIterate(object, stackStr) {
 		for (var property in object) {
@@ -30,19 +30,19 @@ module.exports = (client, message) => {
 	check if the command exists
 	check if the command requires a guild or not
 	check the level of the user executing the command
-	check command context (cooldowns,)
+	check command context (cooldowns,allowed channel etc)
 	
 	
 
 	*/
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
-	//if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
+	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
 	
 	const BotMentionRegEx = new RegExp(`^<@!?${client.user.id}>( |)$`);
 	if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx) && message.guild){ //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.
 		return message.author.send(`Hi there! ${message.author}, My prefix in guild ${message.guild.name} is ${prefix || "$"}.`); //sends (DM's) the user the Command Prefix for the guild, or the default prefix if anything "wonky" happens.
 	}
-	message.content = message.cleanContent;
+	message.content = message.cleanContent; //eslint-disable-line
 	//states ["ok/allowed":"✔️","Wait":"⏳","Block":"🚫"]
 
 	//message.level = client.getLevel(client,message);
