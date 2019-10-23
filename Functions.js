@@ -25,19 +25,17 @@ module.exports = (client) => {
 	var adminRdict = ["Admin","Administrator"]; //Temp
 	var modRdict =["Mod","Moderator"]; //Temp
 	var mutedRdict =["Muted","Mute"]; //Temp
+
 	/** initalisation routine for the client, it ensures all database data needed is present, sets the RPC status. called afte the DJS client emits 'ready' */
 	client.init = (client) =>{
 		client.dStats.increment("overlord.init");
 		client.DB.deleteAll();// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!REMOVE THIS IN PRODUCTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		console.time("init");
-		/** removes the operation locking file to allow the bot to accept incoming commands */
-		fs.unlink(`${basedir}\\SHUTDOWN.txt`, err => {
-			if (err) client.log("Log","Shutdown operation locking file does not exist - expected.","LFensureRem");
-		});
 		// iterates over each guild that the bot has access to (all the guilds it's invited to) 
 		client.guilds.forEach(guild=>{
 			client.commands.ensure(guild.id,new Object);
-			client.trecent[`${guild.id}`] = new Set();
+			client.trecent[guild.id] = new Set();
+			console.log(client.trecent);
 			client.DB.ensure(guild.id,client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
 			guild.members.forEach(member =>{ //ensures each server has all it's users initialised correctly :D
 				client.DB.ensure(guild.id,{xp: 0,},`users.${member.id}`);
@@ -224,10 +222,9 @@ module.exports = (client) => {
 		}else{
 			trecent.push(mobj);
 		}
-		
-
-		}
 	};
+
+
 
 	client.dStats.increment =(counter) =>{ //"fake"DStats Implimentation 
 		client.counters.push(counter);

@@ -18,12 +18,6 @@ client.commands = new enmap();
 /** Bind the exportable functions from Functions.js to the client object as methods. */
 require("./Functions.js")(client); 
 
-/** process error catching with custom stacktrace formatting for ease of reading */
-process.on("uncaughtException", (err) => {
-	console.dir(err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./")); 
-	process.exit(1);
-});
-
 /** used to gracefully shutdown the bot, ensuring all current operations are completed successfully and inhibiting new operations from occuring
  * used an operation 'locking' file (SHUTDOWN.txt) that if present prevents any new commands from being executed. 
  * also uses setImmediate to wait for any I/O operations to prevent things such as DB corruption etc.
@@ -31,7 +25,7 @@ process.on("uncaughtException", (err) => {
 function gracefulShutdown(){
 	fs.writeFile("./SHUTDOWN.txt", "SHUTDOWN",{ flag: "w" }, function(err){
 		if (err) console.log(err);
-		console.log("Successfully Written Shutdown File.");
+		client.log("System","Successfully Written Shutdown File.","GracefulShutdown");
 	});
 	setTimeout(function(){setImmediate(() => {process.exit(0);});},5500); //after 5.5 seconds, and after all I/O activity has finished, quit the application.
 	
@@ -46,10 +40,20 @@ process
 		if (msg == "shutdown") {
 			gracefulShutdown();
 		}
+	})
+	.on("uncaughtException", (err) => {
+		console.dir(err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./")); /** process error catching with custom stacktrace formatting for ease of reading */
+		process.exit(1);
 	});
 
 /** catches and logs any Discord.js Client errors */
-client.on("error",error =>{client.log("ERR",error);});
+client
+	.on("error",error =>{client.log("ERR",error);})
+/** if the client disconnects, report the disconnection */
+	.on("disconnect", function(event){
+		console.error(event);
+	});
+
 
 /** returns a random integer between two numbers (max exclusive, min inclusive.)
  * @param {int} minimum
@@ -59,23 +63,28 @@ function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	return Math.floor(Math.random() * (Math.floor(max) - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
+
+/** removes the operation locking file to allow the bot to accept incoming commands */
+fs.unlink(`${process.cwd()}\\SHUTDOWN.txt`, err => {
+	if (err) client.log("Log","Shutdown operation locking file does not exist - expected.","LockingFileCheck");
+});
+
 /**
  * every 5000ms (5 seconds), checks if the operation locking file is present. if it is, signal to the rest of the application via client variable
  */
-setInterval(function(){if (fs.existsSync("./SHUTDOWN.txt")){client.isShuttingDown = true; }},5000); 
-//setInterval(function(){console.log(client.isShuttingDown);},50);
+setInterval(function(){if(fs.existsSync("./SHUTDOWN.txt")){client.isShuttingDown = true;}},5000); 
+
 
 setTimeout(function(){console.log(client.ws);},5000);
-/** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory. */
+/** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory, then starts the initialisation. */
 client.login(client.config.token);
 client.on("ready",()=>{
-	client.DB.defer.then(client.init(client));
+	client.DB.defer.then(
+		client.init(client)
+	);
 });
 
-/** if the client disconnects, report the disconnection */
-client.on("disconnect", function(event){
-	console.error(event);
-});
+
 
 /* try{
 	console.log("EventHandler Init Sucessful!");
