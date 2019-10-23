@@ -74,8 +74,6 @@ fs.unlink(`${process.cwd()}\\SHUTDOWN.txt`, err => {
  */
 setInterval(function(){if(fs.existsSync("./SHUTDOWN.txt")){client.isShuttingDown = true;}},5000); 
 
-
-setTimeout(function(){console.log(client.ws);},5000);
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory, then starts the initialisation. */
 client.login(client.config.token);
 client.on("ready",()=>{
