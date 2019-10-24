@@ -20,7 +20,7 @@ const version = "0.1.9"; //release.major.minor
 module.exports = (client) => {
 	client.trecent = new Object;
 	client.cooldown = new Set();
-	client.counters = [];
+	client.counters = []; //DSTATS REPLACEMENT
 	client.dStats = new Object();
 	var adminRdict = ["Admin","Administrator"]; //Temp
 	var modRdict =["Mod","Moderator"]; //Temp
@@ -35,7 +35,6 @@ module.exports = (client) => {
 		client.guilds.forEach(guild=>{
 			client.commands.ensure(guild.id,new Object);
 			client.trecent[guild.id] = new Set();
-			console.log(client.trecent);
 			client.DB.ensure(guild.id,client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
 			guild.members.forEach(member =>{ //ensures each server has all it's users initialised correctly :D
 				client.DB.ensure(guild.id,{xp: 0,},`users.${member.id}`);
@@ -49,6 +48,7 @@ module.exports = (client) => {
 				if (mutedRdict.includes(role.name)){client.DB.set(guild.id,role.id,"config.mutedRole");}
 			});
 		});
+		
 		console.log(`!== Overlord v ${version} Intialisation starting. current date/time is ${new Date()} ==! `);
 		client.user.setPresence({
 			game: { 

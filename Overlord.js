@@ -5,13 +5,20 @@ client.config = require("./config.js");
 const enmap = require("enmap");
 //const { inspect } = require("util");
 client.isShuttingDown = false;
-
+client.diff = require("deep-object-diff").detailedDiff;
 /** assigns the client Object a New enmap instance ("DB")*/
 client.DB = new enmap({ 
 	name: "DB",
 	autoFetch: true,
 	fetchAll: true,
 	polling: true
+});
+
+
+/**optional debug system to monitor any/all changes to the Database Object */
+client.DB.changed((Key, Old, New) => {
+	console.log(JSON.stringify(client.diff(Old,New)));
+	client.dStats.increment("overlord.databaseChange");
 });
 
 client.commands = new enmap();
