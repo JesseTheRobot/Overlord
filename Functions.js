@@ -52,7 +52,7 @@ module.exports = (client) => {
 		console.log(`!== Overlord v ${version} Intialisation starting. current date/time is ${new Date()} ==! `);
 		client.user.setPresence({
 			game: { 
-				name: `@ me for Prefix! | (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧🛠💜🦄Being Built!🦄💜🛠✧ﾟ･: *ヽ(◕ヮ◕ヽ) (v${version}) now on ${client.guilds.size} servers!`,
+				name: `@ me for Prefix! | (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧🛠💜🦄Being Built!🦄💜🛠✧ﾟ･: *ヽ(◕ヮ◕ヽ) (v${version}) now on ${client.guilds.size} servers!`, //move this to config file?
 				type: "PLAYING"
 			},
 			status: "active"
