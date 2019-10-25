@@ -102,7 +102,7 @@ module.exports = (client) => {
 	client.loadCommand = (command,guildid) =>{ //loads either a specified command for a guild or loads a command for *all* guilds. 
 		client.log("Log",`Loading ${command} from ${process.cwd()}/commands/`,"CommandInit");
 		try{
-			var cmdObj = require(`${process.cwd()}/commands/${command}.js`)
+			var cmdObj = require(`${process.cwd()}/commands/${command}.js`);
 			return cmdObj;
 		}catch(err){
 			client.log("Error",`Error in loading command ${command} from ${process.cwd()}/commands/ - \n${err}`);
@@ -116,8 +116,9 @@ module.exports = (client) => {
 				client.log("Log",`bound alias ${alias} to command ${command} in guild ${client.guilds.get(guildid).name}`,"CommandBind");
 			});
 			client.commands.ensure(guildid,cmdAliases,command);
-		if(!guildid){ client.guilds.forEach(guild =>{loadCmd(command,guild.id);});
-		}else{loadCmd(command,guildid);}}
+			if(!guildid){ client.guilds.forEach(guild =>{loadCmd(command,guild.id);});
+			}else{loadCmd(command,guildid);}
+		}
 
 	};
 	
