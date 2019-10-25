@@ -5,11 +5,10 @@
   "main": "NCBot.js",
   "dependencies": {
     "better-sqlite-pool": "^0.2.2",
-    "discord-anti-spam": "^2.0.0",
     "discord.js": "^11.5.1",
     "download-file": "^0.1.5",
     "enmap": "^4.8.7",
-    "hot-shots": "^6.4.1",
+    "hot-shots": "^6.8.1",
     "image-downloader": "^3.5.0",
     "integer": "^2.1.0",
     "jsdoc": "^3.6.3",
