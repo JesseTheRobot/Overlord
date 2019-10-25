@@ -59,7 +59,7 @@ module.exports = (client) => {
 		});
 
 		const eventFiles = fs.readdirSync("./events/");
-		client.log("log", `Loading ${eventFiles.length} events from ${process.cwd()}/events/`,"EventInit");
+		client.log("log", `Loading ${eventFiles.length} events from ${basedir}/events/`,"EventInit");
 		eventFiles.forEach(eventFile => {
 			if (!eventFile.endsWith(".js")) return;
 			const eventName = eventFile.split(".")[0];
@@ -69,7 +69,7 @@ module.exports = (client) => {
 		});
 
 		const commandFiles = fs.readdirSync("./commands/");
-		client.log("Log",`Loading ${commandFiles.length} events from ${process.cwd()}/commands/`,"CommandInit");
+		client.log("Log",`Loading ${commandFiles.length} events from ${basedir}/commands/`,"CommandInit");
 		commandFiles.forEach(command =>{
 			if (!command.endsWith(".js")) return;
 			var command = command.split(".")[0]; // eslint-disable-line no-redeclare 
