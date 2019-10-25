@@ -1,4 +1,4 @@
-/** contains functiosn that are bound to the client object at startup. DO NOT EDIT (pls) */
+/** contains functions that are bound to the client object at startup. DO NOT EDIT (pls) */
 const fs = require("fs");
 const basedir = process.cwd();
 const version = "0.1.9"; //release.major.minor
