@@ -1,7 +1,7 @@
 /** contains functions that are bound to the client object at startup. DO NOT EDIT (pls) */
 const fs = require("fs");
 const basedir = process.cwd();
-const version = "0.1.9"; //release.major.minor
+const version = "0.1.9.26102019"; //release.major.minor.date
 /**
  * @exports init 
  * @exports log
@@ -14,13 +14,13 @@ const version = "0.1.9"; //release.major.minor
  * @exports getLevel
  * @exports evalClean
  * @exports checkThrottle
- * @exports dStats **LEGACY** 
+ * @exports dStats **LEGACY - Temp ** 
  * @exports getRandomInt
  */
 module.exports = (client) => {
 	client.trecent = new Object;
 	client.cooldown = new Set();
-	client.counters = []; //DSTATS REPLACEMENT
+	client.counters = []; //DSTATS REPLACEMENT - Temp
 	client.dStats = new Object();
 	var adminRdict = ["Admin","Administrator"]; //Temp
 	var modRdict =["Mod","Moderator"]; //Temp
@@ -29,9 +29,13 @@ module.exports = (client) => {
 	/** initalisation routine for the client, it ensures all database data needed is present, sets the RPC status. called afte the DJS client emits 'ready' */
 	client.init = (client) =>{
 		client.dStats.increment("overlord.init");
-		client.DB.deleteAll();// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!REMOVE THIS IN PRODUCTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		client.DB.deleteAll();//Temp
 		console.time("init");
 		// iterates over each guild that the bot has access to (all the guilds it's invited to) 
+		if(client.guilds.size == 0){
+			client.log("FATAL","No Guilds Detected! Please check your token. aborting Init.","Init");
+			return;
+		}
 		client.guilds.forEach(guild=>{
 			client.commands.ensure(guild.id,new Object);
 			client.trecent[guild.id] = new Set();
@@ -43,7 +47,7 @@ module.exports = (client) => {
 			client.DB.set(guild.id,guild.owner.user.id,"config.serverOwnerID");
 			guild.roles.forEach(role =>{ //figure out a better way of doing this! (dynamic eval?)
 				client.log("Log",`Testing role with name ${role.name} for Admin/Mod/Muted availability.`,"InitPermRoles");
-				if (adminRdict.includes(role.name)){client.DB.push(guild.id,role.id,"config.adminRoles");}
+				if (adminRdict.includes(role.name)){client.DB.push(guild.id,role.id,"config.adminRoles");} 
 				if (modRdict.includes(role.name)){client.DB.push(guild.id,role.id,"config.modRoles");}
 				if (mutedRdict.includes(role.name)){client.DB.set(guild.id,role.id,"config.mutedRole");}
 			});
