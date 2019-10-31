@@ -1,4 +1,5 @@
-﻿const Discord = require("discord.js");
+﻿/**Dependancy Import and initialisation */
+const Discord = require("discord.js");
 const client = new Discord.Client({autoReconnect:true, messageCacheMaxSize:-1,messageCacheLifetime:0,messageSweepInterval:0,fetchAllMembers:true});
 const fs = require("fs");
 client.config = require("./config.js");
@@ -6,16 +7,17 @@ const enmap = require("enmap");
 //const { inspect } = require("util");
 client.isShuttingDown = false;
 client.diff = require("deep-object-diff").detailedDiff;
-/** assigns the client Object a New enmap instance ("DB")*/
+
+/** assigns the client Object a New enmap instance ("DB") - */
 client.DB = new enmap({ 
 	name: "DB",
 	autoFetch: true,
 	fetchAll: false,
-	polling: true
+	polling: true,
+	dataDir: "./data"
 });
 
-
-/**optional debug system to monitor any/all changes to the Database Object */
+/**optional debug system to monitor any/all changes to the ENMAP Database */
 client.DB.changed((Key, Old, New) => {
 	console.log(JSON.stringify(client.diff(Old,New)));
 	client.dStats.increment("overlord.databaseChange");
@@ -26,26 +28,23 @@ client.commands = new enmap();
 require("./Functions.js")(client); 
 
 /** used to gracefully shutdown the bot, ensuring all current operations are completed successfully and inhibiting new operations from occuring
- * used an operation 'locking' file (SHUTDOWN.txt) that if present prevents any new commands from being executed. 
+ * used an operation 'locking' variable  (client.isShuttingDown) that if true prevents any new commands from being executed. 
  * also uses setImmediate to wait for any I/O operations to prevent things such as DB corruption etc.
  */
 function gracefulShutdown(){
-	fs.writeFile("./SHUTDOWN.txt", "SHUTDOWN",{ flag: "w" }, function(err){
-		if (err) console.log(err);
-		client.log("System","Successfully Written Shutdown File.","GracefulShutdown");
-	});
+	client.log("System","Successfully Received Shutdown Request","GracefulShutdown");
 	setTimeout(function(){setImmediate(() => {process.exit(0);});},5500); //after 5.5 seconds, and after all I/O activity has finished, quit the application.
 	
 }
 
 /** PM2 SIGINT and Message handling for invoking a graceful shutdown through PM2 on both UNIX and windows systems */
 process
-	.on("SIGINT", function() { //unix SIGINT graceful PM2 app shutdown.
-		gracefulShutdown();
+	.on("SIGINT", function() {//unix SIGINT graceful PM2 app shutdown.
+		client.isShuttingDown = true;
 	})
 	.on("message", (msg) => {//Windows "message" graceful PM2 app shutdown. 
 		if (msg == "shutdown") {
-			gracefulShutdown();
+			client.isShuttingDown = true;
 		}
 	})
 	.on("uncaughtException", (err) => {
@@ -71,15 +70,11 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (Math.floor(max) - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-/** removes the operation locking file to allow the bot to accept incoming commands */
-fs.unlink(`${process.cwd()}\\SHUTDOWN.txt`, err => {
-	if (err) client.log("Log","Shutdown operation locking file does not exist - expected.","LockingFileCheck");
-});
 
 /**
- * every 5000ms (5 seconds), checks if the operation locking file is present. if it is, signal to the rest of the application via client variable
+ * every 5000ms (5 seconds), checks if the client variable isShuttingDown is true. if it is, signal for the graceful shutdown to begin
  */
-setInterval(function(){if(fs.existsSync("./SHUTDOWN.txt")){client.isShuttingDown = true;}},5000); 
+setInterval(function(){if(client.isShuttingDown == true){gracefulShutdown();}},5000); 
 
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory, then starts the initialisation. */
 client.login(client.config.token);
