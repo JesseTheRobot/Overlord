@@ -10,7 +10,7 @@ client.diff = require("deep-object-diff").detailedDiff;
 client.DB = new enmap({ 
 	name: "DB",
 	autoFetch: true,
-	fetchAll: true,
+	fetchAll: false,
 	polling: true
 });
 
