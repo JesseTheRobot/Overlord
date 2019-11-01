@@ -1,4 +1,6 @@
 ﻿/**Dependancy Import and initialisation */
+
+console.time("init");
 const Discord = require("discord.js");
 const client = new Discord.Client({autoReconnect:true, messageCacheMaxSize:-1,messageCacheLifetime:0,messageSweepInterval:0,fetchAllMembers:true});
 const fs = require("fs");
@@ -7,6 +9,8 @@ const enmap = require("enmap");
 //const { inspect } = require("util");
 client.isShuttingDown = false;
 client.diff = require("deep-object-diff").detailedDiff;
+client.version = "0.1.9.31102019"; //release.major.minor.date
+console.log(`!== Overlord v ${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 
 /** assigns the client Object a New enmap instance ("DB") - */
 client.DB = new enmap({ 
@@ -14,7 +18,7 @@ client.DB = new enmap({
 	autoFetch: true,
 	fetchAll: false,
 	polling: true,
-	dataDir: "./data"
+	dataDir: client.config.datadir
 });
 
 /**optional debug system to monitor any/all changes to the ENMAP Database */
@@ -58,6 +62,7 @@ client
 /** if the client disconnects, report the disconnection */
 	.on("disconnect", function(event){
 		console.error(event);
+		client.isShuttingDown = true; //this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this.
 	});
 
 

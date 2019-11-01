@@ -26,7 +26,12 @@ const config = {
 			name: "Bot Owner",
 			check: (message) => config.ownerID === message.author.id
 		}
-	]
+	],
+	datadir: "./data",
+	startupmessage: "Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.",
+
+
+
 };
   
 module.exports = config;

@@ -1,7 +1,6 @@
 /** contains functions that are bound to the client object at startup. DO NOT EDIT (pls) */
 const fs = require("fs");
 const basedir = process.cwd();
-const version = "0.1.9.26102019"; //release.major.minor.date
 /**
  * @exports init 
  * @exports log
@@ -30,7 +29,7 @@ module.exports = (client) => {
 	client.init = (client) =>{
 		client.dStats.increment("overlord.init");
 		client.DB.deleteAll();//Temp
-		console.time("init");
+		
 		// iterates over each guild that the bot has access to (all the guilds it's invited to) 
 		if(client.guilds.size == 0){
 			client.log("FATAL","No Guilds Detected! Please check your token. aborting Init.","Init");
@@ -53,10 +52,9 @@ module.exports = (client) => {
 			});
 		});
 		
-		console.log(`!== Overlord v ${version} Intialisation starting. current date/time is ${new Date()} ==! `);
 		client.user.setPresence({
 			game: { 
-				name: `@ me for Prefix! | (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧🛠💜🦄Being Built!🦄💜🛠✧ﾟ･: *ヽ(◕ヮ◕ヽ) (v${version}) now on ${client.guilds.size} servers!`, //move this to config file?
+				name: `@ me for Prefix! | (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧🛠💜🦄Being Built!🦄💜🛠✧ﾟ･: *ヽ(◕ヮ◕ヽ) (v${client.version}) now on ${client.guilds.size} servers!`, //move this to config file?
 				type: "PLAYING"
 			},
 			status: "active"
@@ -84,7 +82,7 @@ module.exports = (client) => {
 		console.timeEnd("init");
 		console.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 		var ownerID = (require("./config.js")).ownerID;
-		(client.users.get(ownerID)).send(`Overlord Start up completed! current server time is ${new Date()} - Now Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
+		(client.users.get(ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 	};
 
 	client.log =(type,message,title) =>{
