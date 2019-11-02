@@ -1,7 +1,7 @@
 const config = {
-	ownerID: "150693679500099584",
-	ReservedKeys: ["serverOwnerID","config","autoMod","antiSpam"],
-	token: "NTc2MzM3ODI2MTU3NjkwODkx.XNVCkg.Yyt4uTJi2FOYeaYPE6iOmIurrwI",
+	ownerID: "150693679500099584", //discord ID of the Bot's Owner.
+	ReservedKeys: ["serverOwnerID","config","autoMod","antiSpam"], //list of reserved settings keys
+	token: "NTc2MzM3ODI2MTU3NjkwODkx.XNVCkg.Yyt4uTJi2FOYeaYPE6iOmIurrwI", //bot's Token
   
 	permissionLevels: [
 		{
@@ -28,8 +28,7 @@ const config = {
 		}
 	],
 	datadir: "./data",
-	startupmessage: "Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.",
-
+	
 
 
 };

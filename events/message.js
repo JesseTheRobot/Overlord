@@ -1,6 +1,6 @@
 module.exports = async(client, message) => {
 	if (message.author.bot || !message.channel.type == ("dm" || "text")) return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
-	message.content = message.cleanContent; 
+	message.content = message.cleanContent; //built in method for cleaning message input (eg )
 	console.log(message);
 	client.dStats.increment("overlord.messages");
 
@@ -17,13 +17,13 @@ module.exports = async(client, message) => {
 	check if the command requires a guild or not
 	check the level of the user executing the command
 	check command context (cooldowns,allowed channel etc)
-	
-		if (client.isShuttingDown == true){ //checks if the bot is currently undergoing a shutdown. if so, interdicts all further processing.
+	*/
+	if (client.isShuttingDown == true){ //checks if the bot is currently undergoing a shutdown. if so, interdicts all further processing.
 		console.log("command execution failed - system currently shutting down.");
 		message.react("🚫").then(()=>{message.react("⏳");});
 	}
 
-	*/
+	
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
 	

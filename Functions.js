@@ -141,41 +141,6 @@ module.exports = (client) => {
 		client.DB.set(guildID,settings); //"messy" write, TODO: change to element specific write rather than rewriting the *entire* DB
 	};
 
-	client.getStatus = (client,message,command) =>{ //validate any restrictions for the user using a command/sending a message.
-		//restriction types: Invalid channel (strict/superStrict mode), blacklisted, rate limited, incorrect level, muted role,
-		//.... bl, ic, rl, muted,level
-		command = command.toLowerCase();
-		var cmdObj; //checks if the command sent is actually valid or not.
-		var guildCommands = client.commands.get(message.guild.id);
-		for (var cmdarr in guildCommands ) {
-			if (guildCommands.hasOwnProperty(cmdarr)) { 
-				console.log(cmdarr);
-				if (!client.commands.includes(command)){ //checks if the command has been loaded into the client. if not, tries to load it. if it fails, the command does not exist.
-					var cmdLoader = client.loadCommand(command,message.guild.id);
-					if( cmdLoader== "failed"){ //"failed" is only returned if, well, the command cannot be loaded in the guild for any reason.
-					//attempt load of a custom command here 
-						message.channel.send({embed:{
-							title: "Command Error",
-							fields: [{
-								name:` the Command ${command} Does not exist`,
-								value:`for help, use the ${client.getGuildSettings(message.guild).config.prefix}help command.`
-							}],
-							timestamp: new Date(),
-						}});
-					}else{
-						cmdObj = cmdLoader;
-					}
-				}
-			}
-		}
-
-		
-		//check command's required permLevel.	
-		
-
-		//stage 1: check for blacklist.
-		
-	};
 	client.checkBlacklist = (client,message) =>{
 		
 	};
