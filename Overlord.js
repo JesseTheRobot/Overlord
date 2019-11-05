@@ -1,5 +1,4 @@
 ﻿/**Dependancy Import and initialisation */
-
 console.time("init");
 const Discord = require("discord.js");
 const client = new Discord.Client({autoReconnect:true, messageCacheMaxSize:-1,messageCacheLifetime:0,messageSweepInterval:0,fetchAllMembers:true});
@@ -9,7 +8,7 @@ const enmap = require("enmap");
 //const { inspect } = require("util");
 client.isShuttingDown = false;
 client.diff = require("deep-object-diff").detailedDiff;
-client.version = "0.1.9.31102019"; //release.major.minor.date
+client.version = "0.1.9.04112019"; //release.major.minor.date
 console.log(`!== Overlord v ${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 
 /** assigns the client Object a New enmap instance ("DB") - */
@@ -24,7 +23,7 @@ client.DB = new enmap({
 /**optional debug system to monitor any/all changes to the ENMAP Database */
 client.DB.changed((Key, Old, New) => {
 	console.log(JSON.stringify(client.diff(Old,New)));
-	client.dStats.increment("overlord.databaseChange");
+	client.dStats.increment("overlord.databaseChange"); //reports to dStats for load statistics
 });
 
 client.commands = new enmap();
@@ -40,6 +39,11 @@ function gracefulShutdown(){
 	setTimeout(function(){setImmediate(() => {process.exit(0);});},5500); //after 5.5 seconds, and after all I/O activity has finished, quit the application.
 	
 }
+
+/**
+ * every 5000ms (5 seconds), checks if the client variable isShuttingDown is true. if it is, signal for the graceful shutdown to begin
+ */
+setInterval(function(){if(client.isShuttingDown == true){gracefulShutdown();}},5000); 
 
 /** PM2 SIGINT and Message handling for invoking a graceful shutdown through PM2 on both UNIX and windows systems */
 process
@@ -64,22 +68,7 @@ client
 		console.error(event);
 		client.isShuttingDown = true; //this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this.
 	});
-
-
-/** returns a random integer between two numbers (max exclusive, min inclusive.)
- * @param {int} minimum
- * @param {int} maximum
- */
-function getRandomInt(min, max) { 
-	min = Math.ceil(min);
-	return Math.floor(Math.random() * (Math.floor(max) - min)) + min; //The maximum is exclusive and the minimum is inclusive
-}
-
-
-/**
- * every 5000ms (5 seconds), checks if the client variable isShuttingDown is true. if it is, signal for the graceful shutdown to begin
- */
-setInterval(function(){if(client.isShuttingDown == true){gracefulShutdown();}},5000); 
+	
 
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory, then starts the initialisation. */
 client.login(client.config.token);

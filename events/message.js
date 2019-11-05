@@ -2,7 +2,7 @@ module.exports = async(client, message) => {
 	if (message.author.bot || !message.channel.type == ("dm" || "text")) return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
 	message.content = message.cleanContent; //built in method for cleaning message input (eg )
 	console.log(message);
-	client.dStats.increment("overlord.messages");
+	client.dStats.increment("overlord.messages"); //uses 'fake' dStats immplimentation for the moment.
 
 	try{ //key/path based iteration for the help command
 		//var keys = new Map(Object.entries(client.getGuildSettings(message.guild).config)).keys();

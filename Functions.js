@@ -25,7 +25,9 @@ module.exports = (client) => {
 	var modRdict =["Mod","Moderator"]; //Temp
 	var mutedRdict =["Muted","Mute"]; //Temp
 
-	/** initalisation routine for the client, it ensures all database data needed is present, sets the RPC status. called afte the DJS client emits 'ready' */
+	/** initalisation routine for the client,
+	 *  it ensures all database data needed is present, sets the RPC status.
+	 *  called afte the DJS client emits 'ready' */
 	client.init = (client) =>{
 		client.dStats.increment("overlord.init");
 		client.DB.deleteAll();//Temp
@@ -144,20 +146,23 @@ module.exports = (client) => {
 	client.checkBlacklist = (client,message) =>{
 		
 	};
-		
+	/** returns the permissions integer for a given message's author - used to dterming basal permissions.
+	 * 
+	 * @param client  client Object
+	 * @param message  Message Object
+	 */
 	client.getLevel = (client,message) =>{//gets the permission integer for the user: 1, base user. 2, moderator, 3 Server admin. 4 bot owner
 		const config = require(`${basedir}\\config.js`);
 		let permlvl = 0;
 		const permLvls = config.permissionLevels;
 		while (permLvls.length) {
-			const currentLevel = permLvls.shift(); //shifts the array, removing the first value.
-			if (message.guild && currentLevel.guild) continue;
+			const currentLevel = permLvls.shift(); //shifts the array, removing the first (previously tested) value
 			if (currentLevel.check(client, message)) {
 				permlvl = currentLevel.level;
 				break;
 			}
 		}
-		return permlvl;
+		return permlvl;//returns the user's permission level
 	};
 
 	client.evalClean = async (client, text) => { //cleans output of the eval command, to prevent the token and other chars from causing issues.

@@ -1,13 +1,14 @@
 const config = {
 	ownerID: "150693679500099584", //discord ID of the Bot's Owner.
-	ReservedKeys: ["serverOwnerID","config","autoMod","antiSpam"], //list of reserved settings keys
+	protectedKeys: ["serverOwnerID","config","autoMod","antiSpam"], //list of reserved settings keys that are immutable to command-base changes
 	token: "NTc2MzM3ODI2MTU3NjkwODkx.XNVCkg.Yyt4uTJi2FOYeaYPE6iOmIurrwI", //bot's Token
-  
+	datadir: "./data", //data storage location for the ENMAP-SQLite backend
+	
 	permissionLevels: [
 		{
 			level: 1,
 			name: "User",
-			check: () => true //always returns true for Obvious reasons
+			check: () => true //always returns true as this is the base permission level.
 		},
 		{
 			level: 2,
@@ -27,10 +28,6 @@ const config = {
 			check: (message) => config.ownerID === message.author.id
 		}
 	],
-	datadir: "./data",
-	
-
-
 };
   
 module.exports = config;

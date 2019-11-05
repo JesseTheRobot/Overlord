@@ -12,7 +12,7 @@ exports.run = (client,message,args) =>{
 		}
 	}
 	var keys = client.getGuildSettings(message.guild).config.keys(); //pulls in context guild's configuration keys.
-	const ReservedKeys = require(`${process.cwd}\\config.js`).ReservedKeys;//["serverOwnerID","config","autoMod","antiSpam"];
+	const protectedKeys = require(`${process.cwd}\\config.js`).protectedKeys;//["serverOwnerID","config","autoMod","antiSpam"];
 	objIterate(keys,"config");
 	const configOptions ={ //key:state/action system. 
 		
