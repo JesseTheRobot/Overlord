@@ -196,11 +196,10 @@ module.exports = (client) => {
 		}
 	};
 
-
-
 	client.dStats.increment =(counter) =>{ //"fake"DStats Implimentation 
 		client.counters.push(counter);
-	};	
+	};
+		
 	/** returns a random integer between two numbers (max exclusive, min inclusive.)
  	* @param {int} minimum
  	* @param {int} maximum
