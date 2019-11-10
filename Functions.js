@@ -21,10 +21,6 @@ module.exports = (client) => {
 	client.cooldown = new Set();
 	client.counters = []; //DSTATS REPLACEMENT - Temp
 	client.dStats = new Object();
-	var adminRdict = ["Admin","Administrator"]; //Temp
-	var modRdict =["Mod","Moderator"]; //Temp
-	var mutedRdict =["Muted","Mute"]; //Temp
-
 	/** initalisation routine for the client,
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
@@ -37,6 +33,7 @@ module.exports = (client) => {
 			client.log("FATAL","No Guilds Detected! Please check your token. aborting Init.","Init");
 			return;
 		}
+		/*
 		client.guilds.forEach(guild=>{
 			client.commands.ensure(guild.id,new Object);
 			client.trecent[guild.id] = new Set();
@@ -53,7 +50,7 @@ module.exports = (client) => {
 				if (mutedRdict.includes(role.name)){client.DB.set(guild.id,role.id,"config.mutedRole");}
 			});
 		});
-		
+		*/
 		client.user.setPresence({
 			game: { 
 				name: `@ me for Prefix! | (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧🛠💜🦄Being Built!🦄💜🛠✧ﾟ･: *ヽ(◕ヮ◕ヽ) (v${client.version}) now on ${client.guilds.size} servers!`, //move this to config file?
@@ -86,7 +83,35 @@ module.exports = (client) => {
 		var ownerID = (require("./config.js")).ownerID;
 		(client.users.get(ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 	};
-
+	client.vaidateGuild = (client, guild) =>{ //validates the DB entry for a guild
+		//move pretty much all of the code above into here!
+		var adminRdict = ["Admin","Administrator"]; //Temp
+		var modRdict =["Mod","Moderator"]; //Temp
+		var mutedRdict =["Muted","Mute"]; //Temp
+		client.guilds.forEach(guild =>{
+			client.commands.ensure(guild.id,new Object);
+			client.trecent[guild.id] = new Set();
+			client.DB.ensure(guild.id,client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
+			guild.members.forEach(member =>{ //ensures each server has all it's users initialised correctly
+				client.DB.ensure(guild.id,{xp: 0,},`users.${member.id}`);
+			});
+			client.log("Log",`Sucessfully Verified/initialised Guild ${guild.name} to DB`);
+			client.DB.set(guild.id,guild.owner.user.id,"config.serverOwnerID");
+			guild.roles.forEach(role =>{ //figure out a better way of doing this! (dynamic eval?)
+				client.log("Log",`Testing role with name ${role.name} for Admin/Mod/Muted availability.`,"InitPermRoles");
+				if (adminRdict.includes(role.name)){client.DB.push(guild.id,role.id,"config.adminRoles");} 
+				if (modRdict.includes(role.name)){client.DB.push(guild.id,role.id,"config.modRoles");}
+				if (mutedRdict.includes(role.name)){client.DB.set(guild.id,role.id,"config.mutedRole");}
+			});
+			const commandFiles = fs.readdirSync("./commands/");
+			client.log("Log",`Loading ${commandFiles.length} events from ${basedir}/commands/`,"CommandInit");
+			commandFiles.forEach(command =>{
+				if (!command.endsWith(".js")) return;
+				var command = command.split(".")[0]; // eslint-disable-line no-redeclare 
+				client.loadCommand(command, guild.id);
+			});
+		});
+	}
 	client.log =(type,message,title) =>{
 		if (!title){
 			try{
