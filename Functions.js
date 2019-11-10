@@ -27,7 +27,7 @@ module.exports = (client) => {
 
 	/** initalisation routine for the client,
 	 *  it ensures all database data needed is present, sets the RPC status.
-	 *  called afte the DJS client emits 'ready' */
+	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) =>{
 		client.dStats.increment("overlord.init");
 		client.DB.deleteAll();//Temp
@@ -254,7 +254,7 @@ module.exports = (client) => {
 			modRoles: [], 
 			adminRoles: [], 
 			serverOwnerID: 0,
-			allowedChannels: [],
+			blockedChannels: [],
 			
 			autoMod:{
 				bannedWords: [], 
