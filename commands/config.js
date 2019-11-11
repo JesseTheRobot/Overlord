@@ -1,4 +1,4 @@
-exports.run = (client,message,args) =>{
+exports.run = (client, message, args) => {
 	function objIterate(object, stackStr) {
 		for (var property in object) {
 			if (object.hasOwnProperty(property)) {
@@ -13,66 +13,66 @@ exports.run = (client,message,args) =>{
 	}
 	var keys = client.getGuildSettings(message.guild).config.keys(); //pulls in context guild's configuration keys.
 	const protectedKeys = require(`${process.cwd}\\config.js`).protectedKeys;//["serverOwnerID","config","autoMod","antiSpam"];
-	objIterate(keys,"config");
-	const configOptions ={ //key:state/action system. 
-		
+	objIterate(keys, "config");
+	const configOptions = { //key:state/action system. 
+
 	};
-	var defaultConfig ={ //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development rn.
-		commands:{
-			"help":{ 
+	var defaultConfig = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development rn.
+		commands: {
+			"help": {
 				aliases: ["commands"],
 				guildOnly: true,
-				enabled: true, 
-				permLevel: 1, 
-				cooldown: 1000, 
+				enabled: true,
+				permLevel: 1,
+				cooldown: 1000,
 				allowedChannels: [],
 			},
 		},
-		config:{
+		config: {
 			prefix: "$",
-			mutedRole: 0, 
-			welcomeMsg: "Welcome {{user}} to {{guild.name}}!", 
-			welcomeChan: 0, 
-			modRoles: [], 
-			adminRoles: [], 
+			mutedRole: 0,
+			welcomeMsg: "Welcome {{user}} to {{guild.name}}!",
+			welcomeChan: 0,
+			modRoles: [],
+			adminRoles: [],
 			serverOwnerID: 0,
 			allowedChannels: [],
-			autoMod:{
-				bannedWords: [], 
+			autoMod: {
+				bannedWords: [],
 				excludedRoles: [],
 				percentCaps: 0,
-				floodPercentLimit: 0, 
-				decay: 30000, 
-				antiSpam:{
-					interval: 2000, 
-					count: 2, 
+				floodPercentLimit: 0,
+				decay: 30000,
+				antiSpam: {
+					interval: 2000,
+					count: 2,
 				},
-				penalties:{ 
+				penalties: {
 					spam: 1,
 					bannedWord: 2,
 					repeatOffenceMultiplier: 0.1,
 					repeatOffenceTimeout: 10000 //in ms
 				},
-				punishments:{  
-					5:"mute", 
-					10:"tempBan",
-					15:"ban",
+				punishments: {
+					5: "mute",
+					10: "tempBan",
+					15: "ban",
 				}
 			},
 		},
-		persistence:{
-			messages:{},
-			users:{},
+		persistence: {
+			messages: {},
+			users: {},
 		},
-		blacklist:{},
-		users:{},
+		blacklist: {},
+		users: {},
 	};
 };
-exports.defaultConfig ={
+exports.defaultConfig = {
 	aliases: ["config"],
 	guildOnly: true,
-	enabled: true, 
-	permLevel: 1, 
-	cooldown: 1000, 
+	enabled: true,
+	permLevel: 1,
+	cooldown: 1000,
 	allowedChannels: [],
 };

@@ -19,7 +19,7 @@ require("./Functions.js")(client);
 
 
 client.login(require("./config.js").token);
-client.on("ready",()=>{
+client.on("ready", () => {
 	client.DB.defer.then(client.init(client));
 });
 

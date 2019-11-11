@@ -1,4 +1,4 @@
-exports.run = async (client,message,args) =>{
+exports.run = async (client, message, args) => {
 	const code = args.join(" ");
 	try {
 		var evaled = eval(code);
@@ -9,12 +9,12 @@ exports.run = async (client,message,args) =>{
 	}
 };
 
-    
-exports.defaultConfig ={
+
+exports.defaultConfig = {
 	aliases: ["eval"],
 	guildOnly: true,
-	enabled: true, 
-	permLevel: 1, 
-	cooldown: 1000, 
+	enabled: true,
+	permLevel: 1,
+	cooldown: 1000,
 	allowedChannels: [],
 };
