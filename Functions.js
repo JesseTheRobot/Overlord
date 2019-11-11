@@ -204,6 +204,7 @@ module.exports = (client) => {
 
 	client.dStats.increment = (counter) => { //"fake"DStats Implimentation 
 		client.counters.push(counter);
+		console.log(client.counters)
 	};
 
 	/** returns a random integer between two numbers (max exclusive, min inclusive.)
