@@ -14,7 +14,7 @@ exports.defaultConfig = {
 	aliases: ["eval"],
 	guildOnly: true,
 	enabled: true,
-	permLevel: 1,
+	permLevel: 4,
 	cooldown: 1000,
 	allowedChannels: [],
 };
