@@ -56,7 +56,7 @@ module.exports = (client) => {
 		var ownerID = (require("./config.js")).ownerID;
 		(client.users.get(ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 	};
-	client.vaidateGuild = (client, guild) => { //validates the DB entry for a guild
+	client.validateGuild = (client, guild) => { //validates the DB entry for a guild
 		//move pretty much all of the code above into here!
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp

@@ -1,16 +1,10 @@
 module.exports = async (client, message) => {
 	if (message.author.bot || !message.channel.type == ("dm" || "text")) return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
-	message.content = message.cleanContent; //built in method for cleaning message input (eg )
+	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content )
 	console.log(message);
-	client.dStats.increment("overlord.messages"); //uses 'fake' dStats immplimentation for the moment.
+	client.dStats.increment(`overlord.messages.${message.guild.id}.${message.channel.id}`); //uses 'fake' dStats immplimentation for the moment.
 
-	try { //key/path based iteration for the help command
-		//var keys = new Map(Object.entries(client.getGuildSettings(message.guild).config)).keys();
-		//var keys = Object.entries(client.getGuildSettings(message.guild).config);
-		var config = client.getGuildSettings(message.guild).config;
-		console.log(objIterate(config));
 
-	} catch (err) { console.log(err); }
 
 	/*check if the message has the command prefix
 	check if the command exists
@@ -61,16 +55,6 @@ module.exports = async (client, message) => {
 		return;
 	}*/
 
-	function objIterate(object, stackStr) {
-		for (var property in object) {
-			if (object.hasOwnProperty(property)) {
-				if (typeof object[property] == "object") {
-					objIterate(object[property], `${stackStr}.${property}`);
-				} else {
-					console.log(`${stackStr}.${property}`);
-				}
-			}
-		}
-	}
+
 };
 
