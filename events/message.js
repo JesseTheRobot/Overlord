@@ -1,8 +1,13 @@
 module.exports = async (client, message) => {
 	if (message.author.bot || !message.channel.type == ("dm" || "text")) return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
 	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content )
-	console.log(message);
-	client.dStats.increment(`overlord.messages.${message.guild.id}.${message.channel.id}`); //uses 'fake' dStats immplimentation for the moment.
+	console.log(message); //Temp
+	if (!message.guild){  //fake dstats for now
+		client.dStats.increment(`overlord.messages.${message.channel.id}`); //treats a dm channel as a 'guild'
+	}else{
+		client.dStats.increment(`overlord.messages.${message.guild.id}.${message.channel.id}`);
+	}
+	
 
 
 
@@ -40,7 +45,7 @@ module.exports = async (client, message) => {
 	} catch (err) {
 		console.log(err);
 	}
-	client.log("Log", `user ${message.author.displayName} has used command ${command} with args ${args} at time ${new Date()}`, "MessageEvent");
+	client.log("Log", `user ${message.author.displayName || message.author.username} has used command ${command} with args ${args} at time ${new Date()}`, "MessageEvent");
 	//const permLvl = client.getMsgPerm(message); //returns permission integer for the author of the message.
 	console.log(client.commands); //debug check of the commands collection tied to client
 	//check blacklist

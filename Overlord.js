@@ -8,7 +8,7 @@ const enmap = require("enmap");
 //const { inspect } = require("util");
 client.isShuttingDown = false;
 client.diff = require("deep-object-diff").detailedDiff;
-client.version = "0.1.9.04112019"; //release.major.minor.date
+client.version = "0.1.9.17112019"; //release.major.minor.date
 console.log(`!== Overlord v ${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 
 /** assigns the client Object a New enmap instance ("DB") - */
