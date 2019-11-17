@@ -31,7 +31,7 @@ module.exports = (client) => {
 		if (client.guilds.size == 0) {
 			client.log("FATAL", "No Guilds Detected! Please check your token. aborting Init.", "Init");
 			return;
-		};
+		}
 		client.user.setPresence({
 			game: {
 				name: `@ me for Prefix! | (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧🛠💜🦄Being Built!🦄💜🛠✧ﾟ･: *ヽ(◕ヮ◕ヽ) (v${client.version}) now on ${client.guilds.size} servers!`, //move this to config file?
@@ -49,8 +49,8 @@ module.exports = (client) => {
 			client.log("Log", `Bound ${eventName} to Client Sucessfully!`, "EventBind");
 		});
 		client.guilds.forEach(guild => {//iterates over each guild that the bot has access to and ensures they are present in the database
-			client.vaidateGuild(guild)
-		})
+			client.vaidateGuild(guild);
+		});
 		console.timeEnd("init");
 		console.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 		var ownerID = (require("./config.js")).ownerID;
@@ -72,7 +72,7 @@ module.exports = (client) => {
 		guild.roles.forEach(role => {
 			//switch-Case?
 			if (role.hasPermission("ADMINISTRATOR")) {
-				client.DB.push(guild.id, role.id, "config.adminRoles") //pushes the Role ID to the Database.
+				client.DB.push(guild.id, role.id, "config.adminRoles");//pushes the Role ID to the Database.
 
 			}
 		});
@@ -90,7 +90,7 @@ module.exports = (client) => {
 			var command = command.split(".")[0]; // eslint-disable-line no-redeclare 
 			client.loadCommand(command, guild.id);
 		});
-	}
+	};
 	client.log = (type, message, title) => {
 		if (!title) {
 			try {
@@ -204,7 +204,7 @@ module.exports = (client) => {
 
 	client.dStats.increment = (counter) => { //"fake"DStats Implimentation 
 		client.counters.push(counter);
-		console.log(client.counters)
+		console.log(client.counters);
 	};
 
 	/** returns a random integer between two numbers (max exclusive, min inclusive.)
