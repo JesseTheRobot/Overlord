@@ -56,6 +56,11 @@ module.exports = (client) => {
 		var ownerID = (require("./config.js")).ownerID;
 		(client.users.get(ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 	};
+	/**
+	 * validates a Guilds's configuration properties and database 'Presence'. called at startup and when a new guild is created
+	 * @param  client 
+	 * @param  guild 
+	 */
 	client.vaidateGuild = (client, guild) => { //validates the DB entry for a guild
 		//move pretty much all of the code above into here!
 		var adminRdict = ["Admin", "Administrator"]; //Temp
@@ -259,7 +264,7 @@ module.exports = (client) => {
 			welcomeMsg: "Welcome {{user}} to {{guild.name}}!",
 			welcomeChan: 0,
 			modRoles: [],
-			adminRoles: [],
+			adminRoles: [], //used for Oauth Authentication to the web Dashboard
 			serverOwnerID: 0,
 			blockedChannels: [],
 
