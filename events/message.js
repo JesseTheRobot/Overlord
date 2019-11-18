@@ -1,16 +1,15 @@
 module.exports = async (client, message) => {
 	if (message.author.bot || !message.channel.type == ("dm" || "text")) return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
-	message.content = message.cleanContent; //built in method for cleaning message input (eg )
-	console.log(message);
-	client.dStats.increment("overlord.messages"); //uses 'fake' dStats immplimentation for the moment.
+	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content )
+	console.log(message); //Temp
+	if (!message.guild){  //fake dstats for now
+		client.dStats.increment(`overlord.messages.${message.channel.id}`); //treats a dm channel as a 'guild'
+	}else{
+		client.dStats.increment(`overlord.messages.${message.guild.id}.${message.channel.id}`);
+	}
+	
 
-	try { //key/path based iteration for the help command
-		//var keys = new Map(Object.entries(client.getGuildSettings(message.guild).config)).keys();
-		//var keys = Object.entries(client.getGuildSettings(message.guild).config);
-		var config = client.getGuildSettings(message.guild).config;
-		console.log(objIterate(config));
 
-	} catch (err) { console.log(err); }
 
 	/*check if the message has the command prefix
 	check if the command exists
@@ -46,7 +45,7 @@ module.exports = async (client, message) => {
 	} catch (err) {
 		console.log(err);
 	}
-	client.log("Log", `user ${message.author.displayName} has used command ${command} with args ${args} at time ${new Date()}`, "MessageEvent");
+	client.log("Log", `user ${message.author.displayName || message.author.username} has used command ${command} with args ${args} at time ${new Date()}`, "MessageEvent");
 	//const permLvl = client.getMsgPerm(message); //returns permission integer for the author of the message.
 	console.log(client.commands); //debug check of the commands collection tied to client
 	//check blacklist
@@ -61,16 +60,6 @@ module.exports = async (client, message) => {
 		return;
 	}*/
 
-	function objIterate(object, stackStr) {
-		for (var property in object) {
-			if (object.hasOwnProperty(property)) {
-				if (typeof object[property] == "object") {
-					objIterate(object[property], `${stackStr}.${property}`);
-				} else {
-					console.log(`${stackStr}.${property}`);
-				}
-			}
-		}
-	}
+
 };
 
