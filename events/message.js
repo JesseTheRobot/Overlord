@@ -2,26 +2,23 @@ module.exports = async (client, message) => {
 	if (message.author.bot || !message.channel.type == ("dm" || "text")) return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
 	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content )
 	console.log(message); //Temp
-	if (!message.guild){  //fake dstats for now
+	if (!message.guild) {  //fake dstats for now
 		client.dStats.increment(`overlord.messages.${message.channel.id}`); //treats a dm channel as a 'guild'
-	}else{
+	} else {
 		client.dStats.increment(`overlord.messages.${message.guild.id}.${message.channel.id}`);
 	}
-	
-
-
-
 	/*check if the message has the command prefix
 	check if the command exists
 	check if the command requires a guild or not
 	check the level of the user executing the command
 	check command context (cooldowns,allowed channel etc)
 	*/
+	//check command
+	
 	if (client.isShuttingDown == true) { //checks if the bot is currently undergoing a shutdown. if so, interdicts all further processing.
 		console.log("command execution failed - system currently shutting down.");
 		message.react("🚫").then(() => { message.react("⏳"); });
 	}
-
 
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
@@ -48,18 +45,4 @@ module.exports = async (client, message) => {
 	client.log("Log", `user ${message.author.displayName || message.author.username} has used command ${command} with args ${args} at time ${new Date()}`, "MessageEvent");
 	//const permLvl = client.getMsgPerm(message); //returns permission integer for the author of the message.
 	console.log(client.commands); //debug check of the commands collection tied to client
-	//check blacklist
-
-	/*var status = client.getStatus(client,message,command);
-	switch(status){
-	case "blocked":
-		message.react();
-		return;
-	case "ratelimit":
-		message.react();
-		return;
-	}*/
-
-
 };
-

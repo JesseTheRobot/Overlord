@@ -8,7 +8,7 @@ const config = {
 		{
 			level: 1,
 			name: "User",
-			check: () => true //always returns true as this is the base permission level.
+			check: (client, message) => true //always returns true as this is the base permission level.
 		},
 		{
 			level: 2,
@@ -25,7 +25,7 @@ const config = {
 		{
 			level: 4,
 			name: "Bot Owner",
-			check: (message) => config.ownerID === message.author.id
+			check: (client, message) => config.ownerID === message.author.id
 		}
 	],
 };

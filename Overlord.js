@@ -5,12 +5,10 @@ const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1
 const fs = require("fs");
 client.config = require("./config.js");
 const enmap = require("enmap");
-//const { inspect } = require("util");
 client.isShuttingDown = false;
 client.diff = require("deep-object-diff").detailedDiff;
-client.version = "0.1.9.17112019"; //release.major.minor.date
-console.log(`!== Overlord v ${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
-
+client.version = "0.1.9.18112019"; //release.major.minor.date
+console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 /** assigns the client Object a New enmap instance ("DB") - */
 client.DB = new enmap({
 	name: "DB",
@@ -37,7 +35,6 @@ require("./Functions.js")(client);
 function gracefulShutdown() {
 	client.log("System", "Successfully Received Shutdown Request", "GracefulShutdown");
 	setTimeout(function () { setImmediate(() => { process.exit(0); }); }, 5500); //after 5.5 seconds, and after all I/O activity has finished, quit the application.
-
 }
 
 /**
@@ -69,7 +66,6 @@ client
 		client.isShuttingDown = true; //this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this.
 	});
 
-
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory, then starts the initialisation. */
 client.login(client.config.token);
 client.on("ready", () => {
@@ -77,47 +73,3 @@ client.on("ready", () => {
 		client.init(client)
 	);
 });
-
-
-
-/* try{
-	console.log("EventHandler Init Sucessful!");
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
-	client.on("message", message => {
-		if (message.author.bot) return;
-		message.content = message.cleanContent; //prevent the bot from echo-ing mentions 
-		if (message.guild){
-			let mobj = `{${message.guild.id}:${message.author.id}}`;
-			var usrkey = `${message.guild.id}.users.${message.author.id}`;
-			var user = DB.get("servers",usrkey);
-			if (!user.strikes){
-				user.strikes = [];
-			}
-			user.strikes.push(new Date());
-			user.strikes.push("test");
-			//console.log(DB.get("servers",usrkey));
-			DB.set("servers",user,usrkey);
-			setTimeout(() => {trecent.splice(trecent[trecent.indexOf(mobj)],1);}, interval);
-			if ((trecent.filter(value => value == mobj)).length >= mutecap){ //filter all messages sent (within array) and if <mutecap> or more are keyed to the user and guildid, penalise the user. 
-				trecent =trecent.filter(value => value != mobj); //wipes array after a strike has been added.
-				if (!user.strikes){
-					user.strikes = [];
-				}
-				user.strikes.push(new Date());
-				message.channel.send(`${message.author} has had a strike added!`);
-			
-				//antispam.run(client,message,basedir,user, DB);
-			}else{
-				trecent.push(mobj);
-			}
-
-		}
-		
-		console.log(trecent);
-		
-	});
-		
-}catch(err){
-	console.error(err);
-} */
