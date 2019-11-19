@@ -1,4 +1,4 @@
-exports.run = ((client, message, basedir) =>{
+module.exports= ((client, message, basedir) =>{
 	const Discord = require("discord.js");
 	const directory = `${basedir}\\datastore\\deleted\\`;
 	const fs = require("fs");

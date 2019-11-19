@@ -1,4 +1,4 @@
-exports.run = (client, Message, nMessage) =>{
+module.exports = (client, Message, nMessage) =>{
 	//const svrconfig = require(`${basedir}/NCBot/UserData.json`);
 	async function WebHook(client,message,nMessage,logs) {
 		try{

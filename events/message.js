@@ -1,12 +1,9 @@
 module.exports = async (client, message) => {
-	if (message.author.bot || !message.channel.type == ("dm" || "text")) return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
+	if (message.author.bot || !message.channel.type == "text") return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
 	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content )
-	console.log(message); //Temp
-	if (!message.guild) {  //fake dstats for now
-		client.dStats.increment(`overlord.messages.${message.channel.id}`); //treats a dm channel as a 'guild'
-	} else {
-		client.dStats.increment(`overlord.messages.${message.guild.id}.${message.channel.id}`);
-	}
+
+	client.dStats.increment("overlord.messages"); 
+
 	/*check if the message has the command prefix
 	check if the command exists
 	check if the command requires a guild or not
@@ -23,7 +20,8 @@ module.exports = async (client, message) => {
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
 
-	let level = client.getLevel(message.author);
+	let level = client.getLevel(client,message);
+	client.log("log",`User ${message.author.name} has permission level: 4`,"getLevel");
 
 	const BotMentionRegEx = new RegExp(`^<@!?${client.user.id}>( |)$`);
 	if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx) && message.guild) { //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.

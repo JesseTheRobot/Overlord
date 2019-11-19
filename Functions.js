@@ -26,7 +26,7 @@ module.exports = (client) => {
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
-		console.log(client.guilds) //Temp:  
+		console.log(client.guilds);//Temp:  
 		client.dStats.increment("overlord.init");
 		client.DB.deleteAll();//Temp
 		if (client.guilds.size == 0) {
@@ -62,7 +62,7 @@ module.exports = (client) => {
 	 * @param  client 
 	 * @param  guild 
 	 */
-	client.vaidateGuild = (client, guild) => { //validates the DB entry for a guild
+	client.validateGuild = (client, guild) => { //validates the DB entry for a guild
 		//move pretty much all of the code above into here!
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
@@ -166,13 +166,13 @@ module.exports = (client) => {
 		let permlvl = 0;
 		const permLvls = client.config.permissionLevels;
 		while (permLvls.length) {
-			const currentLevel = permLvls.shift(); //shifts the array, removing the first (previously tested) value
-			if (currentLevel.check(client, message)) {
+			let currentLevel = permLvls.shift();
+			if (message.guild && currentLevel.guild) continue;
+			if (currentLevel.check(client, message)){
 				permlvl = currentLevel.level;
-				break;
 			}
 		}
-		return permlvl;//returns the user's permission level
+		return permlvl;
 	};
 
 	client.evalClean = async (client, text) => { //cleans output of the eval command, to prevent the token and other chars from causing issues.
