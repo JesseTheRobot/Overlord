@@ -16,12 +16,14 @@ module.exports = async (client, message) => {
 		console.log("command execution failed - system currently shutting down.");
 		message.react("🚫").then(() => { message.react("⏳"); });
 	}
-
+	
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
-
-	let level = client.getLevel(client,message);
-	client.log("log",`User ${message.author.name} has permission level: 4`,"getLevel");
+	//binds the guild's settings and the level of the user to the message object, for ease-of-access for later operations (eg commands)
+	message.settings = client.getGuildSettings(message.guild);  // eslint-disable-line 
+	message.level = client.getLevel(client,message); // eslint-disable-line 
+	
+	client.log("log",`User ${message.author} has permission level: ${message.level}`,"getLevel");
 
 	const BotMentionRegEx = new RegExp(`^<@!?${client.user.id}>( |)$`);
 	if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx) && message.guild) { //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.
