@@ -1,8 +1,23 @@
 module.exports = async (client, message) => {
 	if (message.author.bot || !message.channel.type == "text") return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
 	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content )
-
+	message.settings = client.getGuildSettings(message.guild);  // eslint-disable-line 
 	client.dStats.increment("overlord.messages"); 
+	if(message.attachments && message.settings.config.recordAttachments){
+		message.attachments.array().forEach(attachment =>{
+			client.download(attachment.url, {directory:"./cache"}, function(err){
+				if (err) client.log("ERROR",`download of attachment ${attachment.url} failed!`,"recordAttachments");
+				else{
+					console.log("download successful!");
+					new client.transfer(`./cache/${attachment.filename}`)
+						.upload()
+						.then( function (link) {console.log(link);})
+						.catch(function (err) { console.log(err); });
+				}
+			});
+		});
+		
+	}
 
 	/*check if the message has the command prefix
 	check if the command exists
@@ -20,7 +35,7 @@ module.exports = async (client, message) => {
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
 	//binds the guild's settings and the level of the user to the message object, for ease-of-access for later operations (eg commands)
-	message.settings = client.getGuildSettings(message.guild);  // eslint-disable-line 
+	
 	message.level = client.getLevel(client,message); // eslint-disable-line 
 	
 	client.log("log",`User ${message.author} has permission level: ${message.level}`,"getLevel");

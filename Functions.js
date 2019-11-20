@@ -266,7 +266,7 @@ module.exports = (client) => {
 			adminRoles: [], //used for Oauth Authentication to the web Dashboard
 			serverOwnerID: 0,
 			blockedChannels: [],
-
+			recordAttachments: true,
 			autoMod: {
 				bannedWords: [],
 				excludedRoles: [],

@@ -3,7 +3,6 @@ const config = {
 	protectedKeys: ["serverOwnerID", "config", "autoMod", "antiSpam"], //list of reserved settings keys that are immutable to command-base changes
 	token: "NTc2MzM3ODI2MTU3NjkwODkx.XNVCkg.Yyt4uTJi2FOYeaYPE6iOmIurrwI", //bot's Token
 	datadir: "./data", //data storage location for the ENMAP-SQLite backend
-
 	permissionLevels: [
 		{
 			level: 1,

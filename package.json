@@ -20,6 +20,7 @@
     "node-cmd": "^3.0.0",
     "node-gyp": "^4.0.0",
     "sqlite": "^3.0.3",
+    "transfer-sh": "^2.1.1",
     "util": "^0.12.1"
   },
   "devDependencies": {},
