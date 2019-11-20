@@ -4,19 +4,28 @@ module.exports = async (client, message) => {
 	message.settings = client.getGuildSettings(message.guild);  // eslint-disable-line 
 	client.dStats.increment("overlord.messages"); 
 	if(message.attachments && message.settings.config.recordAttachments){
-		message.attachments.array().forEach(attachment =>{
-			client.download(attachment.url, {directory:"./cache"}, function(err){
-				if (err) client.log("ERROR",`download of attachment ${attachment.url} failed!`,"recordAttachments");
+		message.attachments.array().forEach(att =>{
+			client.download(att.url, {directory:"./cache"}, function(err){
+				if (err) client.log("ERROR",`download of attachment ${att.url} failed!`,"recordAttachments");
 				else{
 					console.log("download successful!");
-					new client.transfer(`./cache/${attachment.filename}`)
+					new client.transfer(`./cache/${att.filename}`)
 						.upload()
-						.then( function (link) {console.log(link);})
+						.then( function (link) {console.log(link);
+							client.fs.unlink(`./cache/${att.filename}`, (err) => {
+								if (err) {
+									console.error(err);
+								}else{
+									console.log("Unlink successful!");
+								}
+							}); //write to DB, key:value with array of URL's for data as well as timestamp for deletion!
+								
+						})
 						.catch(function (err) { console.log(err); });
 				}
 			});
-		});
 		
+		});
 	}
 
 	/*check if the message has the command prefix

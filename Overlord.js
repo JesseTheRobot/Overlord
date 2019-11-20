@@ -1,11 +1,11 @@
 ﻿/**Dependancy Import and initialisation */
 console.time("init");
 const Discord = require("discord.js");
-const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 0, messageSweepInterval: 0, fetchAllMembers: true });
-const fs = require("fs");
-client.config = require("./config.js");
 const enmap = require("enmap");
+const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 0, messageSweepInterval: 0, fetchAllMembers: true });
+client.config = require("./config.js");
 client.isShuttingDown = false;
+client.fs = require("fs");
 client.diff = require("deep-object-diff").detailedDiff;
 client.transfer = require("transfer-sh");
 client.download = require("download-file");
