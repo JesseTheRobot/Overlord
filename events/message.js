@@ -26,6 +26,10 @@ module.exports = async (client, message) => {
 			});
 		});
 	}
+	const BotMentionRegEx = new RegExp(`^<@!?${client.user.id}>( |)$`);
+	if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx) && message.guild) { //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.
+		return message.author.send(`Hi there! ${message.author}, My prefix in guild ${message.guild.name} is ${prefix || "$"}.`); //sends (DM's) the user the Command Prefix for the guild, or the default prefix if anything "wonky" happens.
+	}
 
 	/*check if the message has the command prefix
 	check if the command exists
@@ -48,10 +52,7 @@ module.exports = async (client, message) => {
 
 	client.log("log", `User ${message.author} has permission level: ${message.level}`, "getLevel");
 
-	const BotMentionRegEx = new RegExp(`^<@!?${client.user.id}>( |)$`);
-	if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx) && message.guild) { //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.
-		return message.author.send(`Hi there! ${message.author}, My prefix in guild ${message.guild.name} is ${prefix || "$"}.`); //sends (DM's) the user the Command Prefix for the guild, or the default prefix if anything "wonky" happens.
-	}
+
 
 	//states ["ok/allowed":"✔️","Wait":"⏳","Block":"🚫"]
 
