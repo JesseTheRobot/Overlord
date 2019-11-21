@@ -9,7 +9,7 @@ client.fs = require("fs");
 client.diff = require("deep-object-diff").detailedDiff;
 client.transfer = require("transfer-sh");
 client.download = require("download-file");
-client.version = "0.1.9.18112019"; //release.major.minor.date
+client.version = "0.1.9.21112019"; //release.major.minor.date
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 /** assigns the client Object a New enmap instance ("DB") - */
 client.DB = new enmap({
