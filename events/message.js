@@ -20,7 +20,6 @@ module.exports = async (client, message) => {
 									console.log("Unlink successful!");
 								}
 							}); //write to DB, key:value with array of URL's for data as well as timestamp for deletion!
-							console.log(att);
 						})
 						.catch(function (err) { console.log(err); });
 				}
