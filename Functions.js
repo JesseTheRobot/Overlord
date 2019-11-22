@@ -131,7 +131,10 @@ module.exports = (client) => {
 		}
 
 	};
+	client.classify = (input, config) => {
 
+
+	}
 	client.reloadCommand = (commandName) => {
 		try {
 			delete require.cache[require.resolve(`${basedir}/${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
@@ -168,7 +171,7 @@ module.exports = (client) => {
 		while (permLvls.length) {
 			let currentLevel = permLvls.shift();
 			if (message.guild && currentLevel.guild) continue;
-			if (currentLevel.check(client, message)){
+			if (currentLevel.check(client, message)) {
 				permlvl = currentLevel.level;
 			}
 		}
@@ -267,6 +270,7 @@ module.exports = (client) => {
 			serverOwnerID: 0,
 			blockedChannels: [],
 			recordAttachments: true,
+			NSFWclassifier: false,
 			autoMod: {
 				bannedWords: [],
 				excludedRoles: [],

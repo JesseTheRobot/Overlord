@@ -13,6 +13,7 @@ module.exports = async (client, message) => {
 						.upload()
 						.then(function (link) {
 							console.log(link);
+							client.classify(att.filename, message.settings.config.NSFWclassifier)
 							client.fs.unlink(`./cache/${att.filename}`, (err) => {
 								if (err) {
 									console.error(err);
