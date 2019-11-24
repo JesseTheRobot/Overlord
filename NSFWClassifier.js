@@ -3,23 +3,35 @@ const load = require("nsfwjs").load;
 const fs = require("fs");
 const jpeg = require("jpeg-js");
 const NUMBER_OF_CHANNELS = 3;
-const { convert } = require("easyimage");
+const { Image, createCanvas } = require("canvas");
+const canvas = createCanvas(800, 600);
+const ctx = canvas.getContext("2d");
 
-const readImage = async (path) => {
-	console.log(path.split("."));
+
+
+
+async function loadLocalImage(filename) {
 	try {
-		await convert({
-			src: `./cache/${path}`,
-			dst: `./cache/processed/${path.split(".")[0]}.jpg`,
-		});
-	} catch (e) {
-		console.log("Error: ", e);
+		var img = new Image();
+		img.onload = () => ctx.drawImage(img, 0, 0);
+		img.onerror = err => { throw err; };
+		img.src = filename;
+		return tf.fromPixels(canvas);
+	} catch (err) {
+		console.log(err);
 	}
-	path = `./cache/processed/${path.split(".")[0]}.jpg`;
-	const buf = fs.readFileSync(path);
-	const pixels = jpeg.decode(buf, true);
-	return pixels;
+}
+
+
+const getImage = async (filename) => {
+	try {
+		this.image = await loadLocalImage(filename);
+	} catch (error) {
+		console.log("error loading image", error);
+	}
+	return this.image;
 };
+
 
 const imageByteArray = (image, numChannels) => {
 	const pixels = image.data;
@@ -47,7 +59,7 @@ load("file://./model/").then(model => {
 	fs.readdir("./cache", (err, images) => {
 		if (err) console.log(err);
 		images.forEach(img => {
-			readImage(img).then(pimg => {
+			getImage(img).then(pimg => {
 				let input = imageToInput(pimg, NUMBER_OF_CHANNELS);
 				model.classify(input).then(predictions => {
 					console.log(img);
