@@ -11,6 +11,7 @@
     "discord.js": "^11.5.1",
     "download-file": "^0.1.5",
     "enmap": "^4.8.7",
+    "get-image-data": "^4.1.0",
     "integer": "^2.1.0",
     "jpeg-js": "^0.3.6",
     "jsonfile": "^5.0.0",
