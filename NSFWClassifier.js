@@ -9,6 +9,8 @@ const NUMBER_OF_CHANNELS = 3;
 
 
 let imageGet = require("get-image-data");
+//to future me: check if the ImageByteArray can be done through get-image-data or not. if it can, use it!!
+
 
 
 const loadLocalImage = async (filename) => {
