@@ -1,11 +1,21 @@
-
 const tf = require("@tensorflow/tfjs-node");
 const load = require("nsfwjs").load;
 const fs = require("fs");
 const jpeg = require("jpeg-js");
 const NUMBER_OF_CHANNELS = 3;
+const { convert } = require("easyimage");
 
-const readImage = (path) => {
+const readImage = async (path) => {
+	console.log(path.split("."));
+	try {
+		await convert({
+			src: `./cache/${path}`,
+			dst: `./cache/processed/${path.split(".")[0]}.jpg`,
+		});
+	} catch (e) {
+		console.log("Error: ", e);
+	}
+	path = `./cache/processed/${path.split(".")[0]}.jpg`;
 	const buf = fs.readFileSync(path);
 	const pixels = jpeg.decode(buf, true);
 	return pixels;
@@ -34,17 +44,18 @@ const imageToInput = (image, numChannels) => {
 
 
 load("file://./model/").then(model => {
-	fs.readdir("./data", (err, images) => {
+	fs.readdir("./cache", (err, images) => {
 		if (err) console.log(err);
 		images.forEach(img => {
-			if (img.split(".")[1] == "jpg") {
-				let pimg = readImage(`./data/${img}`);
+			readImage(img).then(pimg => {
 				let input = imageToInput(pimg, NUMBER_OF_CHANNELS);
 				model.classify(input).then(predictions => {
 					console.log(img);
 					console.log(JSON.stringify(predictions));
 				});
-			}
+
+			});
+
 		});
 
 	});
