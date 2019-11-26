@@ -1,7 +1,6 @@
 const tf = require("@tensorflow/tfjs-node");
 const load = require("nsfwjs").load;
 const fs = require("fs");
-//to future me: check if the ImageByteArray can be done through get-image-data or not. if it can, use it!!
 
 const readImage = path => {
 	const imageBuffer = fs.readFileSync(path);
@@ -14,8 +13,8 @@ load("file://./model/").then(model => {
 		if (err) console.log(err);
 		images.forEach(img => {
 			var image = readImage(`./cache/${img}`)
-			model.classify(image).then(predictions => {
-				console.log(JSON.stringify(predictions));
+			model.classify(image, 1).then(predictions => {
+				console.log(`${img}: ${predictions[0].className} with probability ${predictions[0].probability}`);
 			});
 		});
 	});
