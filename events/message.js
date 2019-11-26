@@ -9,7 +9,7 @@ module.exports = async (client, message) => {
 				if (err) client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
 				else {
 					console.log("download successful!");
-					new client.transfer(`./cache/${att.filename}`)
+					new client.transfer(`./cache/${att.filename}`, filename: `${message.id + "." + att.url.split("/").pop().split(".")[1]}`)
 						.upload()
 						.then(function (link) {
 							console.log(link);
