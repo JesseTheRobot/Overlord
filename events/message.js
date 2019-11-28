@@ -5,16 +5,17 @@ module.exports = async (client, message) => {
 	client.dStats.increment("overlord.messages");
 	if (message.attachments && message.settings.config.recordAttachments && message.guild) {
 		message.attachments.array().forEach(att => {
-			client.download(att.url, { directory: "./cache" }, function (err) {
+			var filename = message.id + "." + att.url.split("/").pop().split(".")[1]
+			client.download(att.url, { directory: "./cache", filename: filename }, function (err) {
 				if (err) client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
 				else {
 					console.log("download successful!");
-					new client.transfer(`./cache/${att.filename}`, filename: `${message.id + "." + att.url.split("/").pop().split(".")[1]}`)
+					new client.transfer(`./cache/${filename}`)
 						.upload()
 						.then(function (link) {
 							console.log(link);
-							client.classify(att.filename, message.settings.config.NSFWclassifier)
-							client.fs.unlink(`./cache/${att.filename}`, (err) => {
+							client.classify(filename, message.settings.config.NSFWclassifier)
+							client.fs.unlink(`./cache/${filename}`, (err) => {
 								if (err) {
 									console.error(err);
 								} else {

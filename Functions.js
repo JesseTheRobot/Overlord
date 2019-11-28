@@ -270,7 +270,11 @@ module.exports = (client) => {
 			serverOwnerID: 0,
 			blockedChannels: [],
 			recordAttachments: true,
-			NSFWclassifier: false,
+			NSFWclassifier: {
+				enabled: true,
+				threshold: 0.7,
+
+			},
 			autoMod: {
 				bannedWords: [],
 				excludedRoles: [],
