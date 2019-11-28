@@ -15,7 +15,7 @@ load("file://./model/").then(model => {
 			var image = readImage(`./cache/${img}`)
 			model.classify(image, 1).then(predictions => {
 				console.log(`${img}: ${predictions[0].className} with probability ${predictions[0].probability}`);
-			});
+			}).catch(function (err) { console.log(err); })
 		});
 	});
 });
