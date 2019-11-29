@@ -156,6 +156,9 @@ module.exports = (client) => {
 	client.writeSettings = (guildID, settings) => {
 		client.DB.set(guildID, settings); //"messy" write, TODO: change to element specific write rather than rewriting the *entire* DB
 	};
+	client.attHandler = async (client, message) => {
+		//move the code from the message handler into here, use the performant caching to go faaassstt
+	}
 
 	client.checkBlacklist = (client, message) => {
 
@@ -266,11 +269,15 @@ module.exports = (client) => {
 			welcomeMsg: "Welcome {{user}} to {{guild.name}}!",
 			welcomeChan: 0,
 			modRoles: [],
-			adminRoles: [], //used for Oauth Authentication to the web Dashboard
+			adminRoles: [],
 			serverOwnerID: 0,
 			blockedChannels: [],
 			recordAttachments: true,
-			NSFWclassifier: false,
+			NSFWclassifier: {
+				enabled: true,
+				threshold: 0.7,
+				categories: ["hentai", "porn", "sexy"]
+			},
 			autoMod: {
 				bannedWords: [],
 				excludedRoles: [],
