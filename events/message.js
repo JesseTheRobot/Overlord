@@ -3,15 +3,16 @@ module.exports = async (client, message) => {
 	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content )
 	message.settings = client.getGuildSettings(message.guild);  // eslint-disable-line 
 	client.dStats.increment("overlord.messages");
+
 	if (message.attachments && message.guild) {
 		message.attachments.array().forEach(att => {
-			var filename = message.id + "." + att.url.split("/").pop().split(".")[1]
+			var filename = message.id + "." + att.url.split("/").pop().split(".")[1];
 			client.download(att.url, { directory: "./cache", filename: filename }, function (err) {
 				if (err) client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
 				else {
 					console.log("download successful!");
 					if (message.settings.config.NSFWclassifier.enabled) {
-						client.classify(filename, message.settings.config.NSFWclassifier)
+						client.classify(filename, message.settings.config.NSFWclassifier);
 					}
 					if (message.settings.config.recordAttachments) {
 						new client.transfer(`./cache/${filename}`)
