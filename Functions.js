@@ -273,33 +273,42 @@ module.exports = (client) => {
 			serverOwnerID: 0,
 			blockedChannels: [],
 			recordAttachments: true,
-			NSFWclassifier: {
-				enabled: true,
-				threshold: 0.7,
-				categories: ["hentai", "porn", "sexy"]
-			},
-			autoMod: {
-				bannedWords: [],
-				excludedRoles: [],
-				percentCaps: 0,
-				floodPercentLimit: 0,
-				decay: 30000,
-				antiSpam: {
-					interval: 2000,
-					count: 2,
+
+			commands: {
+				toxicityClassifier: {
+					enabled: true,
+					
 				},
-				penalties: {
-					spam: 1,
-					bannedWord: 2,
-					repeatOffenceMultiplier: 0.1,
-					repeatOffenceTimeout: 10000
+				NSFWclassifier: {
+					enabled: true,
+					threshold: 0.7,
+					categories: ["hentai", "porn", "sexy"]
 				},
-				punishments: {
-					5: "mute",
-					10: "tempBan",
-					15: "ban",
-				}
+				autoMod: {
+					bannedWords: [],
+					excludedRoles: [],
+					percentCaps: 0,
+					floodPercentLimit: 0,
+					decay: 30000,
+					antiSpam: {
+						interval: 2000,
+						count: 2,
+					},
+					penalties: {
+						spam: 1,
+						bannedWord: 2,
+						repeatOffenceMultiplier: 0.1,
+						repeatOffenceTimeout: 10000
+					},
+					punishments: {
+						5: "mute",
+						10: "tempBan",
+						15: "ban",
+					}
+				},
+
 			},
+
 		},
 		persistence: {
 			messages: {},
