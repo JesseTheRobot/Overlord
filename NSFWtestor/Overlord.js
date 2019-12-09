@@ -6,29 +6,14 @@ const fs = require("fs");
 const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 0, messageSweepInterval: 0, fetchAllMembers: true });
 client.download = require("download-to-file");
 
-
-/*const readImage = (path) => {
-	try {
-		const imageBuffer = fs.readFileSync(path);
-		const tfimage = tf.node.decodeImage(imageBuffer, undefined, undefined, false);
-		return tfimage;
-	} catch (err) { console.log(err) }
-}*/
-
 client.on("ready", () => {
 	console.log("ready!")
 	fs.readdir("./cache", (err, images) => {
 		if (err) console.log(err);
 		images.forEach(img => {
-			console.log(img)
 			classifier(client, img, "test").then(predictions => {
-				console.log(predictions)
-			}).catch(function (err) {
-				console.log(err);
-				console.error("Error Parsing Content")
-				//message.react("❌")
-			});
-
+				console.log(`${img}: ${predictions[0].className} with probability ${predictions[0].probability}`)
+			})
 		})
 	})
 })
@@ -44,26 +29,19 @@ initmodel(client).then(() => {
 
 var classifier = async (client, img, message) => {
 	return new Promise(resolve => {
-		const imageBuffer = fs.readFileSync(`./cache/${img}`);
-		let image = tf.node.decodeImage(imageBuffer, undefined, undefined, false);
-		image = tf.image.resizeBilinear(image, [299, 299], true)
-		image = image.reshape([1, 299, 299, 3])
-		console.log(image)
-		console.log(`image size check: ${image.size == 268203}`)
-		client.model.classify(image).then(predictions => {
-			//console.log(`img: ${img}, ${JSON.stringify(predictions)}`)
-			//message.reply(`${img}: ${predictions[0].className} with probability ${predictions[0].probability}`)
-			resolve(predictions)
-		})
-
+		try {
+			const imageBuffer = fs.readFileSync(`./cache/${img}`);
+			const image = tf.node.decodeImage(imageBuffer, 3, undefined, false);
+			client.model.classify(image).then(predictions => {
+				resolve(predictions)
+			})
+		} catch (err) {
+			console.error(err)
+		}
 	})
-
 }
 
-
-
 client.on("message", async (message) => {
-	console.log(message.content)
 	console.log(message)
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1]
@@ -75,11 +53,24 @@ client.on("message", async (message) => {
 				console.log(fname)
 				classifier(client, fname, message).then(predictions => {
 					console.log(predictions)
-					message.channel.send(`predictions:${fname}: ${predictions[0].className} with probability ${predictions[0].probability}`)
+					let preL = []
+					predictions.forEach(p => {
+						preL.push(`${p.className} Certainty: ${Math.round(p.probability * 100)}%\n`)
+					})
+					function Type(p) { if (p[0].className == "Porn" || p[0].className == "Hentai") { return "NSFW ❌"; } else { return "SFW ✅"; } }
+					const exampleEmbed = new Discord.RichEmbed()
+						.setColor('#0099ff')
+						.setTitle('Image Classification result')
+						.setAuthor(`${client.user.username}`)
+						.setImage(`${att.url}`)
+						.addField(`Classified as ${preL[0]}`, `${Type(predictions)}`)
+						.addField("Full classification classes:", `${preL.join(` `)} `)
+						.setTimestamp()
+						.setFooter('cool and good');
+					message.channel.send(exampleEmbed)
 				}).catch(function (err) {
-					console.log(err);
+					console.log(err)
 					console.error("Error Parsing Content")
-					//message.react("❌")
 				});
 			}
 
