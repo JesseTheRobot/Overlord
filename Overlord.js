@@ -9,8 +9,12 @@ client.fs = require("fs");
 client.diff = require("deep-object-diff").detailedDiff;
 client.transfer = require("transfer-sh");
 client.download = require("download-file");
+client.tf = require("@tensorflow/tfjs-node");
 client.version = "0.1.9.21112019"; //release.major.minor.date
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
+async (client) => {
+	client.model = await require("nsfwjs").load("file://./model/", { size: 299 }); //load NN for NSFW detection
+};
 /** assigns the client Object a New enmap instance ("DB") - */
 client.DB = new enmap({
 	name: "DB",
