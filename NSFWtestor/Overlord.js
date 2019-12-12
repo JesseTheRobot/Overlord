@@ -11,7 +11,7 @@ client.on("ready", () => {
 	fs.readdir("./cache", (err, images) => {
 		if (err) console.log(err);
 		images.forEach(img => {
-			classifier(client, img, "test").then(predictions => {
+			classifier(client, img).then(predictions => {
 				console.log(`${img}: ${predictions[0].className} with probability ${predictions[0].probability}`);
 			});
 		});
@@ -19,7 +19,9 @@ client.on("ready", () => {
 });
 
 var initmodel = async (client) => {
-	client.model = await load("file://./model/", { size: 299 });
+	client.NSFWmodel = await load("file://./models/NSFW/model.json", { size: 299 });
+	client.toxicModel = await require("@tensorflow-models/toxicity").load("file://./models/toxic/model.json"); //load NN for Toxicity
+	console.log("models loaded!");
 };
 
 initmodel(client).then(() => {
@@ -27,12 +29,12 @@ initmodel(client).then(() => {
 });
 
 
-var classifier = async (client, img, message) => {
+var classifier = async (client, img) => {
 	return new Promise(resolve => {
 		try {
 			const imageBuffer = fs.readFileSync(`./cache/${img}`);
 			const image = tf.node.decodeImage(imageBuffer, 3, undefined, false);
-			client.model.classify(image).then(predictions => {
+			client.NSFWmodel.classify(image).then(predictions => {
 				resolve(predictions);
 			});
 		} catch (err) {
@@ -43,6 +45,9 @@ var classifier = async (client, img, message) => {
 
 client.on("message", async (message) => {
 	console.log(message);
+	client.toxicModel.classify(message.content).then(predictions => {
+		console.log(predictions);
+	});
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, `./cache/${fname}`, function (err, filepath) {
@@ -51,7 +56,7 @@ client.on("message", async (message) => {
 			} else {
 				console.log("Download finished:", filepath);
 				console.log(fname);
-				classifier(client, fname, message).then(predictions => {
+				classifier(client, fname).then(predictions => {
 					console.log(predictions);
 					let preL = [];
 					predictions.forEach(p => {
