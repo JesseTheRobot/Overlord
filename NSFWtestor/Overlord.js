@@ -19,9 +19,9 @@ client.on("ready", () => {
 });
 
 var initmodel = async (client) => {
-	client.NSFWmodel = await load("file://./models/NSFW/model.json", { size: 299 });
-	client.toxicModel = await require("@tensorflow-models/toxicity").load("file://./models/toxic/model.json"); //load NN for Toxicity
-	console.log("models loaded!");
+	client.NSFWmodel = await load("file://./models/NSFW/", { size: 299 });
+	client.toxicModel = await require("@tensorflow-models/toxicity").load("file://./models/toxic/"); //load NN for Toxicity
+	console.log("Models loaded!");
 };
 
 initmodel(client).then(() => {
@@ -43,11 +43,24 @@ var classifier = async (client, img) => {
 	});
 };
 
+
+const toxicClassify = async (inputs) => {
+	const results = await client.toxicModel.classify(inputs);
+
+	return inputs.map((d, i) => {
+		const obj = { 'text': d };
+		results.forEach((classification) => {
+			obj[classification.label] = classification.results[i].match;
+		});
+		return obj;
+	});
+};
+
 client.on("message", async (message) => {
 	console.log(message);
-	client.toxicModel.classify(message.content).then(predictions => {
-		console.log(predictions);
-	});
+	toxicClassify(message).then(res => {
+		console.log(res);
+	})
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, `./cache/${fname}`, function (err, filepath) {
