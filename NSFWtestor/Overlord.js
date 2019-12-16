@@ -17,22 +17,22 @@ client.on("ready", () => {
 		});
 	});
 });
-
+/**
+ * Loads TF GraphModels for NSFW and Toxicity detection.
+ * @param  client 
+ */
 var initmodel = async (client) => {
 	client.NSFWmodel = await load("file://./models/NSFW/", { size: 299 });
-	client.toxicModel = await toxicity.load(); //load NN for Toxicity
-	client.EXPtoxicModel = new toxicity.ToxicityClassifier;
-	client.EXPtoxicModel.loadModel = () => {
+	client.toxicModel = new toxicity.ToxicityClassifier;
+	client.toxicModel.loadModel = () => { //overwrite default LoadModel method due to *hard coded* reliance on web-based model files. I didn't like this so I made it use local files instead.
 		return require("@tensorflow/tfjs-converter").loadGraphModel("file://./models/toxic/model.json");
 	};
-	await client.EXPtoxicModel.load();
-	console.log(client);
+	await client.toxicModel.load();
 	console.log("Models loaded!");
 };
 
 initmodel(client).then(() => {
 	client.login("NjQ4OTU5OTU5NDg4Mzk3MzMy.Xd11Kw.dHib7KEW6nczwGqMs3GUAWmNb3g");
-	client.EXPtoxicModel.classify("asodfadsgijamdsfoijdsafjsadfjasdfjsamfqwjvmfdsfavawvfmafjv");
 });
 
 
@@ -57,8 +57,14 @@ const toxicClassify = async (inputs) => {
 
 client.on("message", async (message) => {
 	console.log(message);
-	toxicClassify(message).then(res => {
-		console.log(res);
+	var classi = []
+	toxicClassify(message).then(results => {
+		results.forEach(res => {
+			{ }
+			classi.push()
+
+
+		})
 	});
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
