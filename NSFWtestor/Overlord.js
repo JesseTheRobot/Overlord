@@ -19,8 +19,8 @@ client.on("ready", () => {
 });
 
 var initmodel = async (client) => {
-	client.NSFWmodel = await load("file://./models/NSFW/", { size: 299 });
-	client.toxicModel = await require("@tensorflow-models/toxicity").load("file://./models/toxic/"); //load NN for Toxicity
+	//client.NSFWmodel = await load("file://./models/NSFW/", { size: 299 });
+	client.toxicModel = await require("@tensorflow-models/toxicity").load("file://./models/Toxic/model.json"); //load NN for Toxicity
 	console.log("Models loaded!");
 };
 
@@ -46,14 +46,7 @@ var classifier = async (client, img) => {
 
 const toxicClassify = async (inputs) => {
 	const results = await client.toxicModel.classify(inputs);
-
-	return inputs.map((d, i) => {
-		const obj = { 'text': d };
-		results.forEach((classification) => {
-			obj[classification.label] = classification.results[i].match;
-		});
-		return obj;
-	});
+	console.log(results)
 };
 
 client.on("message", async (message) => {
