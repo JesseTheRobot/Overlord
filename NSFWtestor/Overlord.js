@@ -46,21 +46,13 @@ var classifier = async (client, img) => {
 
 const toxicClassify = async (inputs) => {
 	const results = await client.toxicModel.classify(inputs);
-
-	return inputs.map((d, i) => {
-		const obj = { 'text': d };
-		results.forEach((classification) => {
-			obj[classification.label] = classification.results[i].match;
-		});
-		return obj;
-	});
 };
 
 client.on("message", async (message) => {
 	console.log(message);
 	toxicClassify(message).then(res => {
 		console.log(res);
-	})
+	});
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, `./cache/${fname}`, function (err, filepath) {
