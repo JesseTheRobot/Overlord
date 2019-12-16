@@ -5,7 +5,7 @@ const load = require("nsfwjs").load;
 const fs = require("fs");
 const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 0, messageSweepInterval: 0, fetchAllMembers: true });
 client.download = require("download-to-file");
-
+var toxicity = require("@tensorflow-models/toxicity");
 client.on("ready", () => {
 	console.log("ready!");
 	fs.readdir("./cache", (err, images) => {
@@ -20,12 +20,19 @@ client.on("ready", () => {
 
 var initmodel = async (client) => {
 	client.NSFWmodel = await load("file://./models/NSFW/", { size: 299 });
-	client.toxicModel = await require("@tensorflow-models/toxicity").load("file://./models/toxic/"); //load NN for Toxicity
+	client.toxicModel = await toxicity.load(); //load NN for Toxicity
+	client.EXPtoxicModel = new toxicity.ToxicityClassifier;
+	client.EXPtoxicModel.loadModel = () =>{
+		return require("@tensorflow/tfjs-converter").loadGraphModel("file://./models/toxic/model.json"); 
+	};
+	await client.EXPtoxicModel.load();
+	console.log(client);
 	console.log("Models loaded!");
 };
 
 initmodel(client).then(() => {
 	client.login("NjQ4OTU5OTU5NDg4Mzk3MzMy.Xd11Kw.dHib7KEW6nczwGqMs3GUAWmNb3g");
+	client.EXPtoxicModel.classify("asodfadsgijamdsfoijdsafjsadfjasdfjsamfqwjvmfdsfavawvfmafjv");
 });
 
 
