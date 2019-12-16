@@ -53,10 +53,6 @@ var classifier = async (client, img) => {
 
 const toxicClassify = async (inputs) => {
 	const results = await client.toxicModel.classify(inputs);
-<<<<<<< HEAD
-	console.log(results)
-=======
->>>>>>> 459128d09dbf09693b7637ab40777297039a1412
 };
 
 client.on("message", async (message) => {
