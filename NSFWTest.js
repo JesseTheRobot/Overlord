@@ -56,7 +56,7 @@ const toxicClassify = async (inputs) => {
 };
 
 client.on("message", async (message) => {
-	console.log(message);
+	console.log(message.content);
 	var classi = [];
 	toxicClassify(message).then(results => {
 		results.forEach(res => {
