@@ -57,14 +57,12 @@ const toxicClassify = async (inputs) => {
 
 client.on("message", async (message) => {
 	console.log(message);
-	var classi = []
 	toxicClassify(message).then(results => {
-		results.forEach(res => {
-			{ }
-			classi.push()
+		var farray = results.map(val => {
+			return val;
 
 
-		})
+		});
 	});
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
