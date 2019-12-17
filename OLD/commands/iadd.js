@@ -14,7 +14,7 @@ exports.run = (client, message, args, basedir) => {
 				console.log("File saved to", filename);
 				console.log((filename.split("/").slice(-1)).slice(0,-3));
 				message.reply(`command added. use ${(filename.split("/").slice(-1)).slice(0,-3)} to invoke it!`);
-				return; 
+
 			});
 	} 
 	try{
@@ -46,7 +46,7 @@ exports.run = (client, message, args, basedir) => {
 				console.log(`${message.author.username} attempted to create a new command whose name is already in use.`);
 				console.log((file.slice(0,-4) != args[0])||(file.slice(0,-4)!=args[1]));
 				duplicate = true;
-				return;
+
 			}else{
 				iter += 1;
 			}
