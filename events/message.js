@@ -1,6 +1,11 @@
 module.exports = async (client, message) => {
+
 	if (message.author.bot || !message.channel.type == "text") return; //ignores all messages from other bots or from non-text channels, EG custom 'news' channels in some servers, or storefront pages, etc.
-	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content )
+	if (client.isShuttingDown) { //checks if the bot is currently undergoing a shutdown. if so, interdicts all further processing.
+		message.react("🚫").then(() => { message.react("⏳"); });
+		return
+	}
+	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content)
 	message.settings = client.getGuildSettings(message.guild);  // eslint-disable-line 
 	client.dStats.increment("overlord.messages");
 
@@ -46,10 +51,7 @@ module.exports = async (client, message) => {
 	*/
 	//check command
 
-	if (client.isShuttingDown == true) { //checks if the bot is currently undergoing a shutdown. if so, interdicts all further processing.
-		console.log("command execution failed - system currently shutting down.");
-		message.react("🚫").then(() => { message.react("⏳"); });
-	}
+
 
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
