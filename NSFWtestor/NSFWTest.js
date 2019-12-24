@@ -33,6 +33,10 @@ var initmodel = async (client) => {
 
 initmodel(client).then(() => {
 	client.login("NjQ4OTU5OTU5NDg4Mzk3MzMy.Xd11Kw.dHib7KEW6nczwGqMs3GUAWmNb3g");
+	const used = process.memoryUsage();
+	for (let key in used) {
+		console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+	}
 });
 
 
@@ -57,7 +61,7 @@ const toxicClassify = async (inputs) => {
 
 client.on("message", async (message) => {
 	console.log(message.content);
-	var classi = [];
+	/*var classi = [];
 	toxicClassify(message).then(results => {
 		results.forEach(res => {
 			{ }
@@ -65,7 +69,7 @@ client.on("message", async (message) => {
 
 
 		})
-	});
+	});*/
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, `./cache/${fname}`, function (err, filepath) {
