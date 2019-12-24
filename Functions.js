@@ -227,31 +227,6 @@ module.exports = (client) => {
 		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 	};
 
-	/** used to gracefully shutdown the bot, ensuring all current operations are completed successfully and inhibiting new operations from occuring
-	* used an operation 'locking' file (SHUTDOWN.txt) that if present prevents any new commands from being executed. 
- 	* also uses setImmediate to wait for any I/O operations to prevent things such as DB corruption etc.
- 	*/
-	client.gracefulShutdown = () => {
-		fs.writeFile(`${basedir}\\SHUTDOWN.txt`, "SHUTDOWN", { flag: "w" }, function (err) {
-			if (err) console.log(err);
-			console.log("Successfully Written Shutdown File.");
-		});
-		setImmediate(() => {// goodnight, sweet prince.
-			process.exit(0);
-		});
-
-	};
-
-	process
-		.on("SIGINT", function () { //unix SIGINT graceful PM2 app shutdown.
-			client.gracefulShutdown();
-		})
-		.on("message", (msg) => {//Windows "message" graceful PM2 app shutdown. 
-			if (msg == "shutdown") {
-				client.gracefulShutdown();
-			}
-		});
-
 	client.defaultConfig = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development rn.
 		commands: {
 			"help": {
@@ -277,7 +252,7 @@ module.exports = (client) => {
 			commands: {
 				toxicityClassifier: {
 					enabled: true,
-					
+
 				},
 				NSFWclassifier: {
 					enabled: true,
