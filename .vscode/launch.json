@@ -4,19 +4,17 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
-
         {
             "type": "node",
             "request": "launch",
             "name": "RunTest",
-            "program" :"${workspaceFolder}/Test.js"
+            "program": "${workspaceFolder}/Test.js"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "RunBot",
-            "program" :"${workspaceFolder}/Overlord.js"
+            "program": "${workspaceFolder}/Overlord.js"
         },
         {
             "type": "node",
@@ -24,6 +22,14 @@
             "name": "Launch current file",
             "program": "${file}"
         },
-
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Profile Current File",
+            "program": "${file}",
+            "args": [
+                "--prof",
+            ]
+        }
     ]
 }

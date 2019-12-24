@@ -273,7 +273,17 @@ module.exports = (client) => {
 			serverOwnerID: 0,
 			blockedChannels: [],
 			recordAttachments: true,
-			modules: {
+
+			commands: {
+				toxicityClassifier: {
+					enabled: true,
+					
+				},
+				NSFWclassifier: {
+					enabled: true,
+					threshold: 0.7,
+					categories: ["hentai", "porn", "sexy"]
+				},
 				autoMod: {
 					bannedWords: [],
 					excludedRoles: [],
@@ -296,27 +306,9 @@ module.exports = (client) => {
 						15: "ban",
 					}
 				},
-				NSFWclassifier: {
-					enabled: true,
-					threshold: 0.7,
-					NSFWcategories: ["hentai", "porn", "sexy"],
-					autoremoval: {
-						enabled: true,
-						threshold: 0.8,
-						notifyUser: true
-					}
-				},
-				attatchmentRecorder: {
-					enabled: true,
-				},
-				toxicityDetector: {
-					enabled: true,
-					classes: ["", ""],
-
-
-				}
 
 			},
+
 		},
 		persistence: {
 			messages: {},
