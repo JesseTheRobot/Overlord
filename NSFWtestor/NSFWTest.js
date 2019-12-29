@@ -59,8 +59,16 @@ const toxicClassify = async (inputs) => {
 	const results = await client.toxicModel.classify(inputs);
 };
 
+client.on('raw', packet => {
+	console.log(packet)
+	//if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
+	//const channel = client.channels.get(packet.d.channel_id);
+
+})
+
 client.on("message", async (message) => {
 	console.log(message.content);
+	let chan = client.channels.get(message.channel.id)
 	/*var classi = [];
 	toxicClassify(message).then(results => {
 		results.forEach(res => {
