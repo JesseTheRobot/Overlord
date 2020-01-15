@@ -58,6 +58,10 @@ function gracefulShutdown() {
  */
 setInterval(() => { if (client.isShuttingDown == true) { gracefulShutdown(); } }, 5000);
 
+
+/**
+ * every 12000 seconds, clears out the loaded database keys to help reduce the memory footprint of the bot.
+ */
 setInterval(() => { client.DB.evict(client.DB.keyArray()) }, 12000)
 
 /** PM2 SIGINT and Message handling for invoking a graceful shutdown through PM2 on both UNIX and windows systems */
@@ -82,7 +86,8 @@ client
 	.on("disconnect", (event) => {
 		console.error(event);
 		client.isShuttingDown = true; /**this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this (note: requires PM2 to restart the process).
-										*this seems dumb, like why not just use an event emitter? well, it means I can easily block commands from processing by just cehcking the value of this variable in the message event handler. otherwise I would've used an Emitter.
+										*this seems dumb, like why not just use an event emitter? well, it means I can easily block commands from processing by just checking the value of this variable in the message event handler (as client is a pseudo-global scope). 
+										*otherwise I would've used an Emitter.
 										*/
 	});
 
