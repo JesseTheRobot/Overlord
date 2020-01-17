@@ -51,18 +51,20 @@ var classifier = async (client, img) => {
 };
 
 
-const toxicClassify = async (inputs) => {
-	const results = await client.toxicModel.classify(inputs);
+const toxicClassify = async (input) => {
+	const results = await client.toxicModel.classify(input);
+	// 
 };
 
 client.on("message", async (message) => {
 	console.log(message);
-	toxicClassify(message).then(results => {
-		var farray = results.map(val => {
+	toxicClassify(message.cleanContent).then(results => {
+		console.log(results);
+		/*var farray = results.map(val => {
 			return val;
 
 
-		});
+		});*/
 	});
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
