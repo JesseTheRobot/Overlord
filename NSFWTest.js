@@ -3,19 +3,19 @@ const Discord = require("discord.js");
 const tf = require("@tensorflow/tfjs-node");
 const load = require("nsfwjs").load;
 const fs = require("fs");
-const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 0, messageSweepInterval: 0, fetchAllMembers: true });
+const client = new Discord.Client({ autoReconnect: true });
 client.download = require("download-to-file");
 var toxicity = require("@tensorflow-models/toxicity");
 client.on("ready", () => {
 	console.log("ready!");
-	fs.readdir("./cache", (err, images) => {
+	/*fs.readdir("./cache", (err, images) => {
 		if (err) console.log(err);
 		images.forEach(img => {
 			classifier(client, img).then(predictions => {
 				console.log(`${img}: ${predictions[0].className} with probability ${predictions[0].probability}`);
 			});
 		});
-	});
+	});*/
 });
 /**
  * Loads TF GraphModels for NSFW and Toxicity detection.
@@ -31,9 +31,6 @@ var initmodel = async (client) => {
 	console.log("Models loaded!");
 };
 
-initmodel(client).then(() => {
-	client.login("NjQ4OTU5OTU5NDg4Mzk3MzMy.Xd11Kw.dHib7KEW6nczwGqMs3GUAWmNb3g");
-});
 
 
 var classifier = async (client, img) => {
@@ -53,14 +50,15 @@ var classifier = async (client, img) => {
 
 const toxicClassify = async (input) => {
 	const results = await client.toxicModel.classify(input);
-	// 
+
 };
 
 client.on("message", async (message) => {
+	message.content = message.cleanContent;
 	console.log(message.content);
 	var classi = [];
 	console.log(message);
-	toxicClassify(message.cleanContent).then(results => {
+	client.toxicModel.classify(message.cleanContent).then(results => {
 		console.log(results);
 		/*var farray = results.map(val => {
 			return val;
@@ -101,4 +99,8 @@ client.on("message", async (message) => {
 
 		});
 	});
+});
+
+initmodel(client).then(() => {
+	client.login("NjQ4OTU5OTU5NDg4Mzk3MzMy.Xd11Kw.dHib7KEW6nczwGqMs3GUAWmNb3g");
 });
