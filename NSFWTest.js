@@ -54,17 +54,17 @@ const toxicClassify = async (input) => {
 };
 
 client.on("message", async (message) => {
+	if (message.author.bot) return;
 	message.content = message.cleanContent;
 	console.log(message.content);
 	var classi = [];
-	console.log(message);
 	client.toxicModel.classify(message.cleanContent).then(results => {
-		console.log(results);
-		/*var farray = results.map(val => {
-			return val;
-
-
-		});*/
+		console.log(...results);
+		results.forEach(result => {
+			classi.push({ type: result.label, certainty: Math.round(result.results[0].probabilities[1] * 100) });
+		});
+		console.log(...classi);
+		message.reply(classi[6].certainty);
 	});
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];

@@ -15,10 +15,10 @@ client.version = "0.1.9.21112019"; //release.major.minor.date
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 
 async (client) => {//loads Models into memory
-	if (!config.enableModels) return;
+	if (!client.config.enableModels) return;
 	var toxicity = require("@tensorflow-models/toxicity");
-	client.NSFWmodel = await require("nsfwjs").load("file://./models/NSFW/", { size: 299 });
-	client.toxicModel = new toxicity.ToxicityClassifier;
+	client.NSFWmodel = await require("nsfwjs").load("file://./models/NSFW/", { size: 299 }); //eslint-disable-line
+	client.toxicModel = new toxicity.ToxicityClassifier; //eslint-disable-line
 	client.toxicModel.loadModel = () => { //overwrite default LoadModel method due to *hard coded* reliance on web-based model files. I didn't like this so I made it use local files instead.
 		return require("@tensorflow/tfjs-converter").loadGraphModel("file://./models/toxic/model.json");
 	};
@@ -62,7 +62,7 @@ setInterval(() => { if (client.isShuttingDown == true) { gracefulShutdown(); } }
 /**
  * every 12000 seconds, clears out the loaded database keys to help reduce the memory footprint of the bot.
  */
-setInterval(() => { client.DB.evict(client.DB.keyArray()) }, 12000)
+setInterval(() => { client.DB.evict(client.DB.keyArray()); }, 12000);
 
 /** PM2 SIGINT and Message handling for invoking a graceful shutdown through PM2 on both UNIX and windows systems */
 process
