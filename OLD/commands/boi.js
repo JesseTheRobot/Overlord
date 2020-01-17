@@ -52,7 +52,7 @@ exports.run = ( (client, message, args, basedir) =>{
 						}],
 						timestamp: new Date(),
 					}});
-					return;
+
 				}
 			}
 		} else if (tdelta.length == 0 && args[0]!= "charge") {

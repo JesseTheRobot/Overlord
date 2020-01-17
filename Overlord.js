@@ -2,7 +2,7 @@
 console.time("init");
 const Discord = require("discord.js");
 const enmap = require("enmap");
-const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 0, messageSweepInterval: 0, fetchAllMembers: true });
+const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 900, messageSweepInterval: 100, disabledEvents: [""] });
 client.config = require("./config.js");
 client.isShuttingDown = false;
 client.fs = require("fs");
@@ -13,9 +13,17 @@ client.tf = require("@tensorflow/tfjs-node");
 client.version = "0.1.9.21112019"; //release.major.minor.date
 
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
-async (client) => {
-	client.NSFWModel = await require("nsfwjs").load("file://./model/", { size: 299 }); //load NN for NSFW detection
-	client.toxicModel = await require("@tensorflow-models/toxicity").load(); //load NN for Toxicity
+
+async (client) => {//loads Models into memory
+	if (!config.enableModels) return;
+	var toxicity = require("@tensorflow-models/toxicity");
+	client.NSFWmodel = await require("nsfwjs").load("file://./models/NSFW/", { size: 299 });
+	client.toxicModel = new toxicity.ToxicityClassifier;
+	client.toxicModel.loadModel = () => { //overwrite default LoadModel method due to *hard coded* reliance on web-based model files. I didn't like this so I made it use local files instead.
+		return require("@tensorflow/tfjs-converter").loadGraphModel("file://./models/toxic/model.json");
+	};
+	await client.toxicModel.load();
+	console.log("Models loaded!");
 };
 /** assigns the client Object a New enmap instance ("DB") - */
 client.DB = new enmap({
@@ -28,7 +36,7 @@ client.DB = new enmap({
 
 /**optional debug system to monitor any/all changes to the ENMAP Database */
 client.DB.changed((Key, Old, New) => {
-	console.log(JSON.stringify(client.diff(Old, New)));
+	console.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
 	client.dStats.increment("overlord.databaseChange"); //reports to dStats for load statistics
 });
 
@@ -42,17 +50,23 @@ require("./Functions.js")(client);
  */
 function gracefulShutdown() {
 	client.log("System", "Successfully Received Shutdown Request", "GracefulShutdown");
-	setTimeout(function () { setImmediate(() => { process.exit(0); }); }, 5500); //after 5.5 seconds, and after all I/O activity has finished, quit the application.
+	setTimeout(() => { setImmediate(() => { process.exit(0); }); }, 5500); //after 5.5 seconds, and after all I/O activity has finished, quit the application.
 }
 
 /**
  * every 5000ms (5 seconds), checks if the client variable isShuttingDown is true. if it is, signal for the graceful shutdown to begin
  */
-setInterval(function () { if (client.isShuttingDown == true) { gracefulShutdown(); } }, 5000);
+setInterval(() => { if (client.isShuttingDown == true) { gracefulShutdown(); } }, 5000);
+
+
+/**
+ * every 12000 seconds, clears out the loaded database keys to help reduce the memory footprint of the bot.
+ */
+setInterval(() => { client.DB.evict(client.DB.keyArray()) }, 12000)
 
 /** PM2 SIGINT and Message handling for invoking a graceful shutdown through PM2 on both UNIX and windows systems */
 process
-	.on("SIGINT", function () {//unix SIGINT graceful PM2 app shutdown.
+	.on("SIGINT", () => {//unix SIGINT graceful PM2 app shutdown.
 		client.isShuttingDown = true;
 	})
 	.on("message", (msg) => {//Windows "message" graceful PM2 app shutdown. 
@@ -61,7 +75,7 @@ process
 		}
 	})
 	.on("uncaughtException", (err) => {
-		console.dir(err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./")); /** process error catching with custom stacktrace formatting for ease of reading */
+		console.dir(err.stack.replace(new RegExp(`${__dirname} / `, "g"), "./")); /** process error catching with custom stacktrace formatting for ease of reading */
 		process.exit(1);
 	});
 
@@ -69,9 +83,12 @@ process
 client
 	.on("error", error => { client.log("ERR", error); })
 	/** if the client disconnects, report the disconnection */
-	.on("disconnect", function (event) {
+	.on("disconnect", (event) => {
 		console.error(event);
-		client.isShuttingDown = true; //this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this.
+		client.isShuttingDown = true; /**this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this (note: requires PM2 to restart the process).
+										*this seems dumb, like why not just use an event emitter? well, it means I can easily block commands from processing by just checking the value of this variable in the message event handler (as client is a pseudo-global scope). 
+										*otherwise I would've used an Emitter.
+										*/
 	});
 
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory, then starts the initialisation. */

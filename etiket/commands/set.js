@@ -10,7 +10,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 
   const copyKey = (key, prop) => {
     client.settings.setProp(key, prop, defaults[prop]);
-  }
+  };
 
   // Secondly, if a user does `-set edit <key> <new value>`, let's change it
   if (action === "edit") {
