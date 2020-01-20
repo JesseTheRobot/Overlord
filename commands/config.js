@@ -17,6 +17,13 @@ exports.run = (client, message, args) => {
 	const configOptions = { //key:state/action system. 
 
 	};
+	const getKeyType = (client, message, args) => {
+		var reqKey = args[1]
+		if (!client.getGuildSettings(message.guild).config.keys().has(reqKey)) {
+			return; //invalid key
+		}
+
+	}
 	var defaultConfig = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development rn.
 		commands: {
 			"help": {

@@ -163,6 +163,9 @@ module.exports = (client) => {
 	client.checkBlacklist = (client, message) => {
 
 	};
+	client.checkblocked = (client, message) => {
+
+	}
 	/** returns the permissions integer for a given message's author - used to dterming basal permissions.
 	 * 
 	 * @param client  client Object
