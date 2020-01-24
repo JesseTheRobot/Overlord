@@ -2,18 +2,15 @@
 console.time("init");
 const Discord = require("discord.js");
 const enmap = require("enmap");
-<<<<<<< Updated upstream
 const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 900, messageSweepInterval: 100, disabledEvents: [""] });
 client.config = require("./config.js");
-=======
->>>>>>> Stashed changes
 client.isShuttingDown = false;
 client.fs = require("fs");
 client.diff = require("deep-object-diff").detailedDiff;
 client.transfer = require("transfer-sh");
 client.download = require("download-file");
 client.tf = require("@tensorflow/tfjs-node");
-client.version = "0.1.9.21112019"; //release.major.minor.date
+client.version = "0.1.9.21012020"; //release.major.minor.date
 
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 
@@ -33,12 +30,8 @@ client.DB = new enmap({
 	name: "DB",
 	autoFetch: true,
 	fetchAll: false,
-<<<<<<< Updated upstream
 	polling: true,
 	dataDir: client.config.datadir
-=======
-	polling: true
->>>>>>> Stashed changes
 });
 
 /**optional debug system to monitor any/all changes to the ENMAP Database */

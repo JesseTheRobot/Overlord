@@ -6,7 +6,7 @@ module.exports = async (client, message) => {
 		return;
 	}
 	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content)
-	message.settings = client.getGuildSettings(message.guild);  // eslint-disable-line 
+	message.settings = message.guild ? client.settings.get(message.guild.id.config) : client.config.defaultSettings;
 	client.dStats.increment("overlord.messages");
 	if (message.settings.config.toxicClassifier.enabled) {
 		client.emit("toxicityClassifier", message);
@@ -34,9 +34,7 @@ var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the pr
 if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
 //binds the guild's settings and the level of the user to the message object, for ease-of-access for later operations (eg commands)
 
-message.level = client.getLevel(client, message); // eslint-disable-line 
 
-client.log("log", `User ${message.author} has permission level: ${message.level}`, "getLevel");
 
 
 
