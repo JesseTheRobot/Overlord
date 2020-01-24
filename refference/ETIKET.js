@@ -3,7 +3,7 @@ const moment = require("moment");
 require("moment-duration-format");
 const { inspect } = require("util");
 
-const config = require("./config.js");
+const config = require("../config.js");
 const Discord = require("discord.js");
 const client = new Discord.Client({
 	disableEveryone: true,
@@ -39,7 +39,7 @@ const commands = {
 		run: (message, args) => {
 			const myEmbed = new Discord.MessageEmbed();
 			myEmbed.setDescription(args.join(" "));
-			message.channel.send({embed: myEmbed});
+			message.channel.send({ embed: myEmbed });
 		},
 		level: 4
 	},
@@ -48,49 +48,49 @@ const commands = {
 			const [action, name, ...content] = args;
 			let answer;
 			switch (action) {
-			case "add":
-				if (tags.has(`${message.guild.id}-${name}`)) return message.channel.send(message.strings.tagexists);
-				if (Object.keys(commands).includes(name)) return message.reply(message.strings.reservedtagname);
-				tags.set(`${message.guild.id}-${name}`, {
-					guild: message.guild.id,
-					content: content.join(" "),
-					name
-				});
-				answer = [null, "☑"];
-				break;
-			case "del":
-				if (tags.has(`${message.guild.id}-${name}`)) {
-					tags.delete(`${message.guild.id}-${name}`);
-					answer = [null, "☑"];
-				} else {
-					answer = [message.strings.tagnotfound, null];
-				}
-				break;
-			case "edit":
-				if (tags.has(`${message.guild.id}-${name}`)) {
+				case "add":
+					if (tags.has(`${message.guild.id}-${name}`)) return message.channel.send(message.strings.tagexists);
+					if (Object.keys(commands).includes(name)) return message.reply(message.strings.reservedtagname);
 					tags.set(`${message.guild.id}-${name}`, {
 						guild: message.guild.id,
 						content: content.join(" "),
 						name
 					});
 					answer = [null, "☑"];
-				} else {
-					answer = [message.strings.tagnotfound, null];
-				}
-				break;
-			case "rename":
-				if (tags.has(`${message.guild.id}-${name}`)) {
-					const newName = content[0];
-					const oldTag = tags.get(`${message.guild.id}-${name}`);
-					tags.set(`${message.guild.id}-${newName}`, oldTag);
-					tags.delete(`${message.guild.id}-${name}`);
-					answer = [null, "☑"];
-				} else {
-					answer = [message.strings.tagnotfound, null];
-				}
-				break;
-			default:
-				answer = [null, "⁉"];
+					break;
+				case "del":
+					if (tags.has(`${message.guild.id}-${name}`)) {
+						tags.delete(`${message.guild.id}-${name}`);
+						answer = [null, "☑"];
+					} else {
+						answer = [message.strings.tagnotfound, null];
+					}
+					break;
+				case "edit":
+					if (tags.has(`${message.guild.id}-${name}`)) {
+						tags.set(`${message.guild.id}-${name}`, {
+							guild: message.guild.id,
+							content: content.join(" "),
+							name
+						});
+						answer = [null, "☑"];
+					} else {
+						answer = [message.strings.tagnotfound, null];
+					}
+					break;
+				case "rename":
+					if (tags.has(`${message.guild.id}-${name}`)) {
+						const newName = content[0];
+						const oldTag = tags.get(`${message.guild.id}-${name}`);
+						tags.set(`${message.guild.id}-${newName}`, oldTag);
+						tags.delete(`${message.guild.id}-${name}`);
+						answer = [null, "☑"];
+					} else {
+						answer = [message.strings.tagnotfound, null];
+					}
+					break;
+				default:
+					answer = [null, "⁉"];
 			}
 			return answer;
 		},
@@ -102,55 +102,55 @@ const commands = {
 			let user = args[1];
 			let answer;
 			switch (action) {
-			case "add":
-				user = client.users.get(args[1]) || message.mentions.users.first();
-				if (!user) return [message.strings.cantfinduser, null];
-				blacklist.set(`${message.guild.id}-${user.id}`, {
-					user: user.id,
-					guild: message.guild.id,
-					time: message.createdTimestamp
-				});
-				message.guild.channels.find("name", message.settings.modlog)
-					.send(message.strings.addedtoblacklist
-						.replace("{user.tag}", user.tag)
-						.replace("{user.id}", user.id)
-						.replace("{author.tag}", message.author.tag)
-						.replace("{author.id}", message.author.id))
-					.catch();
-				answer = [null, "☑"];
-				break;
-			case "remove":
-			case "del":
-				user = client.users.get(args[1]) || message.mentions.users.first();
-				if (!user) return [message.strings.cantfinduser, null];
-				if (blacklist.has(`${message.guild.id}-${user.id}`)) {
-					const blEntry = blacklist.get(`${message.guild.id}-${user.id}`);
-					const duration = moment.duration(moment.createdTimestamp - blEntry.time).format(" D [days], H [hrs], m [mins], s [secs]");
-					blacklist.delete(`${message.guild.id}-${user.id}`);
+				case "add":
+					user = client.users.get(args[1]) || message.mentions.users.first();
+					if (!user) return [message.strings.cantfinduser, null];
+					blacklist.set(`${message.guild.id}-${user.id}`, {
+						user: user.id,
+						guild: message.guild.id,
+						time: message.createdTimestamp
+					});
 					message.guild.channels.find("name", message.settings.modlog)
 						.send(message.strings.addedtoblacklist
 							.replace("{user.tag}", user.tag)
 							.replace("{user.id}", user.id)
 							.replace("{author.tag}", message.author.tag)
-							.replace("{author.id}", message.author.id)
-							.replace("{duration}", duration))
+							.replace("{author.id}", message.author.id))
 						.catch();
 					answer = [null, "☑"];
-				} else {
-					answer = [message.strings.usernotinblacklist, null];
-				}
-				break;
-			case "view":
-				const blIDs = blacklist.filter(entry => entry.guild === message.guild.id);
-				const list = blIDs.map(entry => `${entry.user} ... ${client.users.get(entry.user).tag}`);
-				if(!list.length) {
-					answer = ["The blacklist is empty.", null]; 
-				} else {
-					answer = [`\`\`\`${list}\`\`\``, null];
-				}
-				break;
-			default:
-				answer = [null, "⁉"];
+					break;
+				case "remove":
+				case "del":
+					user = client.users.get(args[1]) || message.mentions.users.first();
+					if (!user) return [message.strings.cantfinduser, null];
+					if (blacklist.has(`${message.guild.id}-${user.id}`)) {
+						const blEntry = blacklist.get(`${message.guild.id}-${user.id}`);
+						const duration = moment.duration(moment.createdTimestamp - blEntry.time).format(" D [days], H [hrs], m [mins], s [secs]");
+						blacklist.delete(`${message.guild.id}-${user.id}`);
+						message.guild.channels.find("name", message.settings.modlog)
+							.send(message.strings.addedtoblacklist
+								.replace("{user.tag}", user.tag)
+								.replace("{user.id}", user.id)
+								.replace("{author.tag}", message.author.tag)
+								.replace("{author.id}", message.author.id)
+								.replace("{duration}", duration))
+							.catch();
+						answer = [null, "☑"];
+					} else {
+						answer = [message.strings.usernotinblacklist, null];
+					}
+					break;
+				case "view":
+					const blIDs = blacklist.filter(entry => entry.guild === message.guild.id);
+					const list = blIDs.map(entry => `${entry.user} ... ${client.users.get(entry.user).tag}`);
+					if (!list.length) {
+						answer = ["The blacklist is empty.", null];
+					} else {
+						answer = [`\`\`\`${list}\`\`\``, null];
+					}
+					break;
+				default:
+					answer = [null, "⁉"];
 			}
 			return answer;
 		},
@@ -164,56 +164,56 @@ const commands = {
 			}
 			const [action, key, ...val] = args;
 			switch (action) {
-			case "set": case "edit":
-				if (!message.settings[key]) {
-					return [message.strings.invalidsetting, null];
-				}
-				if (message.settings[key].constructor.name.toLowerCase() === "array") {
-					return [message.strings.settingisarray, null];
-				}
-				message.settings[key] = val.join(" ");
-				settings.set(message.guild.id, message.settings);
-				answer = [null, "☑"];
-				break;
-			case "reset":
-				if (!message.settings[key]) {
-					return [message.strings.invalidsetting, null];
-				}
-				delete message.settings[key];
-				settings.set(message.guild.id, message.settings);
-				answer = [null, "☑"];
-				break;
-			case "add": case "append":
-				if (!message.settings[key]) {
-					return [message.strings.invalidsetting, null];
-				}
-				if (!message.settings[key].constructor.name.toLowerCase() === "array") {
-					return [message.strings.settingnotarray, null];
-				}
-				if (message.settings[key].indexOf(val.join(" ")) > -1) {
-					return ["This value is already in the settings array.", null];
-				}
-				message.settings[key].push(val.join(" "));
-				settings.set(message.guild.id, message.settings);
-				answer = [null, "☑"];
-				break;
-			case "del": case "remove":
-				if (!message.settings[key]) {
-					return [message.strings.invalidsetting, null];
-				}
-				if (!message.settings[key].constructor.name.toLowerCase() === "array") {
-					return [message.strings.settingnotarray, null];
-				}
-				if (message.settings[key].indexOf(val.join(" ")) < 0) {
-					return [message.strings.cantfindinarray, null];
-				}
-				message.settings[key].slice(message.settings[key].indexOf(val.join(" ")), 1);
-				settings.set(message.guild.id, message.settings);
-				answer = [null, "☑"];
-				break;
-			case "list": case "view": default:
-				answer = [JSON.stringify(message.settings), null];
-				break;
+				case "set": case "edit":
+					if (!message.settings[key]) {
+						return [message.strings.invalidsetting, null];
+					}
+					if (message.settings[key].constructor.name.toLowerCase() === "array") {
+						return [message.strings.settingisarray, null];
+					}
+					message.settings[key] = val.join(" ");
+					settings.set(message.guild.id, message.settings);
+					answer = [null, "☑"];
+					break;
+				case "reset":
+					if (!message.settings[key]) {
+						return [message.strings.invalidsetting, null];
+					}
+					delete message.settings[key];
+					settings.set(message.guild.id, message.settings);
+					answer = [null, "☑"];
+					break;
+				case "add": case "append":
+					if (!message.settings[key]) {
+						return [message.strings.invalidsetting, null];
+					}
+					if (!message.settings[key].constructor.name.toLowerCase() === "array") {
+						return [message.strings.settingnotarray, null];
+					}
+					if (message.settings[key].indexOf(val.join(" ")) > -1) {
+						return ["This value is already in the settings array.", null];
+					}
+					message.settings[key].push(val.join(" "));
+					settings.set(message.guild.id, message.settings);
+					answer = [null, "☑"];
+					break;
+				case "del": case "remove":
+					if (!message.settings[key]) {
+						return [message.strings.invalidsetting, null];
+					}
+					if (!message.settings[key].constructor.name.toLowerCase() === "array") {
+						return [message.strings.settingnotarray, null];
+					}
+					if (message.settings[key].indexOf(val.join(" ")) < 0) {
+						return [message.strings.cantfindinarray, null];
+					}
+					message.settings[key].slice(message.settings[key].indexOf(val.join(" ")), 1);
+					settings.set(message.guild.id, message.settings);
+					answer = [null, "☑"];
+					break;
+				case "list": case "view": default:
+					answer = [JSON.stringify(message.settings), null];
+					break;
 			}
 			return answer;
 		},
@@ -244,7 +244,7 @@ const commands = {
 module.exports = commands;
 
 const validateThrottle = (message, level) => {
-	if ( (message.guild && blacklist.has(`${message.guild.id}-${message.author.id}`) ) || blacklist.has(message.author.id)) {
+	if ((message.guild && blacklist.has(`${message.guild.id}-${message.author.id}`)) || blacklist.has(message.author.id)) {
 		return [false, "blacklisted"];
 	}
 
@@ -289,13 +289,13 @@ async function handleMessage(message) {
 	const [valid, status] = validateThrottle(message, level, command);
 	if (!valid) {
 		switch (status) {
-		case "blacklisted":
-			return message.react("🚫");
-		case "throttled":
-			if (message.guild) {
-				return message.react("⏱");
-			}
-			break;
+			case "blacklisted":
+				return message.react("🚫");
+			case "throttled":
+				if (message.guild) {
+					return message.react("⏱");
+				}
+				break;
 		}
 	}
 
@@ -322,7 +322,7 @@ client.on("ready", () => {
 
 client.on("message", handleMessage);
 
-client.on("error", (o_O)=>{});
+client.on("error", (o_O) => { });
 
 client.login(config.token);
 
