@@ -58,7 +58,6 @@ function gracefulShutdown() {
  */
 setInterval(() => { if (client.isShuttingDown == true) { gracefulShutdown(); } }, 5000);
 
-
 /**
  * every 12000 seconds, clears out the loaded database keys to help reduce the memory footprint of the bot.
  */

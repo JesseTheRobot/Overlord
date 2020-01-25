@@ -33,13 +33,11 @@ module.exports = (client) => {
 			client.log("FATAL", "No Guilds Detected! Please check your token. aborting Init.", "Init");
 			return;
 		}
-		client.user.setPresence({
-			game: {
-				name: `@ me for Prefix! | (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧🛠💜🦄Being Built!🦄💜🛠✧ﾟ･: *ヽ(◕ヮ◕ヽ) (v${client.version}) now on ${client.guilds.size} servers!`, //move this to config file?
-				type: "PLAYING"
-			},
-			status: "active"
-		});
+		if (!client.user.bot) {
+			throw new Error("Warning: Using Bots on a user account is forbidden by Discord Tos. Please Verify your token!");
+		}
+		var game = client.config.status.replace("{{guilds}}", client.guilds.size).replace("{{version}}", client.version);
+		client.user.setPresence({ game: { name: game, type: "PLAYING" }, status: "active" });
 		const eventFiles = fs.readdirSync("./events/");
 		client.log("log", `Loading ${eventFiles.length} events from ${basedir}/events/`, "EventInit");
 		eventFiles.forEach(eventFile => {
@@ -134,7 +132,7 @@ module.exports = (client) => {
 	client.classify = (input, config) => {
 
 
-	}
+	};
 	client.reloadCommand = (commandName) => {
 		try {
 			delete require.cache[require.resolve(`${basedir}/${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
@@ -158,14 +156,14 @@ module.exports = (client) => {
 	};
 	client.attHandler = async (client, message) => {
 		//move the code from the message handler into here, use the performant caching to go faaassstt
-	}
+	};
 
 	client.checkBlacklist = (client, message) => {
 
 	};
 	client.checkblocked = (client, message) => {
 
-	}
+	};
 	/** returns the permissions integer for a given message's author - used to dterming basal permissions.
 	 * 
 	 * @param client  client Object
