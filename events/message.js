@@ -7,13 +7,8 @@ module.exports = async (client, message) => {
 	}
 	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content)
 	message.settings = message.guild ? client.settings.get(message.guild.id.config) : client.config.defaultSettings;
-	client.dStats.increment("overlord.messages");
-	if (message.settings.config.toxicClassifier.enabled) {
-		client.emit("toxicityClassifier", message);
-	}
 
-	if (message.attachments && message.guild && message.settings.config.attatchments.enabled)
-		client.emit("attachmentHandler", message)
+
 }
 const BotMentionRegEx = new RegExp(`^<@!?${client.user.id}>( |)$`);
 if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx) && message.guild) { //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.
