@@ -9,7 +9,6 @@ exports.run = async (client, message, args) => {
 	}
 };
 
-
 exports.defaultConfig = {
 	aliases: ["eval"],
 	guildOnly: true,

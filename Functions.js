@@ -46,6 +46,7 @@ module.exports = (client) => {
 			const eventObj = require(`./events/${eventFile}`);
 			client.on(eventName, eventObj.bind(null, client));
 			client.log("Log", `Bound ${eventName} to Client Sucessfully!`, "EventBind");
+			delete require.cache[require.resolve(`./events/${eventFile}`)];
 		});
 		client.guilds.forEach(guild => {//iterates over each guild that the bot has access to and ensures they are present in the database
 			client.validateGuild(client, guild);
@@ -228,7 +229,7 @@ module.exports = (client) => {
 		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 	};
 
-	client.defaultConfig = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development rn.
+	client.defaultConfigBase = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development.
 		commands: {
 			"help": {
 				aliases: ["commands"],
@@ -239,53 +240,47 @@ module.exports = (client) => {
 				allowedChannels: [],
 			},
 		},
-		config: {
-			prefix: "$",
-			mutedRole: 0,
-			welcomeMsg: "Welcome {{user}} to {{guild.name}}!",
-			welcomeChan: 0,
-			modRoles: [],
-			adminRoles: [],
-			serverOwnerID: 0,
-			blockedChannels: [],
-			recordAttachments: true,
-
-			commands: {
-				toxicityClassifier: {
+		prefix: "$",
+		mutedRole: 0,
+		welcomeMsg: "Welcome {{user}} to {{guild.name}}!",
+		welcomeChan: 0,
+		modRoles: [],
+		adminRoles: [],
+		serverOwnerID: 0,
+		blockedChannels: [],
+		recordAttachments: true,
+		modules: {
+			autoMod: {
+				enabled: true,
+				bannedWords: [],
+				excludedRoles: [],
+				percentCapsLimit: 0,
+				floodPercentLimit: 0,
+				decay: 30000,
+				antiSpam: {
 					enabled: true,
-
+					interval: 2000,
+					count: 2,
+					penalty: 1,
 				},
-				NSFWclassifier: {
+				penalties: {
+					repeatOffenceMultiplier: 2,
+					repeatOffenceTimeout: 10000
+				},
+				punishments: {
+					5: "mute",
+					10: "tempBan",
+					15: "ban",
+				},
+				antiMention: {
 					enabled: true,
-					threshold: 0.7,
-					categories: ["hentai", "porn", "sexy"]
-				},
-				autoMod: {
-					bannedWords: [],
-					excludedRoles: [],
-					percentCaps: 0,
-					floodPercentLimit: 0,
-					decay: 30000,
-					antiSpam: {
-						interval: 2000,
-						count: 2,
-					},
-					penalties: {
-						spam: 1,
-						bannedWord: 2,
-						repeatOffenceMultiplier: 0.1,
-						repeatOffenceTimeout: 10000
-					},
-					punishments: {
-						5: "mute",
-						10: "tempBan",
-						15: "ban",
-					}
-				},
-
+					protectedIDs: [],
+					penalty: 5,
+				}
 			},
 
 		},
+
 		persistence: {
 			messages: {},
 		},
