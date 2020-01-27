@@ -5,8 +5,10 @@ module.exports = async (client, message) => {
             if (err) client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
             else {
                 console.log("download successful!");
-                if (message.settings.config.NSFWclassifier.enabled) {
+                if (message.settings.modules.NSFWclassifier.enabled) {
                     client.classify(filename, message.settings.config.NSFWclassifier);
+                } else {
+                    setTimeout(function)
                 }
                 if (message.settings.config.recordAttachments) {
                     new client.transfer(`./cache/${filename}`)
@@ -27,4 +29,8 @@ module.exports = async (client, message) => {
         });
     });
     return;
+};
+module.exports.info = {
+    desc: "downloads and then uploads attachments to transfer.sh"
+
 };
