@@ -1,6 +1,6 @@
 module.exports = async (client, message) => {
+	var atts = []
 	message.attachments.array().forEach(att => {
-		var atts
 		var filename = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, { directory: "./cache", filename: filename }, function (err) {
 			if (err) client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
@@ -9,7 +9,7 @@ module.exports = async (client, message) => {
 				if (message.settings.modules.NSFWclassifier.enabled) {
 					client.classify(filename, message.settings.config.NSFWclassifier);
 				} else {
-					setTimeout(() => { client.fs.unlinkSync(`./cache/${filename}`) })
+					setTimeout(() => { client.fs.unlink(`./cache/${filename}`).catch(console.log(err)) })
 				}
 				if (message.settings.modules.recordAttachments.enabled) {
 					new client.transfer(`./cache/${filename}`)
@@ -28,6 +28,7 @@ module.exports = async (client, message) => {
 			}
 		});
 	});
+	client.DB.set(message.id, atts, `${message.guild.id}.persistance.attachments`)
 	return;
 };
 module.defaultConfig = {
