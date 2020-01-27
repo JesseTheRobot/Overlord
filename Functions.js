@@ -30,8 +30,8 @@ module.exports = (client) => {
 		client.dStats.increment("overlord.init");
 		client.DB.deleteAll();//Temp
 		if (client.guilds.size == 0) {
-			client.log("FATAL", "No Guilds Detected! Please check your token. aborting Init.", "Init");
-			return;
+			throw new Error("No Guilds Detected! Please check your token. aborting Init.");
+
 		}
 		if (!client.user.bot) {
 			throw new Error("Warning: Using Bots on a user account is forbidden by Discord Tos. Please Verify your token!");
