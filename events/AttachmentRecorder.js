@@ -1,11 +1,11 @@
 module.exports = async (client, message) => {
 	message.attachments.array().forEach(att => {
+		var atts
 		var filename = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, { directory: "./cache", filename: filename }, function (err) {
 			if (err) client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
 			else {
 				console.log("download successful!");
-
 				if (message.settings.modules.NSFWclassifier.enabled) {
 					client.classify(filename, message.settings.config.NSFWclassifier);
 				} else {
@@ -22,7 +22,7 @@ module.exports = async (client, message) => {
 									console.log("Unlink successful!");
 								}
 							});
-							client.DB.set()//write to DB, key:value with array of URL's for data as well as timestamp for deletion!
+							atts.push(link)
 						}).catch(function (err) { console.log(err); });
 				}
 			}
