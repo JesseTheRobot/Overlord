@@ -4,10 +4,6 @@ module.exports = ((client, message, basedir) => {
 	const path = require("path");
 	var attach;
 	//var att;
-		console.log("got to execution");
-		fs.readdirSync(`${basedir}\\deleted\\`,(err, items) => {
-			items.forEach(item =>{
-				var tes = (item.split(path.extname(item)))[0] ;
 	function getattach() {
 
 		async function WebHook(client, user, message, logs) {
