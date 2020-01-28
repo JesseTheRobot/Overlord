@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
 	ownerID: "646452404316798978", //discord ID of the Bot's Owner.
 	protectedKeys: ["serverOwnerID",],
 	token:
@@ -8,5 +8,3 @@ const config = {
 	datadir: "./data", //data storage location for the ENMAP-SQLite backend
 	status: ""
 };
-
-module.exports = config;
