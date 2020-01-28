@@ -1,6 +1,6 @@
 const config = {
-	ownerID: "150693679500099584", //discord ID of the Bot's Owner.
-	protectedKeys: ["serverOwnerID", "config", "autoMod", "antiSpam"], //list of reserved settings keys that are immutable to command-base changes
+	ownerID: "646452404316798978", //discord ID of the Bot's Owner.
+	protectedKeys: ["serverOwnerID",],
 	token:
 		process.env.NODE_ENV === "production"
 			? "NTc2MzM3ODI2MTU3NjkwODkx.XNVCkg.Yyt4uTJi2FOYeaYPE6iOmIurrwI" //bot's  Production Token

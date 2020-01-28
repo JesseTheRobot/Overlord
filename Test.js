@@ -9,10 +9,11 @@ client.DB = new enmap({
 	polling: true,
 	ensureProps: true
 });
+require("./Functions.js")(client);
+delete require.cache[require.resolve(`./Functions.js`)];
 
+var init = async (client) => {
 
-var testModule = async (client) => {
-	require("./Functions.js")(client);
 	const eventName = "message";
 	const eventFile = "message.js";
 	const eventObj = require(`./events/${eventFile}`);
@@ -25,6 +26,8 @@ var testModule = async (client) => {
 client.login(require("./config.js").token);
 client.on("ready", () => {
 	//client.DB.defer.then(client.init(client));
-	testModule(client);
+	client.DB.defer.then(init(client))
+	//
+	client.DB.set("150083544593344833", "https://somesite.com/attachment", `15000.attachment`)
 });
 

@@ -73,19 +73,19 @@ module.exports = (client) => {
 			client.DB.ensure(guild.id, { xp: 0 }, `users.${member.id}`);
 		});
 		client.log("Log", `Sucessfully Verified/initialised Guild ${guild.name} to DB`);
-		client.DB.set(guild.id, guild.owner.user.id, "config.serverOwnerID");
+		client.DB.set(guild.id, guild.owner.user.id, "serverOwnerID");
 		guild.roles.forEach(role => {
 			//switch-Case?
 			if (role.hasPermission("ADMINISTRATOR")) {
-				client.DB.push(guild.id, role.id, "config.adminRoles");//pushes the Role ID to the Database.
+				client.DB.push(guild.id, role.id, "adminRoles");//pushes the Role ID to the Database.
 			}
 		});
 
 		guild.roles.forEach(role => { //figure out a better way of doing this! (dynamic eval?)
 			client.log("Log", `Testing role with name ${role.name} for Admin/Mod/Muted availability.`, "InitPermRoles");
-			if (adminRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "config.adminRoles"); }
-			if (modRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "config.modRoles"); }
-			if (mutedRdict.includes(role.name)) { client.DB.set(guild.id, role.id, "config.mutedRole"); }
+			if (adminRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "adminRoles"); }
+			if (modRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "modRoles"); }
+			if (mutedRdict.includes(role.name)) { client.DB.set(guild.id, role.id, "mutedRole"); }
 		});
 		const commandFiles = fs.readdirSync("./commands/");
 		client.log("Log", `Loading ${commandFiles.length} events from ${basedir}/commands/`, "CommandInit");
@@ -216,7 +216,6 @@ module.exports = (client) => {
 
 	client.dStats.increment = (counter) => { //"fake"DStats Implimentation 
 		client.counters.push(counter);
-		console.log(client.counters);
 	};
 
 	/** returns a random integer between two numbers (max exclusive, min inclusive.)
@@ -229,7 +228,7 @@ module.exports = (client) => {
 		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 	};
 
-	client.defaultConfigBase = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development.
+	client.defaultConfig = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development.
 		commands: {
 			"help": {
 				aliases: ["commands"],
@@ -248,7 +247,6 @@ module.exports = (client) => {
 		adminRoles: [],
 		serverOwnerID: 0,
 		blockedChannels: [],
-		recordAttachments: true,
 		modules: {
 			autoMod: {
 				enabled: true,

@@ -3,3 +3,6 @@ node_modules/
 data/
 cache/
 .vscode/
+data/enmap.sqlite-shm
+data/enmap.sqlite
+data/enmap.sqlite-wal
