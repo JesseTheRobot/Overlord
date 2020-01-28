@@ -11,7 +11,7 @@ module.exports = async (client, message) => {
 				} else {
 					setTimeout(() => { client.fs.unlink(`./cache/${filename}`).catch(console.log(err)) })
 				}
-				if (message.settings.modules.recordAttachments.enabled) {
+				if (message.settings.modules.attachmentRecorder.keep) {
 					new client.transfer(`./cache/${filename}`)
 						.upload().then(function (link) {
 							console.log(link);
@@ -34,4 +34,5 @@ module.exports = async (client, message) => {
 module.defaultConfig = {
 	enabled: true,
 	storageDir: "./cache",
+	keep: true,
 };
