@@ -11,12 +11,9 @@ module.exports = async (client, message) => {
         });
         if (classi.length >= modConfig.thresholdExceeders) {
             //insert code to link to moderation subsystem here
+            //client.emit("modActions",client,message,)
         }
     })
-
-
-
-
 };
 
 module.exports.defaultConfig = {
