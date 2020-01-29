@@ -262,6 +262,8 @@ module.exports = (client) => {
 		adminRoles: [],
 		serverOwnerID: 0,
 		blockedChannels: [],
+		modActionChannel: 0,
+		auditLogChannel: 0,
 		modules: {
 			autoMod: {
 				enabled: true,
