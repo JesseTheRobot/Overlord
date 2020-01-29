@@ -2,7 +2,7 @@
 console.time("init");
 const Discord = require("discord.js");
 const enmap = require("enmap");
-const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: -1, messageCacheLifetime: 900, messageSweepInterval: 100, disabledEvents: [""] });
+const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: 20000, messageCacheLifetime: 86400, messageSweepInterval: 100, disabledEvents: [""] });
 client.config = require("./config.js");
 client.isShuttingDown = false;
 client.fs = require("fs");

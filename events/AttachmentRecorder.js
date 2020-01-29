@@ -1,21 +1,24 @@
 module.exports = async (client, message) => {
 	var atts = []
+	var modConfig = message.settings.modules.attachmentRecorder
+	var path = modConfig.storageDir
 	message.attachments.array().forEach(att => {
 		var filename = message.id + "." + att.url.split("/").pop().split(".")[1];
-		client.download(att.url, { directory: "./cache", filename: filename }, function (err) {
+		var filePath = path + filename
+		client.download(att.url, { directory: path, filename: filename }, function (err) {
 			if (err) client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
 			else {
 				console.log("download successful!");
 				if (message.settings.modules.NSFWclassifier.enabled) {
 					client.classify(client, message, filename);
 				} else {
-					setTimeout(() => { client.fs.unlink(`./cache/${filename}`).catch(console.log(err)) })
+					setTimeout(() => { client.fs.unlink(filePath).catch(console.log(err)) })
 				}
-				if (message.settings.modules.attachmentRecorder.keep) {
-					new client.transfer(`./cache/${filename}`)
+				if (modConfig.keep) {
+					new client.transfer(filePath)
 						.upload().then(function (link) {
 							console.log(link);
-							client.fs.unlink(`./cache/${filename}`, (err) => {
+							client.fs.unlink(filePath, (err) => {
 								if (err) {
 									console.log(err);
 								} else {
@@ -33,6 +36,6 @@ module.exports = async (client, message) => {
 };
 module.defaultConfig = {
 	enabled: true,
-	storageDir: "./cache",
+	storageDir: "./cache/",
 	keep: true,
 };

@@ -50,12 +50,27 @@ module.exports = (client) => {
 		});
 		client.guilds.forEach(guild => {//iterates over each guild that the bot has access to and ensures they are present in the database
 			client.validateGuild(client, guild);
+			guild.channels.forEach(channel => {
+				switch (channel.type) {
+					case "category":
+						channel.children.forEach(child => {
+							child.fetchMessages({ limit: 100 })
+						})
+						break;
+					case "text":
+						channel.fetchMessages({ limit: 100 })
+						break;
+				}
+			});
+
+
 		});
-		console.timeEnd("init");
-		console.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
-		var ownerID = (require("./config.js")).ownerID;
-		(client.users.get(ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
-	};
+	}
+
+	console.timeEnd("init");
+	console.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
+	var ownerID = (require("./config.js")).ownerID;
+	(client.users.get(ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 	/**
 	 * validates a Guilds's configuration properties and database 'Presence'. called at startup and when a new guild is created
 	 * @param  client 
@@ -219,9 +234,9 @@ module.exports = (client) => {
 	};
 
 	/** returns a random integer between two numbers (max exclusive, min inclusive.)
- 	* @param {int} minimum
- 	* @param {int} maximum
- 	*/
+	  * @param {int} minimum
+	  * @param {int} maximum
+	  */
 	client.getRandomInt = (min, max) => {
 		min = Math.ceil(min);
 		max = Math.floor(max);
