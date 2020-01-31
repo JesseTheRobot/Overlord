@@ -26,12 +26,21 @@ module.exports = (client) => {
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
-		console.log(client.guilds);//Temp:  
 		client.dStats.increment("overlord.init");
-		client.DB.deleteAll();//Temp
+		client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
+		client.channels.forEach(channel => {
+			if (channel.type == "category)") {
+				channel.children.forEach(child => {
+					child.fetchMessages({ limit: 100 }).then(c => { return })
+				})
+			} else if (channel.type == "text") {
+				console.log(channel.messages)
+				channel.fetchMessages({ limit: 100 }).then(c => { return })
+
+			}
+		});
 		if (client.guilds.size == 0) {
 			throw new Error("No Guilds Detected! Please check your token. aborting Init.");
-
 		}
 		if (!client.user.bot) {
 			throw new Error("Warning: Using Bots on a user account is forbidden by Discord Tos. Please Verify your token!");
@@ -50,27 +59,11 @@ module.exports = (client) => {
 		});
 		client.guilds.forEach(guild => {//iterates over each guild that the bot has access to and ensures they are present in the database
 			client.validateGuild(client, guild);
-			guild.channels.forEach(channel => {
-				switch (channel.type) {
-					case "category":
-						channel.children.forEach(child => {
-							child.fetchMessages({ limit: 100 })
-						})
-						break;
-					case "text":
-						channel.fetchMessages({ limit: 100 })
-						break;
-				}
-			});
-
-
 		});
+		console.timeEnd("init");
+		console.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
+		(client.users.get(client.config.ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 	}
-
-	console.timeEnd("init");
-	console.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
-	var ownerID = (require("./config.js")).ownerID;
-	(client.users.get(ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 	/**
 	 * validates a Guilds's configuration properties and database 'Presence'. called at startup and when a new guild is created
 	 * @param  client 
@@ -81,6 +74,8 @@ module.exports = (client) => {
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
+
+
 		client.commands.ensure(guild.id, new Object);
 		client.trecent[guild.id] = new Set();
 		client.DB.ensure(guild.id, client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
@@ -179,23 +174,6 @@ module.exports = (client) => {
 	};
 	client.checkblocked = (client, message) => {
 
-	};
-	/** returns the permissions integer for a given message's author - used to dterming basal permissions.
-	 * 
-	 * @param client  client Object
-	 * @param message  Message Object
-	 */
-	client.getLevel = (client, message) => {//gets the permission integer for the user: 1, base user. 2, moderator, 3 Server admin. 4 bot owner
-		let permlvl = 0;
-		const permLvls = client.config.permissionLevels;
-		while (permLvls.length) {
-			let currentLevel = permLvls.shift();
-			if (message.guild && currentLevel.guild) continue;
-			if (currentLevel.check(client, message)) {
-				permlvl = currentLevel.level;
-			}
-		}
-		return permlvl;
 	};
 
 	client.evalClean = async (client, text) => { //cleans output of the eval command, to prevent the token and other chars from causing issues.

@@ -14,7 +14,7 @@ client.version = "0.1.9.21012020"; //release.major.minor.date
 
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 
-async (client) => {//loads Models into memory
+async (client) => {//loads Models into memory asyncronously
 	if (!client.config.enableModels) return;
 	var toxicity = require("@tensorflow-models/toxicity");
 	client.NSFWmodel = await require("nsfwjs").load("file://./models/NSFW/", { size: 299 }); //eslint-disable-line
@@ -23,6 +23,7 @@ async (client) => {//loads Models into memory
 		return require("@tensorflow/tfjs-converter").loadGraphModel("file://./models/toxic/model.json");
 	};
 	await client.toxicModel.load();
+
 	console.log("Models loaded!");
 };
 /** assigns the client Object a New enmap instance ("DB") - */
@@ -35,10 +36,12 @@ client.DB = new enmap({
 });
 
 /**optional debug system to monitor any/all changes to the ENMAP Database */
-client.DB.changed((Key, Old, New) => {
-	console.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
-	client.dStats.increment("overlord.databaseChange"); //reports to dStats for load statistics
-});
+if (process.env.NODE_ENV != "production") {
+	client.DB.changed((Key, Old, New) => {
+		console.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
+		client.dStats.increment("overlord.databaseChange"); //reports to dStats for load statistics
+	})
+}
 
 client.commands = new enmap();
 /** Bind the exportable functions from Functions.js to the client object as methods. */
