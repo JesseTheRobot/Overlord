@@ -6,5 +6,6 @@ module.exports = {
 			? "NTc2MzM3ODI2MTU3NjkwODkx.XNVCkg.Yyt4uTJi2FOYeaYPE6iOmIurrwI" //bot's  Production Token
 			: "NjQ4OTU5OTU5NDg4Mzk3MzMy.Xd11Kw.dHib7KEW6nczwGqMs3GUAWmNb3g",
 	datadir: "./data", //data storage location for the ENMAP-SQLite backend
-	status: ""
+	status: "",
+	enableModels: true,
 };

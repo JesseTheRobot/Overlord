@@ -140,10 +140,7 @@ module.exports = (client) => {
 		}
 
 	};
-	client.classify = (input, config) => {
 
-
-	};
 	client.reloadCommand = (commandName) => {
 		try {
 			delete require.cache[require.resolve(`${basedir}/${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
@@ -241,6 +238,7 @@ module.exports = (client) => {
 		serverOwnerID: 0,
 		blockedChannels: [],
 		modActionChannel: 0,
+		modReportingChannel: 0,
 		auditLogChannel: 0,
 		modules: {
 			autoMod: {
