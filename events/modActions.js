@@ -4,13 +4,6 @@ module.exports = async (client, message, action) => {
         data:
 
     }*/
-
-
-
-
-
-
-
     let modAction = message.settings.modActionChannel
     let audit = message.settings.auditLogChannel
     let modReport = message.settings.modReportingChannel
