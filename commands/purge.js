@@ -5,7 +5,7 @@ exports.defaultConfig = {
 	aliases: ["purge"],
 	guildOnly: true,
 	enabled: true,
-	permLevel: 2,
+	permReq: [],
 	cooldown: 1000,
 	allowedChannels: [],
 };

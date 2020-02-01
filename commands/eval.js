@@ -13,7 +13,7 @@ exports.defaultConfig = {
 	aliases: ["eval"],
 	guildOnly: true,
 	enabled: true,
-	permLevel: 4,
+	permReq: ["BOT_OWNER"],
 	cooldown: 1000,
 	allowedChannels: [],
 };

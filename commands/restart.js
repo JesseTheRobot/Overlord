@@ -5,7 +5,7 @@ exports.defaultConfig = {
 	aliases: ["restart", "reboot"],
 	guildOnly: true,
 	enabled: true,
-	permLevel: 1,
+	permReq: [],
 	cooldown: 1000,
 	allowedChannels: [],
 };

@@ -30,4 +30,9 @@ client.on("ready", () => {
 	//
 	client.DB.set("150083544593344833", "https://somesite.com/attachment", `15000.attachment`)
 });
+client.on("message", message => {
+	console.log(message)
+	message.content = message.cleanContent
+
+})
 

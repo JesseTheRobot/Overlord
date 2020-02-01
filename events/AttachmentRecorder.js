@@ -1,6 +1,7 @@
 module.exports = async (client, message) => {
-	var atts = []
 	var modConfig = message.settings.modules.attachmentRecorder
+	if (!modConfig.enabled) return
+	var atts = []
 	var path = modConfig.storageDir
 	message.attachments.array().forEach(att => {
 		var filename = message.id + "." + att.url.split("/").pop().split(".")[1];

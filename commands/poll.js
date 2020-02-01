@@ -5,7 +5,7 @@ exports.defaultConfig = {
 	aliases: ["poll", "vote"],
 	guildOnly: true,
 	enabled: true,
-	permLevel: 1,
+	permReq: [],
 	cooldown: 1000,
 	allowedChannels: [],
 };
