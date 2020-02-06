@@ -140,6 +140,25 @@ module.exports = (client) => {
 		}
 
 	};
+	client.deleteMessage = (message, type) => {
+		try {
+			message.delete()
+
+		} catch (err) {
+			client.raisePermError("")
+
+		}
+
+	};
+	client.raiseModError = (message, guildID) => {
+		var config = client.getGuildSettings(guildID)
+		if (config.modReportingChannel) {
+			client.getChannel(modReportingChannel).then(channel => {
+				channel.send(message)
+			})
+		}
+
+	}
 
 	client.reloadCommand = (commandName) => {
 		try {

@@ -11,7 +11,7 @@ module.exports = async (client, message) => {
 			else {
 				console.log("download successful!");
 				if (message.settings.modules.NSFWclassifier.enabled) {
-					client.classify(client, message, filename);
+					client.emit("NSFWClassifier", client, message, filename);
 				} else {
 					setTimeout(() => { client.fs.unlink(filePath).catch(console.log(err)) })
 				}
