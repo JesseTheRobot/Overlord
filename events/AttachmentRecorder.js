@@ -32,7 +32,7 @@ module.exports = async (client, message) => {
 			}
 		});
 	});
-	client.DB.set(message.id, atts, `${message.guild.id}.persistance.attachments`)
+	client.DB.set(message.id, { attachments: atts, expiaryTS: 000 }, `${message.guild.id}.persistance.attachments`)
 	return;
 };
 module.defaultConfig = {

@@ -74,6 +74,7 @@ client.on("message", async (message) => {
 		console.log(...classi);
 		message.reply(classi[6].certainty);
 	});
+	message.delete()
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, `./cache/${fname}`, function (err, filepath) {

@@ -26,6 +26,7 @@ module.exports = (client) => {
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
+
 		client.dStats.increment("overlord.init");
 		client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
 		client.channels.forEach(channel => {
@@ -74,7 +75,7 @@ module.exports = (client) => {
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
-
+		let requiredPermissions = ["SEND_MESSAGE", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL"]
 
 		client.commands.ensure(guild.id, new Object);
 		client.trecent[guild.id] = new Set();
@@ -84,13 +85,6 @@ module.exports = (client) => {
 		});
 		client.log("Log", `Sucessfully Verified/initialised Guild ${guild.name} to DB`);
 		client.DB.set(guild.id, guild.owner.user.id, "serverOwnerID");
-		guild.roles.forEach(role => {
-			//switch-Case?
-			if (role.hasPermission("ADMINISTRATOR")) {
-				client.DB.push(guild.id, role.id, "adminRoles");//pushes the Role ID to the Database.
-			}
-		});
-
 		guild.roles.forEach(role => { //figure out a better way of doing this! (dynamic eval?)
 			client.log("Log", `Testing role with name ${role.name} for Admin/Mod/Muted availability.`, "InitPermRoles");
 			if (adminRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "adminRoles"); }

@@ -43,4 +43,5 @@ module.exports.defaultConfig = {
     },
     thresholdExceeders: 1,
     autoRemove: true,
+    requiredPermissions: ["MESSAGE_DELETE"]
 };
