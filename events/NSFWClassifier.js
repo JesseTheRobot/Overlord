@@ -28,10 +28,6 @@ module.exports = async (client, message, filename) => {
         }
 
     })
-
-
-
-
 };
 module.exports.defaultConfig = {
     enabled: false,

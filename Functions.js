@@ -75,8 +75,7 @@ module.exports = (client) => {
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
-		let requiredPermissions = ["SEND_MESSAGE", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL"]
-
+		let reqPermissions = ["SEND_MESSAGE", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL"]
 		client.commands.ensure(guild.id, new Object);
 		client.trecent[guild.id] = new Set();
 		client.DB.ensure(guild.id, client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
@@ -98,6 +97,17 @@ module.exports = (client) => {
 			var command = command.split(".")[0]; // eslint-disable-line no-redeclare 
 			client.loadCommand(command, guild.id);
 		});
+		//check module permission requirements
+		var guildData = client.DB.get(guild.id)
+		guildData.modules.forEach(Module => {
+			if (!Module.defaultConfig) return;
+			Module.defaultConfig.requiredPermissions.forEach(perm => {
+				if (!reqPermissions.has(perm)) { reqPermissions.push(perm) }
+			})
+		})
+		guildData.persistance.filter(function (state) {
+			if (state.end)
+		})
 	};
 	client.log = (type, message, title) => {
 		if (!title) {
