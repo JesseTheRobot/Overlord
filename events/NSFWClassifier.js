@@ -4,8 +4,8 @@ module.exports = async (client, message, filename) => {
     var classifier = async (client, img) => {
         return new Promise(resolve => {
             try {
-                const imageBuffer = fs.readFileSync(`./cache/${img}`);
-                const image = tf.node.decodeImage(imageBuffer, 3, undefined, false);
+                const imageBuffer = client.fs.readFileSync(`./cache/${img}`);
+                const image = client.tf.node.decodeImage(imageBuffer, 3, undefined, false);
                 client.NSFWmodel.classify(image).then(predictions => {
                     resolve(predictions);
                 });
@@ -17,10 +17,9 @@ module.exports = async (client, message, filename) => {
     classifier(client, filename).then(predictions => {
         if (predictions.filter(p => modConfig.classificationWeights[p.class] >= p.probability).length >= modConfig.thresholdExceeders) {
             if (modConfig.autoRemove) {
-
-                return
-
+                message.delete.
             }
+
             var action = {
 
             }

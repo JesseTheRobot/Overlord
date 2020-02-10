@@ -30,6 +30,7 @@ client.on("ready", () => {
 	//
 	console.log("ready!")
 	client.DB.set("150083544593344833", "https://somesite.com/attachment", `15000.attachment`)
+	console.log(Date.now())
 });
 client.on("message", message => {
 	if (message.author.bot) return

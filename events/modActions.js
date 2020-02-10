@@ -1,17 +1,13 @@
 module.exports = async (client, message, action) => {
-    /*action:{
-        type: "action/audit/report"
-        data:
-
-    }*/
-    //https://leovoel.github.io/embed-visualizer/
     let modAction = message.settings.modActionChannel
     let audit = message.settings.auditLogChannel
     let modReport = message.settings.modReportingChannel
     const discord = require("discord.js")
+    //https://leovoel.github.io/embed-visualizer/
+
     /*action:{
         type: "action/audit/report",
-        actionDesc:"
+        actionDesc:"","
         data: (...),
     }*/
 

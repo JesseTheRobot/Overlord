@@ -71,7 +71,6 @@ module.exports = (client) => {
 	 * @param  guild 
 	 */
 	client.validateGuild = (client, guild) => { //validates the DB entry for a guild
-		//move pretty much all of the code above into here!
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
@@ -109,6 +108,13 @@ module.exports = (client) => {
 			client.guilds.get(guild.id).channels.get(message.split(":")[0].toString()).fetchMessage(message.split(":").toString()[1]).catch(err => {
 				guildData.persistence.messages.remove(message)
 			})
+		})
+		guildData.persistence.time.forEach(action => {
+			if (Date.now() >= action.end) {
+
+			}
+
+
 		})
 	};
 	client.log = (type, message, title) => {

@@ -3,7 +3,7 @@ module.exports = (client, guild) => {
     check for expired actions and execute them - 
     role: remove, add : roleID : userID
     remind: userID : Message
-    
+    guild.
     persistence:{
         time:{
             ''messageID'':{
@@ -17,8 +17,25 @@ module.exports = (client, guild) => {
         
 
     }
-    let guildData = client.DB.get(guild.id).persistence
-    guildData
+    let removeRole = async(client,guildID,memberID,roleID) =>{
+        let guild = client.guilds.get(guildID)
+        guild.members.get(memberID).removeRole(guild.roles.get(roleID))
+    }
+    let actionProcessor =(client,guildID,action){
+        let guildData = client.DB.get(guildID,"persistence")
+        client.get(guildID).members.get()
+
+        switch(action.type){
+            case "role":{
+
+            },
+            case "reminder":{
+
+            }
+        }
+    }
+    
+    switch()
 
     */
 
