@@ -1,7 +1,9 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const enmap = require("enmap");
-
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://e7d4763a70c04344aabd5cee0eafba31@sentry.io/2410177' })
+throw new Error({ token: "asdfsadfsadfsadfdsa", test: "bbb" })
 client.DB = new enmap({
 	name: "DB",
 	autoFetch: true,
