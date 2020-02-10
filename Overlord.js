@@ -87,10 +87,7 @@ client
 	/** if the client disconnects, report the disconnection */
 	.on("disconnect", (event) => {
 		console.error(event);
-		client.isShuttingDown = true; /**this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this (note: requires PM2 to restart the process).
-										*this seems dumb, like why not just use an event emitter? well, it means I can easily block commands from processing by just checking the value of this variable in the message event handler (as client is a pseudo-global scope). 
-										*otherwise I would've used an Emitter.
-										*/
+		client.isShuttingDown = true; /**this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this (note: requires PM2 to restart the process).*/
 	});
 
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory, then starts the initialisation. */

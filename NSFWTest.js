@@ -5,6 +5,14 @@ const load = require("nsfwjs").load;
 const fs = require("fs");
 const client = new Discord.Client({ autoReconnect: true });
 client.download = require("download-to-file");
+var modConfig = {}
+modConfig.classificationWeights = {
+	hentai: 0.7,
+	porn: 0.7,
+	sexy: 0.9,
+	drawing: 0.9,
+}
+
 var toxicity = require("@tensorflow-models/toxicity");
 client.on("ready", () => {
 	console.log("ready!");
@@ -66,6 +74,7 @@ client.on("message", async (message) => {
 		console.log(...classi);
 		message.reply(classi[6].certainty);
 	});
+	message.delete()
 	message.attachments.array().forEach(att => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, `./cache/${fname}`, function (err, filepath) {
@@ -76,6 +85,7 @@ client.on("message", async (message) => {
 				console.log(fname);
 				classifier(client, fname).then(predictions => {
 					console.log(predictions);
+					predictions.filter(p => modConfig.classificationWeights[p.class] >= p.probability).length
 					let preL = [];
 					predictions.forEach(p => {
 						preL.push(`${p.className} Certainty: ${Math.round(p.probability * 100)}%\n`);

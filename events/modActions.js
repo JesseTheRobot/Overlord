@@ -9,14 +9,27 @@ module.exports = async (client, message, action) => {
     let audit = message.settings.auditLogChannel
     let modReport = message.settings.modReportingChannel
     const discord = require("discord.js")
-    //action : summary, desc, target(?)
+    /*action:{
+        type: "action/audit/report",
+        actionDesc:"
+        data: (...),
+    }*/
 
+    const genModAction = (client, message, action) => {
+        let embed = new discord.RichEmbed()
+            .setAuthor(client.user, client.user.avatarURL)
+    }
+    const genAudit = (client, message, action) => {
+
+    }
+    const genModReport = (client, message, action) => {
+
+    }
+
+    //action : summary, desc, target(?)
     //send a message to a moderation channel in which moderators
     // can react to determine if an automated action should be taken or not
     // (only if the autoremove is disabled in module config, g for the antispam/flood/classifier nets)
-
-    var emb = new discord.RichEmbed()
-        .setTitle("test")
 
     const exampleEmbed = {
         color: 0x0099ff,
