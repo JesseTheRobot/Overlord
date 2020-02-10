@@ -105,8 +105,10 @@ module.exports = (client) => {
 				if (!reqPermissions.has(perm)) { reqPermissions.push(perm) }
 			})
 		})
-		guildData.persistance.filter(function (state) {
-			if (state.end)
+		guildData.persistence.messages.forEach(message => {
+			client.guilds.get(guild.id).channels.get(message.split(":")[0].toString()).fetchMessage(message.split(":").toString()[1]).catch(err => {
+				guildData.persistence.messages.remove(message)
+			})
 		})
 	};
 	client.log = (type, message, title) => {
@@ -296,7 +298,8 @@ module.exports = (client) => {
 		},
 
 		persistence: {
-			messages: {},
+			messages: [], //channelid:messageid
+			time: {},
 		},
 		blacklist: [],
 		users: {},

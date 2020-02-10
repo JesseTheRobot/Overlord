@@ -9,8 +9,8 @@ client.DB = new enmap({
 	polling: true,
 	ensureProps: true
 });
-require("./Functions.js")(client);
-delete require.cache[require.resolve(`./Functions.js`)];
+//require("./Functions.js")(client);
+//delete require.cache[require.resolve(`./Functions.js`)];
 
 /*var init = async (client) => {
 
@@ -28,6 +28,7 @@ client.on("ready", () => {
 	//client.DB.defer.then(client.init(client));
 	//client.DB.defer.then(init(client))
 	//
+	console.log("ready!")
 	client.DB.set("150083544593344833", "https://somesite.com/attachment", `15000.attachment`)
 });
 client.on("message", message => {
