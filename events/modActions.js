@@ -4,6 +4,7 @@ module.exports = async (client, message, action) => {
         data:
 
     }*/
+    //https://leovoel.github.io/embed-visualizer/
     let modAction = message.settings.modActionChannel
     let audit = message.settings.auditLogChannel
     let modReport = message.settings.modReportingChannel
