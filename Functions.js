@@ -305,7 +305,7 @@ module.exports = (client) => {
 
 		persistence: {
 			messages: [], //channelid:messageid
-			time: {},
+			time: [],
 		},
 		blacklist: [],
 		users: {},
