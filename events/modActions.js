@@ -6,7 +6,7 @@ module.exports = async (client, message, action) => {
     //https://leovoel.github.io/embed-visualizer/
 
     /*action:{
-        type: "action/audit/report",
+        type: "action/audit/report/",
         actionDesc:"","
         data: (...),
     }*/
@@ -75,4 +75,7 @@ module.exports = async (client, message, action) => {
         },
     };
     //channel.send({ embed: exampleEmbed });
+    let testfunc = (client, user, message) => {
+        let config = client.DB.get(message.guild.id, "modules.autoMod")
+    }
 }

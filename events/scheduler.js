@@ -14,29 +14,29 @@ module.exports = (client, guild) => {
         messages:{
             id array - used for reaction handling
         }
-        
+    }*/
+    let guildData = client.DB.get(guild.id, "persistence")
+    let time = Date.now()
+    guildData.forEach(action => {
+        if (action.time >= time) {
+            actionProcessor(client, guild.id, action)
+        } else {
+            setTimeout(actionProcessor(client, guild.id, action), action.time - Date.now())
+        }
+    })
 
-    }
-    let removeRole = async(client,guildID,memberID,roleID) =>{
+    let actionProcessor = (client, guildID, action) => {
         let guild = client.guilds.get(guildID)
-        guild.members.get(memberID).removeRole(guild.roles.get(roleID))
-    }
-    let actionProcessor =(client,guildID,action){
-        let guildData = client.DB.get(guildID,"persistence")
-        client.get(guildID).members.get()
-
-        switch(action.type){
-            case "role":{
-
-            },
-            case "reminder":{
-
-            }
+        switch (action.type) {
+            case "role":
+                guild.members.get(action.memberID).roles.removeRole(action.roleID)
+                break
+            case "reminder":
+                client.user.get(action.memberID).send(`scheduled reminder: ${action.message}`)
+                break
+            case "nick":
+                guild.members.get(action.memberID).setNickname(action.nick)
+                break
         }
     }
-    
-    switch()
-
-    */
-
 }
