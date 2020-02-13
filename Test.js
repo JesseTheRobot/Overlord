@@ -41,7 +41,16 @@ client.on("ready", () => {
 	data = client.DB.get(guildID, "persistence.time")
 	var actions = data.filter(action => action.end <= now)
 	const closest = Math.min(...data.filter(action => action.end >= now).map(action => action.end));
+	let schTimeout = null
+	schTimeout = setTimeout(myfun, 5000)
+	let sch = require("./events/scheduler.js")
+	sch().then(
+		sch())
+
 });
+var myfun = () => {
+	return true
+}
 /*client.on("message", message => {
 	if (message.author.bot) return
 	console.log(message)
