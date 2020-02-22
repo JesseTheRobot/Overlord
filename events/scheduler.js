@@ -27,6 +27,7 @@ guildData.forEach(action => {
 */
 let actionProcessor = async (client, guildID, action) => {
     let guild = client.guilds.get(guildID)
+    console.log(action)
     switch (action.type) {
         case "role":
             guild.members.get(action.memberID).roles.removeRole(action.roleID)
@@ -44,16 +45,19 @@ let actionProcessor = async (client, guildID, action) => {
 }
 
 module.exports = async function check(client, guildID) {
+    /** Scheduler - uses setTimeout to call itself 
+     * 
+     */
     console.log(client)
     console.log(guildID)
-    return
     let timeouts = client.timeouts
     if (!timeouts.has(guildID)) timeouts.set(guildID, null)
-    console.log(`Checking... (timeout = ${timeouts.guildID})`);
+    let timeout = timeouts.get(guildID)
+    console.log(`Checking... (timeout = ${timeout}) ${new Date()} `);
     console.log(timeouts)
     // clears previous check refresher
     clearTimeout(timeout);
-    const now = new Date();
+    const now = new Date().getTime();
     data = client.DB.get(guildID, "persistence.time")
     const closest = Math.min(...data.filter(action => action.end >= now).map(action => action.end));
     data.filter(action => action.end <= now).forEach(action => {
@@ -62,7 +66,10 @@ module.exports = async function check(client, guildID) {
     client.DB.set(guildID, data.filter(action => action.end >= now), "persistence.time")
     if (closest === Infinity) return;
     const timeTo = closest - now;
+    console.log(`checking timeout in ${timeTo} ms`)
 
     // will only wait a max of 2**31 - 1 because setTimeout breaks after that
-    timeouts.set(guildID, setTimeout(check, Math.min(timeTo, 2 ** 31 - 1)))
+    timeouts.set(guildID, setTimeout(check, Math.min(timeTo, 2 ** 31 - 1), client, guildID))
+    console.log(timeouts)
+    console.log(client.timeouts)
 };
