@@ -79,7 +79,7 @@ client.on("message", async (message) => {
 		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
 		client.download(att.url, `./cache/${fname}`, function (err, filepath) {
 			if (err) {
-				client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
+				client.log(`download of attachment ${att.url} failed!`, "ERROR");
 			} else {
 				console.log("Download finished:", filepath);
 				console.log(fname);

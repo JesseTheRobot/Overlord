@@ -19,10 +19,12 @@ client.DB = new enmap({
 	const eventFile = "message.js";
 	const eventObj = require(`./events/${eventFile}`);
 	client.on(eventName, eventObj.bind(null, client));
-	client.log("Log", `Bound ${eventName} to Client Sucessfully!`, "EventBind");
+	client.log(`Bound ${eventName} to Client Sucessfully!`, "INFO");
 	delete require.cache[require.resolve(`./events/${eventFile}`)];
 };*/
-
+eventObj = require("./events/scheduler.js")
+client.on("scheduler", eventObj.bind(null, client))
+client.emit("scheduler", 100011101011101)
 
 client.login(require("./config.js").token);
 client.on("ready", () => {
@@ -39,18 +41,45 @@ client.on("ready", () => {
 	client.DB.push(guildID, { end: 44444000, action: "add" }, "persistence.time")
 	const now = new Date();
 	data = client.DB.get(guildID, "persistence.time")
-	var actions = data.filter(action => action.end <= now)
-	const closest = Math.min(...data.filter(action => action.end >= now).map(action => action.end));
-	let schTimeout = null
-	schTimeout = setTimeout(myfun, 5000)
-	let sch = require("./events/scheduler.js")
-	sch().then(
-		sch())
+	client.debug = false
+
+	client.timeouts = new Set()
+	log("warn", "WARN")
+	log("error", "ERROR")
+	log("info", "INFO")
+	check(guildID)
+
+	async function check(guildID) {
+
+		// clears previous check refresher
+		const now = new Date();
+		data = client.DB.get(guildID, "persistence.time")
+		const closest = Math.min(...data.filter(action => action.end >= now).map(action => action.end));
+		data.filter(action => action.end <= now).forEach(action => {
+			//actionProcessor(client, guildID, action)
+		})
+		client.DB.set(guildID, data.filter(action => action.end >= now), "persistence.time")
+
+		if (closest === Infinity) return;
+		const timeTo = closest - now;
+
+		// will only wait a max of 2**31 - 1 because setTimeout breaks after that
+		//timeouts.set(guildID, setTimeout(check, Math.min(timeTo, 2 ** 31 - 1)))
+	};
 
 });
-var myfun = () => {
-	return true
-}
+var log = (message, type) => {
+	//info, warn, debug
+	let caller = ((new Error).stack).split("at")[2].trim().replace(process.cwd(), ".")
+	if (!type) type = "INFO";
+	if (client.debug) {
+		console.log(`[${type}] ${JSON.stringify(message)} ${caller}`);
+	} else if (((!client.debug) && (type === "WARN" || type === "ERROR"))) {
+		console.log(`[${type}] ${JSON.stringify(message)} ${caller}`)
+	}
+
+
+};
 /*client.on("message", message => {
 	if (message.author.bot) return
 	console.log(message)

@@ -35,7 +35,15 @@ module.exports = async (client, message) => {
 
 	//message.level = client.getLevel(client,message);
 	const args = message.content.slice(prefix.length).trim().split(/ +/g);
-	const command = args.shift().toLowerCase();
+	const cmdName = args.shift().toLowerCase();
+
+
+	client.checkPermissions = (client, message, command) => {
+
+	}
+	/*
+	guild status (guild only, enabled, etc) perms => array => overrides => set substraction => length check => true/false
+	*/
 	//client.getStatus(client,message,command);
 	try {
 		var cmdfile = require(`${process.cwd()}\\commands\\${command}.js`);
@@ -44,7 +52,6 @@ module.exports = async (client, message) => {
 		console.log(err);
 	}
 
-	client.log("Log", `user ${message.author.displayName || message.author.username} has used command ${command} with args ${args} at time ${new Date()}`, "MessageEvent");
 	//const permLvl = client.getMsgPerm(message); //returns permission integer for the author of the message.
 	console.log(client.commands); //debug check of the commands collection tied to client
 };

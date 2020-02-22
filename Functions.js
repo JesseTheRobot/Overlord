@@ -19,15 +19,13 @@ const basedir = process.cwd();
  */
 module.exports = (client) => {
 	client.trecent = new Object;
+	client.commands = new enmap();
 	client.cooldown = new Set();
-	client.counters = []; //DSTATS REPLACEMENT - Temp
-	client.dStats = new Object();
+	client.timeouts = new Set()
 	/** initalisation routine for the client,
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
-
-		client.dStats.increment("overlord.init");
 		client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
 		client.channels.forEach(channel => {
 			if (channel.type == "category)") {
@@ -49,13 +47,13 @@ module.exports = (client) => {
 		var game = client.config.status.replace("{{guilds}}", client.guilds.size).replace("{{version}}", client.version);
 		client.user.setPresence({ game: { name: game, type: "PLAYING" }, status: "active" });
 		const eventFiles = fs.readdirSync("./events/");
-		client.log("log", `Loading ${eventFiles.length} events from ${basedir}/events/`, "EventInit");
+		client.log(`Loading ${eventFiles.length} events from ${basedir}/events/`, "INFO");
 		eventFiles.forEach(eventFile => {
 			if (!eventFile.endsWith(".js")) return;
 			const eventName = eventFile.split(".")[0];
 			const eventObj = require(`./events/${eventFile}`);
 			client.on(eventName, eventObj.bind(null, client));
-			client.log("Log", `Bound ${eventName} to Client Sucessfully!`, "EventBind");
+			client.log(`Bound ${eventName} to Client Sucessfully!`, "INFO");
 			delete require.cache[require.resolve(`./events/${eventFile}`)];
 		});
 		client.guilds.forEach(guild => {//iterates over each guild that the bot has access to and ensures they are present in the database
@@ -81,16 +79,16 @@ module.exports = (client) => {
 		guild.members.forEach(member => { //ensures each server has all it's users initialised correctly
 			client.DB.ensure(guild.id, { xp: 0 }, `users.${member.id}`);
 		});
-		client.log("Log", `Sucessfully Verified/initialised Guild ${guild.name} to DB`);
+		client.log(`Sucessfully Verified/initialised Guild ${guild.name} to DB`, "INFO");
 		client.DB.set(guild.id, guild.owner.user.id, "serverOwnerID");
 		guild.roles.forEach(role => { //figure out a better way of doing this! (dynamic eval?)
-			client.log("Log", `Testing role with name ${role.name} for Admin/Mod/Muted availability.`, "InitPermRoles");
+			client.log(`Testing role with name ${role.name} for Admin/Mod/Muted availability.`, "INFO");
 			if (adminRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "adminRoles"); }
 			if (modRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "modRoles"); }
 			if (mutedRdict.includes(role.name)) { client.DB.set(guild.id, role.id, "mutedRole"); }
 		});
 		const commandFiles = fs.readdirSync("./commands/");
-		client.log("Log", `Loading ${commandFiles.length} events from ${basedir}/commands/`, "CommandInit");
+		client.log(`Loading ${commandFiles.length} events from ${basedir}/commands/`, "INFO");
 		commandFiles.forEach(command => {
 			if (!command.endsWith(".js")) return;
 			var command = command.split(".")[0]; // eslint-disable-line no-redeclare 
@@ -109,46 +107,36 @@ module.exports = (client) => {
 				guildData.persistence.messages.remove(message)
 			})
 		})
-		guildData.persistence.time.forEach(action => {
-			if (Date.now() >= action.end) {
-
-			}
-
-
-		})
+		client.emit("scheduler")
 	};
-	client.log = (type, message, title) => {
-		if (!title) {
-			try {
-				title = `『Function: ${client.log.caller.name}』`;
-			} catch (err) {
-				title = "";
-			}
+	client.log = (message, type) => {
+		let caller = ((new Error).stack).split("at")[2].trim().replace(process.cwd(), ".")
+		if (!type) type = "INFO";
+		if (client.debug) {
+			console.log(`[${type}] ${JSON.stringify(message)} ${caller}`);
+		} else if (type != "INFO") {
+			console.log(`[${type}] ${JSON.stringify(message)} ${caller}`)
 		}
-		if (!type) type = "Log";
-		console.log(`[${type}] ${title} ${JSON.stringify(message)}`);
 	};
 
 	client.loadCommand = (command, guildid) => { //loads either a specified command for a guild or loads a command for *all* guilds. 
-		client.log("Log", `Loading ${command} from ${process.cwd()}/commands/`, "CommandInit");
+		console.log(`Loading ${command} from ${process.cwd()}/commands/`);
 		try {
 			var cmdObj = require(`${process.cwd()}/commands/${command}.js`);
-			return cmdObj;
-		} catch (err) {
-			client.log("Error", `Error in loading command ${command} from ${process.cwd()}/commands/ - \n${err}`);
-			return "failed";
-		}
-		function loadCmd(command, guildid) {
 			client.DB.ensure(guildid, cmdObj.defaultConfig, `commands.${command}`); //ensures each guild has the configuration data required for each command.
 			var cmdAliases = [];
 			client.DB.get(guildid).commands[command].aliases.forEach(alias => {
 				cmdAliases.push(alias);
-				client.log("Log", `bound alias ${alias} to command ${command} in guild ${client.guilds.get(guildid).name}`, "CommandBind");
+				client.log(`bound alias ${alias} to command ${command} in guild ${client.guilds.get(guildid).name}`, "INFO");
 			});
 			client.commands.ensure(guildid, cmdAliases, command);
 			if (!guildid) {
 				client.guilds.forEach(guild => { loadCmd(command, guild.id); }); //if no guildid is specified, loads the command for all guilds.
 			} else { loadCmd(command, guildid); }
+
+		} catch (err) {
+			client.error(`Failed to load command ${command}!`)
+			return "failed";
 		}
 
 	};
@@ -177,7 +165,7 @@ module.exports = (client) => {
 			delete require.cache[require.resolve(`${basedir}/${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
 			client.loadCommand(commandName); //reload the command fully just to be sure.
 		} catch (err) {
-			client.log("Error", `Error in reloading command ${commandName} - \n${err}`);
+			client.log(`Error in reloading command ${commandName} - \n${err}`, "ERROR");
 		}
 	};
 
@@ -197,13 +185,6 @@ module.exports = (client) => {
 		//move the code from the message handler into here, use the performant caching to go faaassstt
 	};
 
-	client.checkBlacklist = (client, message) => {
-
-	};
-	client.checkblocked = (client, message) => {
-
-	};
-
 	client.evalClean = async (client, text) => { //cleans output of the eval command, to prevent the token and other chars from causing issues.
 		if (text && text.constructor.name == "Promise") //checks if the evaled code is that of a promise, if so, awaits for the code to execute and for the promise to be reoslve before continuing execution.
 			text = await text;
@@ -218,9 +199,8 @@ module.exports = (client) => {
 		let mobj = `{${message.guild.id}:${message.author.id}}`;
 		var user = client.DB.get(message.guild.id, `users.${message.author.id}`);
 		var trecent = client.trecent[`${message.guild.id}`];
-		var gcfg = client.getGuildSettings(message.guild.id);
-		var interval = gcfg.config.autoMod.interval;
-		var mutecap = gcfg.config.autoMod.mutecap;
+		var interval = message.settings.modules.autoMod.interval;
+		var mutecap = message.settings.modules.autoMod.mutecap;
 		setTimeout(() => { trecent.splice(trecent[trecent.indexOf(mobj)], 1); }, interval);
 		if ((trecent.filter(value => value == mobj)).length >= mutecap) { //filter all messages sent (within array) and if <mutecap> or more are keyed to the user and guildid, penalise the user. 
 			trecent = trecent.filter(value => value != mobj); //wipes array after a strike has been added.
@@ -235,9 +215,9 @@ module.exports = (client) => {
 		}
 	};
 
-	client.dStats.increment = (counter) => { //"fake"DStats Implimentation 
-		client.counters.push(counter);
-	};
+	client.checkPermissions = (client, message, command) => {
+
+	}
 
 	/** returns a random integer between two numbers (max exclusive, min inclusive.)
 	  * @param {int} minimum

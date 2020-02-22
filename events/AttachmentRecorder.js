@@ -7,7 +7,7 @@ module.exports = async (client, message) => {
 		var filename = message.id + "." + att.url.split("/").pop().split(".")[1];
 		var filePath = path + filename
 		client.download(att.url, { directory: path, filename: filename }, function (err) {
-			if (err) client.log("ERROR", `download of attachment ${att.url} failed!`, "recordAttachments");
+			if (err) client.log(`download of attachment ${att.url} failed!`, "ERROR");
 			else {
 				console.log("download successful!");
 				if (message.settings.modules.NSFWclassifier.enabled) {
