@@ -1,5 +1,5 @@
 module.exports = async (client, message, filename) => {
-    if (!client.NSFWModel) { return }
+    if (!client.NSFWModel) return
     let modConfig = message.settings.modules.NSFWClassifier
     var classifier = async (client, img) => {
         return new Promise(resolve => {
@@ -17,7 +17,6 @@ module.exports = async (client, message, filename) => {
     classifier(client, filename).then(predictions => {
         if (predictions.filter(p => modConfig.classificationWeights[p.class] >= p.probability).length >= modConfig.thresholdExceeders) {
             if (modConfig.autoRemove) {
-                message.delete.
             }
 
             var action = {
@@ -38,5 +37,5 @@ module.exports.defaultConfig = {
     },
     thresholdExceeders: 1,
     autoRemove: true,
-    requiredPermissions: ["MESSAGE_DELETE"]
+    requiredPermissions: ["MESSAGE_DELETE"],
 };

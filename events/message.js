@@ -22,12 +22,9 @@ module.exports = async (client, message) => {
 	//check command
 
 
-
 	var prefix = client.getGuildSettings(message.guild).config.prefix; //sets the prefix for the current guild
 	if (message.guild && !message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
 	//binds the guild's settings and the level of the user to the message object, for ease-of-access for later operations (eg commands)
-
-
 
 
 

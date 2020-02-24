@@ -1,4 +1,5 @@
 exports.run = (client, message, args) => {
+	console.log("WIP")
 
 };
 exports.defaultConfig = {

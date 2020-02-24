@@ -19,13 +19,13 @@ const basedir = process.cwd();
  */
 module.exports = (client) => {
 	client.trecent = new Object;
-	client.commands = new enmap();
 	client.cooldown = new Set();
-	client.timeouts = new Set()
+	client.timeouts = new Map()
 	/** initalisation routine for the client,
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
+
 		client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
 		client.channels.forEach(channel => {
 			if (channel.type == "category)") {
@@ -33,27 +33,26 @@ module.exports = (client) => {
 					child.fetchMessages({ limit: 100 }).then(c => { return })
 				})
 			} else if (channel.type == "text") {
-				console.log(channel.messages)
 				channel.fetchMessages({ limit: 100 }).then(c => { return })
-
 			}
 		});
 		if (client.guilds.size == 0) {
 			throw new Error("No Guilds Detected! Please check your token. aborting Init.");
 		}
 		if (!client.user.bot) {
-			throw new Error("Warning: Using Bots on a user account is forbidden by Discord Tos. Please Verify your token!");
+			throw new Error("Warning: Using Bots on a user account is (for the most part) forbidden by Discord Tos. Please Verify your token!");
 		}
 		var game = client.config.status.replace("{{guilds}}", client.guilds.size).replace("{{version}}", client.version);
 		client.user.setPresence({ game: { name: game, type: "PLAYING" }, status: "active" });
 		const eventFiles = fs.readdirSync("./events/");
-		client.log(`Loading ${eventFiles.length} events from ${basedir}/events/`, "INFO");
+		client.log(`Loading ${eventFiles.length} events from ${basedir}/events/`);
 		eventFiles.forEach(eventFile => {
 			if (!eventFile.endsWith(".js")) return;
 			const eventName = eventFile.split(".")[0];
+			client.log(`attempting to load event ${eventName}`)
 			const eventObj = require(`./events/${eventFile}`);
 			client.on(eventName, eventObj.bind(null, client));
-			client.log(`Bound ${eventName} to Client Sucessfully!`, "INFO");
+			client.log(`Bound ${eventName} to Client Sucessfully!`);
 			delete require.cache[require.resolve(`./events/${eventFile}`)];
 		});
 		client.guilds.forEach(guild => {//iterates over each guild that the bot has access to and ensures they are present in the database
@@ -96,7 +95,9 @@ module.exports = (client) => {
 		});
 		//check module permission requirements
 		var guildData = client.DB.get(guild.id)
-		guildData.modules.forEach(Module => {
+		Object.keys(guildData.modules).forEach(key => {
+			console.log(key)
+			Module = guildData.modules[key]
 			if (!Module.defaultConfig) return;
 			Module.defaultConfig.requiredPermissions.forEach(perm => {
 				if (!reqPermissions.has(perm)) { reqPermissions.push(perm) }
@@ -110,17 +111,26 @@ module.exports = (client) => {
 		client.emit("scheduler")
 	};
 	client.log = (message, type) => {
+		//info, warn, debug
 		let caller = ((new Error).stack).split("at")[2].trim().replace(process.cwd(), ".")
 		if (!type) type = "INFO";
-		if (client.debug) {
-			console.log(`[${type}] ${JSON.stringify(message)} ${caller}`);
-		} else if (type != "INFO") {
-			console.log(`[${type}] ${JSON.stringify(message)} ${caller}`)
+		switch (type) {
+			case "ERROR":
+				console.error(`[${type}] ${JSON.stringify(message)} ${caller}`);
+				break;
+			case "WARN":
+				console.warn(`[${type}] ${JSON.stringify(message)} ${caller}`);
+				break;
+			default:
+				if (!client.debug) break
+				console.log(`[${type}] ${JSON.stringify(message)} ${caller}`)
 		}
 	};
 
 	client.loadCommand = (command, guildid) => { //loads either a specified command for a guild or loads a command for *all* guilds. 
-		console.log(`Loading ${command} from ${process.cwd()}/commands/`);
+		if (!guildid) {
+			client.guilds.forEach(guild => { client.loadCommand(command, guild.id); }); //if no guildid is specified, loads the command for all guilds.
+		}
 		try {
 			var cmdObj = require(`${process.cwd()}/commands/${command}.js`);
 			client.DB.ensure(guildid, cmdObj.defaultConfig, `commands.${command}`); //ensures each guild has the configuration data required for each command.
@@ -130,15 +140,9 @@ module.exports = (client) => {
 				client.log(`bound alias ${alias} to command ${command} in guild ${client.guilds.get(guildid).name}`, "INFO");
 			});
 			client.commands.ensure(guildid, cmdAliases, command);
-			if (!guildid) {
-				client.guilds.forEach(guild => { loadCmd(command, guild.id); }); //if no guildid is specified, loads the command for all guilds.
-			} else { loadCmd(command, guildid); }
-
 		} catch (err) {
-			client.error(`Failed to load command ${command}!`)
-			return "failed";
+			client.log(`Failed to load command ${command}! : ${err}`, "ERROR")
 		}
-
 	};
 	client.deleteMessage = (message, type) => {
 		try {
@@ -280,6 +284,7 @@ module.exports = (client) => {
 					penalty: 5,
 				}
 			},
+
 
 		},
 

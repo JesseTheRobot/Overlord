@@ -54,11 +54,11 @@ module.exports = async function check(client, guildID) {
     if (!timeouts.has(guildID)) timeouts.set(guildID, null)
     let timeout = timeouts.get(guildID)
     console.log(`Checking... (timeout = ${timeout}) ${new Date()} `);
-    console.log(timeouts)
     // clears previous check refresher
     clearTimeout(timeout);
     const now = new Date().getTime();
     data = client.DB.get(guildID, "persistence.time")
+    if (!data) return
     const closest = Math.min(...data.filter(action => action.end >= now).map(action => action.end));
     data.filter(action => action.end <= now).forEach(action => {
         actionProcessor(client, guildID, action)
