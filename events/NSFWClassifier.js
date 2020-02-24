@@ -17,6 +17,11 @@ module.exports = async (client, message, filename) => {
     classifier(client, filename).then(predictions => {
         if (predictions.filter(p => modConfig.classificationWeights[p.class] >= p.probability).length >= modConfig.thresholdExceeders) {
             if (modConfig.autoRemove) {
+                message.delete()
+                let action = {
+
+                }
+                client.emit("modaction", message)
             }
 
             var action = {

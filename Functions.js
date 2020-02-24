@@ -97,7 +97,8 @@ module.exports = (client) => {
 		var guildData = client.DB.get(guild.id)
 		Object.keys(guildData.modules).forEach(key => {
 			console.log(key)
-			Module = guildData.modules[key]
+			let
+				Module = guildData.modules[key]
 			if (!Module.defaultConfig) return;
 			Module.defaultConfig.requiredPermissions.forEach(perm => {
 				if (!reqPermissions.has(perm)) { reqPermissions.push(perm) }
@@ -144,20 +145,11 @@ module.exports = (client) => {
 			client.log(`Failed to load command ${command}! : ${err}`, "ERROR")
 		}
 	};
-	client.deleteMessage = (message, type) => {
-		try {
-			message.delete()
 
-		} catch (err) {
-			client.raisePermError("")
-
-		}
-
-	};
 	client.raiseModError = (message, guildID) => {
 		var config = client.getGuildSettings(guildID)
 		if (config.modReportingChannel) {
-			client.getChannel(modReportingChannel).then(channel => {
+			client.getChannel(config.modReportingChannel).then(channel => {
 				channel.send(message)
 			})
 		}
@@ -171,15 +163,6 @@ module.exports = (client) => {
 		} catch (err) {
 			client.log(`Error in reloading command ${commandName} - \n${err}`, "ERROR");
 		}
-	};
-
-	client.getGuildSettings = (guild) => {
-		try {
-			var gcfg = client.DB.get(guild.id);
-		} catch (err) {
-			var gcfg = client.defaultConfig; //eslint-disable-line no-redeclare 
-		}
-		return (gcfg);
 	};
 
 	client.writeSettings = (guildID, settings) => {

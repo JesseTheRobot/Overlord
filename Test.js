@@ -26,7 +26,7 @@ delete require.cache[require.resolve(`./Functions.js`)];
 	client.log(`Bound ${eventName} to Client Sucessfully!`, "INFO");
 	delete require.cache[require.resolve(`./events/${eventFile}`)];
 };*/
-eventObj = require("./events/scheduler.js")
+let eventObj = require("./events/scheduler.js")
 client.on("scheduler", eventObj.bind(null, client))
 
 

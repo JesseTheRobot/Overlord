@@ -4,26 +4,6 @@ check for expired actions and execute them -
 role: remove, add : roleID : userID
 remind: userID : Message
 guild.
-persistence:{
-    time:{
-        ''messageID'':{
-            end: UTS,
-            action: role remove RoleID UserID
-        }
-    },
-    messages:{
-        id array - used for reaction handling
-    }
-}
-let guildData = client.DB.get(guild.id, "persistence")
-let time = Date.now()
-guildData.forEach(action => {
-    if (action.time >= time) {
-        actionProcessor(client, guild.id, action)
-    } else {
-        setTimeout(actionProcessor(client, guild.id, action), action.time - Date.now())
-    }
-})
 */
 let actionProcessor = async (client, guildID, action) => {
     let guild = client.guilds.get(guildID)
@@ -57,7 +37,7 @@ module.exports = async function check(client, guildID) {
     // clears previous check refresher
     clearTimeout(timeout);
     const now = new Date().getTime();
-    data = client.DB.get(guildID, "persistence.time")
+    let data = client.DB.get(guildID, "persistence.time")
     if (!data) return
     const closest = Math.min(...data.filter(action => action.end >= now).map(action => action.end));
     data.filter(action => action.end <= now).forEach(action => {
