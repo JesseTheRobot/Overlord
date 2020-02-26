@@ -13,7 +13,7 @@ module.exports = async (client, message) => {
 				if (message.settings.modules.NSFWclassifier.enabled) {
 					client.emit("NSFWClassifier", client, message, filename);
 				} else {
-					setTimeout(() => { client.fs.unlink(filePath).catch(console.log(err)) })
+					setTimeout(() => { client.fs.unlink(filePath).catch(client.log(err, "ERROR")) })
 				}
 				if (modConfig.keep) {
 					new client.transfer(filePath)
@@ -32,7 +32,7 @@ module.exports = async (client, message) => {
 			}
 		});
 	});
-	client.DB.set(message.id, { attachments: atts, expiaryTS: 000 }, `${message.guild.id}.persistance.attachments`)
+	client.DB.set(message.id, { attachments: atts, expiry: (new Date().getMilliseconds + (13.5 * 86400000)) }, `${message.guild.id}.persistance.attachments`)
 	return;
 };
 module.defaultConfig = {

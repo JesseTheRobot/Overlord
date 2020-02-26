@@ -10,11 +10,16 @@ module.exports = async (client, message) => {
 	}
 	message.content = message.cleanContent; //built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content)
 	message.settings = client.settings.get(message.guild.id)
+	if (!message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
+	//binds the guild's settings and the level of the user to the message object, for ease-of-access for later operations (eg commands)
 
 	const BotMentionRegEx = new RegExp(`^<@!?${client.user.id}>( |)$`);
 	if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx)) { //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.
-		return message.author.send(`Hi there! ${message.author}, My prefix in guild ${message.guild.name} is ${prefix || "$"}.`); //sends (DM's) the user the Command Prefix for the guild, or the default prefix if anything "wonky" happens.
+		return message.author.send(`Hi there! ${message.member.displayName}, My prefix in guild ${message.guild.name} is ${prefix || "$"}.`); //sends (DM's) the user the Command Prefix for the guild, or the default prefix if anything "wonky" happens.
 	}
+	//message heuristics time!
+	//antispam, attachments, xp, NN's. (as this is 'unconditional')
+
 	/*check if the message has the command prefix
 	check if the command exists
 	check if the command requires a guild or not
@@ -23,8 +28,6 @@ module.exports = async (client, message) => {
 	*/
 	//check command
 
-	if (!message.member) await message.guild.members.fetch(message.author); //fetches the member into cache if they're offline.
-	//binds the guild's settings and the level of the user to the message object, for ease-of-access for later operations (eg commands)
 
 	//states ["ok/allowed":"✔️","Wait":"⏳","Block":"🚫"]
 
