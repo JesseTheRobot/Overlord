@@ -8,4 +8,5 @@ module.exports = {
 	datadir: "./data", //data storage location for the ENMAP-SQLite backend
 	status: "",
 	enableModels: true,
+	preLoad: true,
 };

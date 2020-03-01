@@ -12,6 +12,7 @@ client.download = require("download-file");
 client.tf = require("@tensorflow/tfjs-node");
 client.version = "0.1.9.21012020"; //release.major.minor.date
 client.debug = false
+
 console.time("init");
 
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
@@ -38,6 +39,7 @@ client.DB = new enmap({
 	dataDir: client.config.datadir
 });
 client.commands = new enmap();
+client.trecent = new enmap()
 
 /**optional debug system to monitor any/all changes to the ENMAP Database */
 if (process.env.NODE_ENV != "production") {

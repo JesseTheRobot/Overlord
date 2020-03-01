@@ -33,6 +33,7 @@ module.exports = async (client, message) => {
 		});
 	});
 	client.DB.set(message.id, { attachments: atts, expiry: (new Date().getMilliseconds + (13.5 * 86400000)) }, `${message.guild.id}.persistance.attachments`)
+	console.log("test")
 	return;
 };
 module.defaultConfig = {

@@ -17,6 +17,8 @@ module.exports = async (client, message) => {
 	if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx)) { //checks if the bot, and *only* the bot, is mentioned, as well as a guild is present.
 		return message.author.send(`Hi there! ${message.member.displayName}, My prefix in guild ${message.guild.name} is ${prefix || "$"}.`); //sends (DM's) the user the Command Prefix for the guild, or the default prefix if anything "wonky" happens.
 	}
+	var msgHeuristics = ["autoMod", "NSFWClassifier", "toxicClassifier", ""]
+
 	//message heuristics time!
 	//antispam, attachments, xp, NN's. (as this is 'unconditional')
 
