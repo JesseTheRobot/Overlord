@@ -4,36 +4,32 @@ module.exports = async (client, message) => {
 	var atts = []
 	var path = modConfig.storageDir
 	message.attachments.array().forEach(att => {
-		var filename = message.id + "." + att.url.split("/").pop().split(".")[1];
+		var filename = message.id + "." + att.url.split("/").pop().split(".")[1]; //TODO: change this to the last item to prevent errors.
 		var filePath = path + filename
 		client.download(att.url, { directory: path, filename: filename }, function (err) {
 			if (err) client.log(`download of attachment ${att.url} failed!`, "ERROR");
 			else {
-				console.log("download successful!");
-				if (message.settings.modules.NSFWclassifier.enabled) {
+				client.log("download successful!");
+				if (modConfig.NSFWclassifier.enabled) {
 					client.emit("NSFWClassifier", client, message, filename);
-				} else {
-					setTimeout(() => { client.fs.unlink(filePath).catch(client.log(err, "ERROR")) })
 				}
 				if (modConfig.keep) {
 					new client.transfer(filePath)
 						.upload().then(function (link) {
-							console.log(link);
 							client.fs.unlink(filePath, (err) => {
 								if (err) {
-									console.log(err);
+									client.log(err, "ERROR");
 								} else {
-									console.log("Unlink successful!");
+									client.log("Unlink successful!");
 								}
 							});
 							atts.push(link)
-						}).catch(function (err) { console.log(err); });
+						}).catch(function (err) { client.log(err, "ERROR"); });
 				}
 			}
 		});
 	});
-	client.DB.set(message.id, { attachments: atts, expiry: (new Date().getMilliseconds + (13.5 * 86400000)) }, `${message.guild.id}.persistance.attachments`)
-	console.log("test")
+	if (modConfig.keep) { client.DB.set(message.id, { attachments: atts, expiry: (new Date().getMilliseconds + (13.5 * 86400000)) }, `${message.guild.id}.persistance.attachments`) }
 	return;
 };
 module.defaultConfig = {

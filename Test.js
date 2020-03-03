@@ -14,6 +14,12 @@ client.debug = true
 client.config = require("./config.js")
 console.time("init");
 client.timeouts = new Map()
+console.log((new Error).stack.toString())
+var stk = (new Error).stack
+console.log(stk.split(" at ")[2])
+
+
+
 require("./Functions.js")(client);
 delete require.cache[require.resolve(`./Functions.js`)];
 

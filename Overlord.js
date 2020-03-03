@@ -2,7 +2,7 @@
 console.time("init");
 const Discord = require("discord.js");
 const enmap = require("enmap");
-const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: 20000, messageCacheLifetime: 86400, messageSweepInterval: 100, disabledEvents: [""] });
+const client = new Discord.Client({ autoReconnect: true, messageCacheMaxSize: 20000, messageCacheLifetime: 86400000, messageSweepInterval: 100, disabledEvents: [""] });
 client.config = require("./config.js");
 client.isShuttingDown = false;
 client.fs = require("fs");
@@ -10,11 +10,8 @@ client.diff = require("deep-object-diff").detailedDiff;
 client.transfer = require("transfer-sh");
 client.download = require("download-file");
 client.tf = require("@tensorflow/tfjs-node");
-client.version = "0.1.9.21012020"; //release.major.minor.date
-client.debug = false
-
-console.time("init");
-
+client.version = "0.2.0.2032020"; //release.major.minor.date
+client.debug = (process.env.NODE_ENV === "production" ? false : true) //debug flag set if the bot is not run with the enviroment variable "production"
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 
 async (client) => {//loads Models into memory asyncronously
@@ -26,8 +23,7 @@ async (client) => {//loads Models into memory asyncronously
 		return require("@tensorflow/tfjs-converter").loadGraphModel("file://./models/toxic/model.json");
 	};
 	await client.toxicModel.load();
-
-	console.log("Models loaded!");
+	client.log("Models loaded!");
 };
 /** assigns the client Object a New enmap instance ("DB") - */
 client.DB = new enmap({
@@ -39,10 +35,10 @@ client.DB = new enmap({
 	dataDir: client.config.datadir
 });
 client.commands = new enmap();
-client.trecent = new enmap()
+
 
 /**optional debug system to monitor any/all changes to the ENMAP Database */
-if (process.env.NODE_ENV != "production") {
+if (client.debug) {
 	client.DB.changed((Key, Old, New) => {
 		console.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
 	})
@@ -90,7 +86,7 @@ client
 	.on("error", error => { client.log(error, "ERROR"); })
 	/** if the client disconnects, report the disconnection */
 	.on("disconnect", (event) => {
-		console.error(event);
+		client.log("Client disconnected! restarting...\n" + event, "ERROR")
 		client.isShuttingDown = true; /**this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this (note: requires PM2 to restart the process).*/
 	});
 

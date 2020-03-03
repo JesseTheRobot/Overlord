@@ -19,12 +19,13 @@ const basedir = process.cwd();
  */
 module.exports = (client) => {
 	client.cooldown = new Set();
-	client.timeouts = new Map()
+	client.timeouts = new Map();
+	client.trecent = new Map();
 	/** initalisation routine for the client,
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
-
+		client.log(`client logging in as ${client.user.tag}`)
 		client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
 		if (client.config.preLoad) {
 			client.channels.forEach(channel => {
@@ -41,7 +42,7 @@ module.exports = (client) => {
 			throw new Error("No Guilds Detected! Please check your token. aborting Init.");
 		}
 		if (!client.user.bot) {
-			throw new Error("Warning: Using Bots on a user account is (for the most part) forbidden by Discord Tos. Please Verify your token!");
+			throw new Error("Warning: Using Bots on a user account is (for the most part) forbidden by Discord ToS. Please Verify your token!");
 		}
 		var game = client.config.status.replace("{{guilds}}", client.guilds.size).replace("{{version}}", client.version);
 		client.user.setPresence({ game: { name: game, type: "PLAYING" }, status: "active" });
@@ -72,7 +73,7 @@ module.exports = (client) => {
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
-		let reqPermissions = ["SEND_MESSAGE", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL"]
+		let reqPermissions = ["SEND_MESSAGES", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL"]
 		client.commands.ensure(guild.id, new Object);
 		client.trecent[guild.id] = new Set();
 		client.DB.ensure(guild.id, client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
@@ -97,14 +98,17 @@ module.exports = (client) => {
 		//check module permission requirements
 		var guildData = client.DB.get(guild.id)
 		Object.keys(guildData.modules).forEach(key => {
-			console.log(key)
-			let
-				Module = guildData.modules[key]
+			let Module = guildData.modules[key]
 			if (!Module.defaultConfig) return;
 			Module.defaultConfig.requiredPermissions.forEach(perm => {
 				if (!reqPermissions.has(perm)) { reqPermissions.push(perm) }
 			})
-		})
+		});
+		client.log(`required permissions for server ${guild.name} : ${reqPermissions.toString()}`)
+		let missingPerms = reqPermissions.filter(perm => !(guild.members.get(client.user.id).permissions.toArray()).includes(perm))
+		if (missingPerms.length >= 1) {
+			client.log(`bot is missing permisions : ${missingPerms.toString()} in guild ${guild.name}`, "ERROR")
+		}
 		guildData.persistence.messages.forEach(message => {
 			client.guilds.get(guild.id).channels.get(message.split(":")[0].toString()).fetchMessage(message.split(":").toString()[1]).catch(err => {
 				guildData.persistence.messages.remove(message)
@@ -114,18 +118,18 @@ module.exports = (client) => {
 	};
 	client.log = (message, type) => {
 		//info, warn, debug
-		let caller = ((new Error).stack).split("at")[2].trim().replace(process.cwd(), ".")
+		let caller = ((new Error).stack).split(" at ")[2].trim().replace(process.cwd(), ".")
 		if (!type) type = "INFO";
 		switch (type) {
 			case "ERROR":
-				console.error(`[${type}] ${JSON.stringify(message)} ${caller}`);
+				console.error(`[${type}]${JSON.stringify(message)} ${caller}`);
 				break;
 			case "WARN":
-				console.warn(`[${type}] ${JSON.stringify(message)} ${caller}`);
+				console.warn(`[${type}]${JSON.stringify(message)} ${caller}`);
 				break;
 			default:
 				if (!client.debug) break
-				console.log(`[${type}] ${JSON.stringify(message)} ${caller}`)
+				console.log(`[${type}]${JSON.stringify(message)} ${caller}`)
 		}
 	};
 
@@ -134,7 +138,7 @@ module.exports = (client) => {
 			client.guilds.forEach(guild => { client.loadCommand(command, guild.id); }); //if no guildid is specified, loads the command for all guilds.
 		}
 		try {
-			var cmdObj = require(`${process.cwd()}/commands/${command}.js`);
+			var cmdObj = require(`${process.cwd()} / commands / ${command}.js`);
 			client.DB.ensure(guildid, cmdObj.defaultConfig, `commands.${command}`); //ensures each guild has the configuration data required for each command.
 			var cmdAliases = [];
 			client.DB.get(guildid).commands[command].aliases.forEach(alias => {
@@ -159,7 +163,7 @@ module.exports = (client) => {
 
 	client.reloadCommand = (commandName) => {
 		try {
-			delete require.cache[require.resolve(`${basedir}/${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
+			delete require.cache[require.resolve(`${basedir} / ${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
 			client.loadCommand(commandName); //reload the command fully just to be sure.
 		} catch (err) {
 			client.log(`Error in reloading command ${commandName} - \n${err}`, "ERROR");
