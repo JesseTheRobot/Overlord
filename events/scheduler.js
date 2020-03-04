@@ -9,17 +9,17 @@ let actionProcessor = async (client, guildID, action) => {
     let guild = client.guilds.get(guildID)
     console.log(action)
     switch (action.type) {
-        case "role":
+        case "roleRemove":
             guild.members.get(action.memberID).roles.removeRole(action.roleID)
             break
         case "reminder":
             client.user.get(action.memberID).send(`scheduled reminder: ${action.message}`)
             break
-        case "nick":
+        case "nickReset":
             guild.members.get(action.memberID).setNickname(action.nick)
             break
         default:
-            console.warn(`unknown Action type/action ${JSON.stringify(action)}`)
+            client.log(`unknown Action type/action ${JSON.stringify(action)}`, "WARN")
             break
     }
 }
@@ -28,12 +28,10 @@ module.exports = async function check(client, guildID) {
     /** Scheduler - uses setTimeout to call itself 
      * 
      */
-    console.log(client)
-    console.log(guildID)
     let timeouts = client.timeouts
     if (!timeouts.has(guildID)) timeouts.set(guildID, null)
     let timeout = timeouts.get(guildID)
-    console.log(`Checking... (timeout = ${timeout}) ${new Date()} `);
+    client.log(`Checking... (timeout = ${timeout}) ${new Date()} `);
     // clears previous check refresher
     clearTimeout(timeout);
     const now = new Date().getTime();

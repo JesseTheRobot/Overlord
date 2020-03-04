@@ -37,12 +37,12 @@ client.DB = new enmap({
 client.commands = new enmap();
 
 
-/**optional debug system to monitor any/all changes to the ENMAP Database */
-if (client.debug) {
-	client.DB.changed((Key, Old, New) => {
-		console.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
-	})
-}
+
+client.DB.changed((Key, Old, New) => {
+	client.log(Key)
+	/**optional debug system to monitor any/all changes to the ENMAP Database */
+	client.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
+})
 
 /** Bind the exportable functions from Functions.js to the client object as methods. */
 require("./Functions.js")(client);

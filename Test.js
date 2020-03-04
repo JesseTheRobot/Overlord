@@ -14,9 +14,16 @@ client.debug = true
 client.config = require("./config.js")
 console.time("init");
 client.timeouts = new Map()
-console.log((new Error).stack.toString())
-var stk = (new Error).stack
-console.log(stk.split(" at ")[2])
+client.DB.changed((Key, Old, New) => {
+	client.log(Key)
+	client.log(Old)
+	client.log(New)
+	/**optional debug system to monitor any/all changes to the ENMAP Database */
+	client.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
+	/*switch (Key) {
+		case ""
+	}*/
+})
 
 
 
@@ -40,8 +47,10 @@ client.login(require("./config.js").token);
 client.commands = new enmap();
 client.on("ready", () => {
 	client.DB.defer.then(client.init(client));
-	//client.DB.defer.then(init(client))
 	console.log(client.commands)
+	let guildID = "636959316405911562"
+	let data = client.DB.get(guildID, "persistence.time")
+	client.log(data)
 
 
 
@@ -51,20 +60,5 @@ client.on("ready", () => {
 
 });
 
-var log = (message, type) => {
-	//info, warn, debug
-	let caller = ((new Error).stack).split("at")[2].trim().replace(process.cwd(), ".")
-	if (!type) type = "INFO";
-	switch (type) {
-		case "ERROR":
-			console.error(`[${type}] ${JSON.stringify(message)} ${caller}`);
-			break;
-		case "WARN":
-			console.warn(`[${type}] ${JSON.stringify(message)} ${caller}`);
-			break;
-		default:
-			if (!client.debug) break
-			console.log(`[${type}] ${JSON.stringify(message)} ${caller}`)
-	}
-}
+
 

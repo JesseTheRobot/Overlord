@@ -114,7 +114,7 @@ module.exports = (client) => {
 				guildData.persistence.messages.remove(message)
 			})
 		})
-		client.emit("scheduler")
+		client.emit("scheduler", client, guild.id)
 	};
 	client.log = (message, type) => {
 		//info, warn, debug
