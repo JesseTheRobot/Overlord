@@ -43,13 +43,10 @@ module.exports = async (client, message) => {
 		//const permLvl = client.getMsgPerm(message); //returns permission integer for the author of the message.
 		console.log(client.commands); //debug check of the commands collection tied to client
 	} else {
-		if (message.author.id != client.config.ownerID) {
-			message.react("🚫")
+		if (message.author.id === client.config.ownerID) {
+			//run command
 			return
-		} else {
-			//process commands with no heuristics 
 		}
-
 	}
-};
+}
 module.exports.info = "message event - called with each message that the bot receives. passes the sanitised message object to any other functions/modules that need it (eg for classification)"

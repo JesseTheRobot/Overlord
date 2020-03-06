@@ -26,7 +26,7 @@ module.exports = (client) => {
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
 		client.log(`client logging in as ${client.user.tag}`)
-		client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
+		//client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
 		if (client.config.preLoad) {
 			client.channels.forEach(channel => {
 				if (channel.type == "category)") {
@@ -73,7 +73,7 @@ module.exports = (client) => {
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
-		let reqPermissions = ["SEND_MESSAGES", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL"]
+		let reqPermissions = ["SEND_MESSAGES", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL", "VIEW_AUDIT_LOGS", "MANAGE_WEBHOOKS", "MANAGE_GUILD",]
 		client.commands.ensure(guild.id, new Object);
 		client.trecent[guild.id] = new Set();
 		client.DB.ensure(guild.id, client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
@@ -108,28 +108,30 @@ module.exports = (client) => {
 		let missingPerms = reqPermissions.filter(perm => !(guild.members.get(client.user.id).permissions.toArray()).includes(perm))
 		if (missingPerms.length >= 1) {
 			client.log(`bot is missing permisions : ${missingPerms.toString()} in guild ${guild.name}`, "ERROR")
+			//send notification to admins or each server? (eg in modAction channel)
 		}
 		guildData.persistence.messages.forEach(message => {
 			client.guilds.get(guild.id).channels.get(message.split(":")[0].toString()).fetchMessage(message.split(":").toString()[1]).catch(err => {
 				guildData.persistence.messages.remove(message)
 			})
 		})
-		client.emit("scheduler", client, guild.id)
+		client.emit("scheduler", guild.id)
 	};
 	client.log = (message, type) => {
 		//info, warn, debug
 		let caller = ((new Error).stack).split(" at ")[2].trim().replace(process.cwd(), ".")
 		if (!type) type = "INFO";
+		let msg = `[${type}]${JSON.stringify(message).trim('"')} ${caller}`
 		switch (type) {
 			case "ERROR":
-				console.error(`[${type}]${JSON.stringify(message)} ${caller}`);
+				console.error(msg);
 				break;
 			case "WARN":
-				console.warn(`[${type}]${JSON.stringify(message)} ${caller}`);
+				console.warn(msg);
 				break;
 			default:
 				if (!client.debug) break
-				console.log(`[${type}]${JSON.stringify(message)} ${caller}`)
+				console.log(msg)
 		}
 	};
 
@@ -138,7 +140,7 @@ module.exports = (client) => {
 			client.guilds.forEach(guild => { client.loadCommand(command, guild.id); }); //if no guildid is specified, loads the command for all guilds.
 		}
 		try {
-			var cmdObj = require(`${process.cwd()} / commands / ${command}.js`);
+			var cmdObj = require(`${process.cwd()}/commands/${command}.js`);
 			client.DB.ensure(guildid, cmdObj.defaultConfig, `commands.${command}`); //ensures each guild has the configuration data required for each command.
 			var cmdAliases = [];
 			client.DB.get(guildid).commands[command].aliases.forEach(alias => {

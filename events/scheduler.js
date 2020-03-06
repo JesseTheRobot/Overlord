@@ -13,7 +13,7 @@ let actionProcessor = async (client, guildID, action) => {
             guild.members.get(action.memberID).roles.removeRole(action.roleID)
             break
         case "reminder":
-            client.user.get(action.memberID).send(`scheduled reminder: ${action.message}`)
+            client.users.get(action.memberID).send(`scheduled reminder: ${action.message}`)
             break
         case "nickReset":
             guild.members.get(action.memberID).setNickname(action.nick)
@@ -26,7 +26,8 @@ let actionProcessor = async (client, guildID, action) => {
 
 module.exports = async function check(client, guildID) {
     /** Scheduler - uses setTimeout to call itself 
-     * 
+     * array of objects (ik ik....)
+     * "action:"{end:TS,type:typeInst,...data}
      */
     let timeouts = client.timeouts
     if (!timeouts.has(guildID)) timeouts.set(guildID, null)
@@ -44,10 +45,10 @@ module.exports = async function check(client, guildID) {
     client.DB.set(guildID, data.filter(action => action.end >= now), "persistence.time")
     if (closest === Infinity) return;
     const timeTo = closest - now;
-    console.log(`checking timeout in ${timeTo} ms`)
-
+    client.log(`checking timeout in ${timeTo} ms`)
     // will only wait a max of 2**31 - 1 because setTimeout breaks after that
     timeouts.set(guildID, setTimeout(check, Math.min(timeTo, 2 ** 31 - 1), client, guildID))
-    console.log(timeouts)
-    console.log(client.timeouts)
 };
+module.exports.defaultConfig = {
+    requiredPermissions: ["MANAGE_MESSAGES", "MANAGE_ROLES", "MANAGE_NICKNAMES"]
+}

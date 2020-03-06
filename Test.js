@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const enmap = require("enmap");
+client.diff = require("deep-object-diff").detailedDiff;
 //const Sentry = require('@sentry/node');
 //Sentry.init({ dsn: 'https://e7d4763a70c04344aabd5cee0eafba31@sentry.io/2410177' })
 client.DB = new enmap({
@@ -16,10 +17,9 @@ console.time("init");
 client.timeouts = new Map()
 client.DB.changed((Key, Old, New) => {
 	client.log(Key)
-	client.log(Old)
-	client.log(New)
+	client.log(client.diff(Old, New))
 	/**optional debug system to monitor any/all changes to the ENMAP Database */
-	client.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
+	//client.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
 	/*switch (Key) {
 		case ""
 	}*/
@@ -47,8 +47,11 @@ client.login(require("./config.js").token);
 client.commands = new enmap();
 client.on("ready", () => {
 	client.DB.defer.then(client.init(client));
-	console.log(client.commands)
 	let guildID = "636959316405911562"
+	client.log((new Date().getTime() + 7000))
+	var action = { end: 69, type: "reminder", message: "ayy lmao", memberID: "150693679500099584" }
+	client.DB.push(guildID, action, "persistence.time")
+	client.emit("scheduler", "636959316405911562")
 	let data = client.DB.get(guildID, "persistence.time")
 	client.log(data)
 
