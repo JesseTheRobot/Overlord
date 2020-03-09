@@ -18,6 +18,9 @@ client.timeouts = new Map()
 client.DB.changed((Key, Old, New) => {
 	client.log(Key)
 	client.log(client.diff(Old, New))
+	if (client.setData) {
+		throw new Error()
+	}
 	/**optional debug system to monitor any/all changes to the ENMAP Database */
 	//client.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
 	/*switch (Key) {
@@ -46,14 +49,17 @@ client.on("scheduler", eventObj.bind(null, client))
 client.login(require("./config.js").token);
 client.commands = new enmap();
 client.on("ready", () => {
-	client.DB.defer.then(client.init(client));
+	//client.DB.defer.then(client.init(client));
+
 	let guildID = "636959316405911562"
 	client.log((new Date().getTime() + 7000))
 	var action = { end: 69, type: "reminder", message: "ayy lmao", memberID: "150693679500099584" }
 	client.DB.push(guildID, action, "persistence.time")
-	client.emit("scheduler", "636959316405911562")
-	let data = client.DB.get(guildID, "persistence.time")
-	client.log(data)
+	client.setData = true
+	/*client.emit("scheduler", "636959316405911562")
+	data = client.DB.get(guildID, "persistence.time")
+	client.log(data)*/
+
 
 
 

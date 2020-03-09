@@ -1,14 +1,11 @@
 module.exports = async (client, message) => {
     let config = message.settings
     let modConfig = config.autoMod
-    let antiSpam = (client, message) => {
+    let antiSpam = async (client, message) => {
         let member = message.member
-        let config = message.settings
         let trecent = client.trecent.get(message.guild.id)
-        if (member.roles.array.filter(role => config.excludedRoles.has(role)).size >= 1) { return }
-        let mobj = `${message.guild.id}.${message.channel.id}.${member.id}`
-        trecent.ensure("")
-        var user = client.DB.get(message.guild.id, `users.${message.author.id}`);
+        if (member.roles.array.filter(role => config.excludedRoles.has(role)).size >= 1) { return } //exclude those who have configured 'protected' roles
+        trecent.ensure(member.id, `${message.channel.id}`)
 
         setTimeout(() => { trecent.splice(trecent[trecent.indexOf(mobj)], 1); }, interval);
         if ((trecent.filter(value => value == mobj)).length >= mutecap) { //filter all messages sent (within array) and if <mutecap> or more are keyed to the user and guildid, penalise the user. 

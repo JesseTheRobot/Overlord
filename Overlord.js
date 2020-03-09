@@ -9,13 +9,13 @@ client.fs = require("fs");
 client.diff = require("deep-object-diff").detailedDiff;
 client.transfer = require("transfer-sh");
 client.download = require("download-file");
-client.tf = require("@tensorflow/tfjs-node");
 client.version = "0.2.0.2032020"; //release.major.minor.date
 client.debug = (process.env.NODE_ENV === "production" ? false : true) //debug flag set if the bot is not run with the enviroment variable "production"
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
 
 async (client) => {//loads Models into memory asyncronously
 	if (!client.config.enableModels) return;
+	client.tf = require("@tensorflow/tfjs-node");
 	var toxicity = require("@tensorflow-models/toxicity");
 	client.NSFWmodel = await require("nsfwjs").load("file://./models/NSFW/", { size: 299 }); //eslint-disable-line
 	client.toxicModel = new toxicity.ToxicityClassifier; //eslint-disable-line
