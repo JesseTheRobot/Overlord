@@ -5,11 +5,11 @@ module.exports = async (client, message) => {
         let member = message.member
         let trecent = client.trecent.get(message.guild.id)
         if (member.roles.array.filter(role => config.excludedRoles.has(role)).size >= 1) { return } //exclude those who have configured 'protected' roles
-        trecent.ensure(member.id, `${message.channel.id}`)
-
-        setTimeout(() => { trecent.splice(trecent[trecent.indexOf(mobj)], 1); }, interval);
-        if ((trecent.filter(value => value == mobj)).length >= mutecap) { //filter all messages sent (within array) and if <mutecap> or more are keyed to the user and guildid, penalise the user. 
-            trecent = trecent.filter(value => value != mobj); //wipes array after a strike has been added.
+        trecent.ensure([], message.channel.id)
+        trecent.push(message.channel.id,member.id,true) //remember to transition to local scoping!
+        setTimeout(()=>{trecent.remove(message.channel.id,member.id)},modConfig.interval)
+        if((trecent.filterArray((user) =>user === member.id)).length >= modConfig.count){ //filter all messages sent (within array) and if <mutecap> or more are keyed to the user and guildid, penalise the user. 
+            //wipes array after a strike has been added.
             if (!user.strikes) {
                 user.strikes = [];
             }
@@ -48,12 +48,6 @@ module.exports.defaultConfig = {
         5: "mute",
         10: "tempBan",
         15: "ban",
-    },
-    antiMention: {
-        enabled: true,
-        protectedRoleIDs: [],
-        pingEveryone: false,
-        penalty: 5,
     },
     requiredPermissions: ["MANAGE_MESSAGES"]
 

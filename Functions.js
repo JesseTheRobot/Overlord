@@ -74,7 +74,7 @@ module.exports = (client) => {
 		var mutedRdict = ["Muted", "Mute"]; //Temp
 		let reqPermissions = ["SEND_MESSAGES", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL", "VIEW_AUDIT_LOGS", "MANAGE_WEBHOOKS", "MANAGE_GUILD",]
 		client.commands.ensure(guild.id, new Object);
-		client.trecent[guild.id] = new Set();
+		client.trecent.ensure(guild.id,{})
 		client.DB.ensure(guild.id, client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
 		guild.members.forEach(member => { //ensures each server has all it's users initialised correctly
 			client.DB.ensure(guild.id, { xp: 0 }, `users.${member.id}`);
