@@ -20,7 +20,6 @@ const basedir = process.cwd();
 module.exports = (client) => {
 	client.cooldown = new Set();
 	client.timeouts = new Map();
-	client.trecent = new Map();
 	/** initalisation routine for the client,
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */

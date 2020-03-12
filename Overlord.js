@@ -35,6 +35,7 @@ client.DB = new enmap({
 	dataDir: client.config.datadir
 });
 client.commands = new enmap();
+client.trecent = new enmap()
 
 
 
