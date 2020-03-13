@@ -51,24 +51,19 @@ client.login(require("./config.js").token);
 client.commands = new enmap();
 client.on("ready", () => {
 	//client.DB.defer.then(client.init(client));
-
-	let guildID = "636959316405911562"
+	client.DB.deleteAll()
+	/*let guildID = "636959316405911562"
 	client.log((new Date().getTime() + 7000))
 	var action = { end: 69, type: "reminder", message: "ayy lmao", memberID: "150693679500099584" }
 	client.DB.push(guildID, action, "persistence.time")
 	client.setData = true
-	/*client.emit("scheduler", "636959316405911562")
+	client.emit("scheduler", "636959316405911562")
 	data = client.DB.get(guildID, "persistence.time")
 	client.log(data)*/
 
-
-
-
-
-
-
-
 });
+
+
 client.on("message", message => {
 	if (!message.guild) return
 	let member = message.member
@@ -82,14 +77,11 @@ client.on("message", message => {
 	if (Array.from(member.roles).filter(role => config.excludedRoles.includes(role)).size >= 1) { return } //exclude those who have configured 'protected' roles
 	trecent.ensure(message.guild.id, [], message.channel.id)
 	trecent.push(message.guild.id, member.id, message.channel.id, true) //remember to transition to local scoping!
-	trecent.push(message.guild.id, member.id, message.channel.id, true)
-	trecent.push(message.guild.id, member.id, message.channel.id, true)
-	trecent.push(message.guild.id, member.id, message.channel.id, true)
-	setTimeout(() => { trecent.remove(message.guild.id, message.channel.id, member.id) }, modConfig.interval)
-	setTimeout(() => { client.log(trecent) }, 5000)
+	setTimeout(() => { trecent.remove(message.guild.id, member.id, message.channel.id) }, modConfig.interval)
 	if ((trecent.get(message.guild.id, message.channel.id).filter((user) => user === member.id)).length >= modConfig.count) {
 		client.log("exceeded")
 	}
+
 })
 
 
