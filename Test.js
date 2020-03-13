@@ -11,6 +11,7 @@ client.DB = new enmap({
 	polling: true,
 	ensureProps: true
 });
+client.trecent = new enmap()
 client.debug = true
 client.config = require("./config.js")
 console.time("init");
@@ -68,6 +69,28 @@ client.on("ready", () => {
 
 
 });
+client.on("message", message => {
+	if (!message.guild) return
+	let member = message.member
+	let trecent = client.trecent
+	trecent.ensure(message.guild.id, {})
+	let config = {}
+	config.excludedRoles = ["god"]
+	var modConfig = {}
+	modConfig.count = 2
+	modConfig.interval = 2000
+	if (Array.from(member.roles).filter(role => config.excludedRoles.includes(role)).size >= 1) { return } //exclude those who have configured 'protected' roles
+	trecent.ensure(message.guild.id, [], message.channel.id)
+	trecent.push(message.guild.id, member.id, message.channel.id, true) //remember to transition to local scoping!
+	trecent.push(message.guild.id, member.id, message.channel.id, true)
+	trecent.push(message.guild.id, member.id, message.channel.id, true)
+	trecent.push(message.guild.id, member.id, message.channel.id, true)
+	setTimeout(() => { trecent.remove(message.guild.id, message.channel.id, member.id) }, modConfig.interval)
+	setTimeout(() => { client.log(trecent) }, 5000)
+	if ((trecent.get(message.guild.id, message.channel.id).filter((user) => user === member.id)).length >= modConfig.count) {
+		client.log("exceeded")
+	}
+})
 
 
 
