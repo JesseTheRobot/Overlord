@@ -2,21 +2,17 @@ module.exports = async (client, message) => {
     let config = message.settings
     let modConfig = config.autoMod
     let antiSpam = async (client, message) => {
-        let ASConfig = modConfig.antiSpam
+        let ASconfig = modConfig.antiSpam
         let member = message.member
         let trecent = client.trecent
-        if (Array.from(member.roles).filter(role => config.excludedRoles.includes(role)).size >= 1) { return } //exclude those who have configured 'protected' roles
+        if (Array.from(member.roles).filter(role => ASconfig.excludedRoles.includes(role)).size >= 1) { return } //exclude those who have configured 'protected' roles
         trecent.ensure(message.guild.id, [], message.channel.id)
-        setTimeout(() => { trecent.remove(message.guild.id, member.id, message.channel.id) }, modConfig.interval)
-        if ((trecent.get(message.guild.id, message.channel.id).filter((user) => user === member.id)).length >= modConfig.count) {
+        setTimeout(() => { trecent.remove(message.guild.id, member.id, message.channel.id) }, ASconfig.interval)
+        if ((trecent.get(message.guild.id, message.channel.id).filter((user) => user === member.id)).length >= ASconfig.count) {
             client.log("exceeded")
         }
-
     }
-    let penalise = async (client, user, data) => {
-
-
-    }
+    
     module.exports.defaultConfig = {
         enabled: true,
         bannedWords: [],

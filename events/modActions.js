@@ -1,24 +1,69 @@
-module.exports = async (client, message, action) => {
-    let modAction = message.settings.modActionChannel
-    let audit = message.settings.auditLogChannel
-    let modReport = message.settings.modReportingChannel
+module.exports = async (client, action) => {
+    let config = client.DB.get(action.guildID)
+    let modAction = config.modActionChannel
+    let audit = config.auditLogChannel
+    let modReport = config.modReportingChannel
     const discord = require("discord.js")
     //https://leovoel.github.io/embed-visualizer/
-
     /*action:{
         type: "action/audit/report/",
         actionDesc:"","
         data: (...),
     }*/
 
-    const genModAction = (client, message, action) => {
-        let embed = new discord.RichEmbed()
-            .setAuthor(client.user, client.user.avatarURL)
+    let embed = new discord.RichEmbed()
+        .setAuthor(client.user, client.user.avatarURL)
+        .setTimestamp(new Date())
+        .setTitle(action.type)
+    switch (action.type) {
+        case "action":
+            genModAction(client, action)
+            break;
+        case "audit":
+            genAudit(cient, action)
+            break;
+        case "report":
+            genModReport(client, action)
+            break;
+        default:
+            client.log(`incorrect action type ${action.type}! event processing failed.`, "FATAL")
+            break;
     }
-    const genAudit = (client, message, action) => {
+    const genModAction = async (client, action) => {
+        embed
+        //action title: desc: infringing item in question, other dets, reaction based 
+    }
+    const genAudit = async (client, action) => {
+        embed
+        //action/change: affected elements : summary of data. used for moderators.
 
     }
-    const genModReport = (client, message, action) => {
+    const genModReport = async (client, action) => {
+        embed
+        //'public' report of an action. sent to affected user(s) (if applicable)
+
+
+    }
+    let actionProcessor = async (client, action) => {
+        var guild = client.guilds.get(action.guildID)
+        var guildConfig = client.DB.get(action.guildID)
+        /**
+         * actions: objects containing data to be done 'at some point', whether via a scheduler or otherwise
+         * 
+         */
+        function mute() {
+            guild.members.get(action.memberID).roles.addRole(guildConfig.mutedRole)
+            var newAction = {
+                type: "roleRemove",
+                memberID: action.memberID,
+                roleID: guildConfig.mutedRole,
+            }
+            let schedule = async (client, action, guildID) => {
+                client.DB.push(guildID, action, "persistence.time")
+                check(client, guildID)
+            }
+
+        }
 
     }
 

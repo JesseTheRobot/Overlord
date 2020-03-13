@@ -18,6 +18,9 @@ let actionProcessor = async (client, guildID, action) => {
         case "nickReset":
             guild.members.get(action.memberID).setNickname(action.nick)
             break
+        case "roleAdd":
+            guild.members.get(action.memberID).roles.addRole(action.roleID)
+            break;
         default:
             client.log(`unknown Action type/action ${JSON.stringify(action)}`, "WARN")
             break
