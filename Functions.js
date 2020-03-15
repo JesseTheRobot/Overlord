@@ -161,6 +161,10 @@ module.exports = (client) => {
 		}
 
 	}
+	client.schedule = async (action, guildID) => {
+		client.DB.push(guildID, action, "persistence.time")
+		check(client, guildID)
+	}
 
 	client.reloadCommand = (commandName) => {
 		try {

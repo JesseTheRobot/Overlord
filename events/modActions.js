@@ -47,10 +47,20 @@ module.exports = async (client, action) => {
     let actionProcessor = async (client, action) => {
         var guild = client.guilds.get(action.guildID)
         var guildConfig = client.DB.get(action.guildID)
+        let newAction = {}
         /**
          * actions: objects containing data to be done 'at some point', whether via a scheduler or otherwise
          * 
          */
+        function saveUserState() {
+            let state = {
+                nick: member.nickname,
+                roles: member.roles,
+                TS: new Date()
+            }
+
+
+        }
         function mute() {
             guild.members.get(action.memberID).roles.addRole(guildConfig.mutedRole)
             var newAction = {
@@ -58,11 +68,7 @@ module.exports = async (client, action) => {
                 memberID: action.memberID,
                 roleID: guildConfig.mutedRole,
             }
-            let schedule = async (client, action, guildID) => {
-                client.DB.push(guildID, action, "persistence.time")
-                check(client, guildID)
-            }
-
+            client.schedule(newAction, guild.id)
         }
 
     }

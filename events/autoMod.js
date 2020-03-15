@@ -12,7 +12,7 @@ module.exports = async (client, message) => {
             client.log("exceeded")
         }
     }
-    
+
     module.exports.defaultConfig = {
         enabled: true,
         bannedWords: [],
@@ -38,4 +38,5 @@ module.exports = async (client, message) => {
         requiredPermissions: ["MANAGE_MESSAGES"]
 
     }
+}
 
