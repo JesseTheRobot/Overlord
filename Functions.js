@@ -120,7 +120,7 @@ module.exports = (client) => {
 		//info, warn, debug
 		let caller = ((new Error).stack).split(" at ")[2].trim().replace(process.cwd(), ".")
 		if (!type) type = "INFO";
-		let msg = `[${type}] ${JSON.stringify(message).trim('"')} 「${caller}」`
+		let msg = `[${type}] ${(JSON.stringify(message)).replace(/\"/g, "")}「${caller}」`
 		switch (type) {
 			case "ERROR":
 				console.error(msg);

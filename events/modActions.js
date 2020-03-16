@@ -30,45 +30,61 @@ module.exports = async (client, action) => {
             break;
     }
     const genModAction = async (client, action) => {
+        //colour: amber
         embed
-        //action title: desc: infringing item in question, other dets, reaction based 
+            .setTitle(`Moderator Action requested:${action.title}`)
+            .addField(`Trigger type ${action.trigger.type}`)
+            .addField(`Trigger description: ${action.trigger.data}`)
+            .addField(`Reccomended Action Pending Approval: ${action.request}`)
+        //action title: desc: infringing item in question, other dets, reaction based  - scollector
+
     }
     const genAudit = async (client, action) => {
         embed
+            .setTitle(action.title)
+            .addField(action.data)
+        //colour: blue
         //action/change: affected elements : summary of data. used for moderators.
 
     }
     const genModReport = async (client, action) => {
         embed
+            .setTitle(`Moderator Action: ${action.title}`)
+            .addField(`action trigger: ${action.trigger.type}`)
+            .addField(`Action description: ${action.request}`)
+        //colour: cyan
         //'public' report of an action. sent to affected user(s) (if applicable)
-
-
     }
     let actionProcessor = async (client, action) => {
         var guild = client.guilds.get(action.guildID)
         var guildConfig = client.DB.get(action.guildID)
-        let newAction = {}
+        let member = guild.members(action.memberID)
         /**
          * actions: objects containing data to be done 'at some point', whether via a scheduler or otherwise
          * 
          */
-        function saveUserState() {
+        function saveUserState(client, action) {
             let state = {
                 nick: member.nickname,
-                roles: member.roles,
+                roles: Array.from(member.roles.keys()),
                 TS: new Date()
             }
-
-
+            client.DB.set(action.guildID, state, `users.${member.id}.savedState`)
         }
-        function mute() {
-            guild.members.get(action.memberID).roles.addRole(guildConfig.mutedRole)
-            var newAction = {
+        function mute(client, action) {
+            member.roles.addRole(guildConfig.mutedRole)
+            client.schedule({
                 type: "roleRemove",
                 memberID: action.memberID,
                 roleID: guildConfig.mutedRole,
-            }
-            client.schedule(newAction, guild.id)
+            }, guild.id)
+        }
+        function restoreUserSate(client, action) {
+            let state = client.DB.get(action.guildID, `users.${action.memberID}.savedState`)
+            //declare that a state restore has been performed
+            let user = client.guilds.get(action.guildID).members.get(action.memberID)
+            user.setNickname(state.nick)
+            user.roles.add(state.roles)
         }
 
     }
