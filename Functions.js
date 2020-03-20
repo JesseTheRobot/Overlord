@@ -1,6 +1,5 @@
 /** contains functions that are bound to the client object at startup. DO NOT EDIT (pls) */
 const fs = require("fs");
-const basedir = process.cwd();
 /**
  * @exports init 
  * @exports validateGuild
@@ -20,13 +19,21 @@ const basedir = process.cwd();
 module.exports = (client) => {
 	client.cooldown = new Set();
 	client.timeouts = new Map();
+	client.basedir = process.cwd();
 	/** initalisation routine for the client,
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
 		client.log(`client logging in as ${client.user.tag}`)
 		//client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
-		if (client.config.preLoad) {
+
+		if (client.guilds.size == 0) {
+			throw new Error("No Guilds Detected! Please check your token. aborting Init.");
+		}
+		if (!client.user.bot) {
+			throw new Error("Warning: Using Bots on a user account is (for the most part) forbidden by Discord ToS. Please Verify your token!");
+		}
+		if (client.config.preLoad) {  //if preloading is enabled, iterate over every channel and load messages into bot message cache.
 			client.channels.forEach(channel => {
 				if (channel.type == "category)") {
 					channel.children.forEach(child => {
@@ -36,12 +43,6 @@ module.exports = (client) => {
 					channel.fetchMessages({ limit: 100 }).then(c => { return })
 				}
 			});
-		}
-		if (client.guilds.size == 0) {
-			throw new Error("No Guilds Detected! Please check your token. aborting Init.");
-		}
-		if (!client.user.bot) {
-			throw new Error("Warning: Using Bots on a user account is (for the most part) forbidden by Discord ToS. Please Verify your token!");
 		}
 		var game = client.config.status.replace("{{guilds}}", client.guilds.size).replace("{{version}}", client.version);
 		client.user.setPresence({ game: { name: game, type: "PLAYING" }, status: "active" });
@@ -118,7 +119,7 @@ module.exports = (client) => {
 	};
 	client.log = (message, type) => {
 		//info, warn, debug
-		let caller = ((new Error).stack).split(" at ")[2].trim().replace(process.cwd(), ".")
+		let caller = ((new Error).stack).split(" at ")[2].trim().replace(basedir, ".")
 		if (!type) type = "INFO";
 		let msg = `[${type}] ${(JSON.stringify(message)).replace(/\"/g, "")}「${caller}」`
 		switch (type) {
@@ -151,21 +152,10 @@ module.exports = (client) => {
 			client.log(`Failed to load command ${command}! : ${err}`, "ERROR")
 		}
 	};
-
-	client.raiseModError = (message, guildID) => {
-		var config = client.getGuildSettings(guildID)
-		if (config.modReportingChannel) {
-			client.getChannel(config.modReportingChannel).then(channel => {
-				channel.send(message)
-			})
-		}
-
-	}
 	client.schedule = async (action, guildID) => {
 		client.DB.push(guildID, action, "persistence.time")
 		check(client, guildID)
 	}
-
 	client.reloadCommand = (commandName) => {
 		try {
 			delete require.cache[require.resolve(`${basedir} / ${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
@@ -181,7 +171,7 @@ module.exports = (client) => {
 	client.attHandler = async (client, message) => {
 		//move the code from the message handler into here, use the performant caching to go faaassstt
 	};
-
+	//BELOW IS FROM ANOTHER SOURCE - DO NOT ASSESS
 	client.evalClean = async (client, text) => { //cleans output of the eval command, to prevent the token and other chars from causing issues.
 		if (text && text.constructor.name == "Promise") //checks if the evaled code is that of a promise, if so, awaits for the code to execute and for the promise to be reoslve before continuing execution.
 			text = await text;
@@ -190,13 +180,17 @@ module.exports = (client) => {
 		text = text.replace(/@/g, "@").replace(/`/g, "`").replace(require("./config.js").token, "[BOT_TOKEN]");
 		return text;
 	}; //full disclosure: this code was copied off Etiket2 (another discord bot) as it is undoubtedly the best way to do this.
-
+	//
 	client.checkThrottle = (client, message) => {
-
+		//check potential throtlles - eg blacklist or timeout.
+		//per guild - run only for commands - antispam is 'optional',
+		//but this is aways run
 	};
 
 	client.checkPermissions = (client, message, command) => {
-
+		// check that user has prerequisate permissions for command execution.
+		//need to do a role-based permissions system, maybe expand o a target orogin system (eg eval target and origin permisisons to determine action validity.)
+		//role hoist detection?
 	}
 
 	/** returns a random integer between two numbers (max exclusive, min inclusive.)
