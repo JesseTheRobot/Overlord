@@ -43,6 +43,7 @@ module.exports = async (client, action) => {
         embed
             .setTitle(action.title)
             .addField(action.data)
+            .
         //colour: blue
         //action/change: affected elements : summary of data. used for moderators.
 
@@ -77,6 +78,7 @@ module.exports = async (client, action) => {
                 type: "roleRemove",
                 memberID: action.memberID,
                 roleID: guildConfig.mutedRole,
+
             }, guild.id)
         }
         function restoreUserSate(client, action) {

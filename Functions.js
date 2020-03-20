@@ -182,9 +182,9 @@ module.exports = (client) => {
 	}; //full disclosure: this code was copied off Etiket2 (another discord bot) as it is undoubtedly the best way to do this.
 	//
 	client.checkThrottle = (client, message) => {
+
 		//check potential throtlles - eg blacklist or timeout.
 		//per guild - run only for commands - antispam is 'optional',
-		//but this is aways run
 	};
 
 	client.checkPermissions = (client, message, command) => {
