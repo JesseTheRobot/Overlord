@@ -1,9 +1,11 @@
 module.exports = async (client, action) => {
+    let guild = client.guilds.get(action.guildID)
     let config = client.DB.get(action.guildID)
-    let modAction = config.modActionChannel
-    let audit = config.auditLogChannel
-    let modReport = config.modReportingChannel
+    let modAction = guild.channels.get(config.modActionChannel)
+    let audit = guild.channels.get(config.auditLogChannel)
+    let modReport = guild.channels.get(onfig.modReportingChannel)
     const discord = require("discord.js")
+
     //https://leovoel.github.io/embed-visualizer/
     /*action:{
         type: "action/audit/report/",
@@ -31,21 +33,36 @@ module.exports = async (client, action) => {
     }
     const genModAction = async (client, action) => {
         //colour: amber
-        embed
-            .setTitle(`Moderator Action requested:${action.title}`)
-            .addField(`Trigger type ${action.trigger.type}`)
-            .addField(`Trigger description: ${action.trigger.data}`)
-            .addField(`Reccomended Action Pending Approval: ${action.request}`)
-        //action title: desc: infringing item in question, other dets, reaction based  - scollector
-
+        if (action.autoRemove) { actionProcessor(client, action) } else {
+            let embed = new Discord.RichEmbed()
+                .setAuthor(client.user.username, client.user.avatarURL)
+                .setTimestamp(new Date())
+                .setURL(message.url)
+                .setTitle(`Moderator Action requested: ${action.title}`)
+                .setDescription(`source: ${action.src}`)
+                .addField("Trigger type", action.trigger.type)
+                .addField("Trigger description:", action.trigger.data)
+                .addField("Reccomended Action Pending Approval:", action.request)
+                .setFooter("react with ✅ to perform the reccomended action. react with a number to assign demerits.")
+            //action title: desc: infringing item in question, other dets, reaction based  - scollector
+            message.guild.channels.get(message.channel.id).send({ embed: embed }).then(msg => {
+                msg.react("✅").then(() => {
+                    msg.awaitReactions((reaction, user) => { return reaction.emoji.name === "✅" && !user.bot }, { max: 1 })
+                        .then(collected => {
+                            client.log(collected)
+                            actionProcessor(client, action)
+                        })
+                })
+            })
+        }
     }
     const genAudit = async (client, action) => {
         embed
             .setTitle(action.title)
             .addField(action.data)
-            .
         //colour: blue
         //action/change: affected elements : summary of data. used for moderators.
+        audit.send({ embed: embed, attatchments: action.attachments })
 
     }
     const genModReport = async (client, action) => {
@@ -88,61 +105,26 @@ module.exports = async (client, action) => {
             user.setNickname(state.nick)
             user.roles.add(state.roles)
         }
+        function deleteMessage(client, action) {
+            let args = action.requestedAction.target.split(".")
+            client.guilds.get(args[0]).channels.get(args[1]).messages.get(args[2]).delete()
+            genModReport(client, action)
 
+        }
     }
 
     //action : summary, desc, target(?)
     //send a message to a moderation channel in which moderators
     // can react to determine if an automated action should be taken or not
     // (only if the autoremove is disabled in module config, g for the antispam/flood/classifier nets)
+    const addPoints = (client, data) => {
+        /*
+        data ={
+            target: GuildID.memberID,
+            number: int
+        }
+        */
 
-    const exampleEmbed = {
-        color: 0x0099ff,
-        title: 'Some title',
-        url: 'https://discord.js.org',
-        author: {
-            name: 'Some name',
-            icon_url: 'https://i.imgur.com/wSTFkRM.png',
-            url: 'https://discord.js.org',
-        },
-        description: 'Some description here',
-        thumbnail: {
-            url: 'https://i.imgur.com/wSTFkRM.png',
-        },
-        fields: [
-            {
-                name: 'Regular field title',
-                value: 'Some value here',
-            },
-            {
-                name: '\u200b',
-                value: '\u200b',
-            },
-            {
-                name: 'Inline field title',
-                value: 'Some value here',
-                inline: true,
-            },
-            {
-                name: 'Inline field title',
-                value: "[Guide](https://discordjs.guide/ 'optional hovertext')",
-                inline: true,
-            },
-            {
-                name: 'Inline field title',
-                value: 'Some value here',
-                inline: true,
-            },
-        ],
-        image: {
-            url: 'https://i.imgur.com/wSTFkRM.png',
-        },
-        timestamp: new Date(),
-        footer: {
-            text: 'Some footer text here',
-            icon_url: 'https://i.imgur.com/wSTFkRM.png',
-        },
-    };
-    //channel.send({ embed: exampleEmbed });
+    }
 
 }

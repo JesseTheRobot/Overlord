@@ -47,7 +47,7 @@ module.exports = (client) => {
 		var game = client.config.status.replace("{{guilds}}", client.guilds.size).replace("{{version}}", client.version);
 		client.user.setPresence({ game: { name: game, type: "PLAYING" }, status: "active" });
 		const eventFiles = fs.readdirSync("./events/");
-		client.log(`Loading ${eventFiles.length} events from ${basedir}/events/`);
+		client.log(`Loading ${eventFiles.length} events from ${client.basedir}/events/`);
 		eventFiles.forEach(eventFile => {
 			if (!eventFile.endsWith(".js")) return;
 			const eventName = eventFile.split(".")[0];
@@ -88,8 +88,16 @@ module.exports = (client) => {
 			if (modRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "modRoles"); }
 			if (mutedRdict.includes(role.name)) { client.DB.set(guild.id, role.id, "mutedRole"); }
 		});
+		let now = new Date()
+		let attachments = client.DB.ensure(guild.id, {}, `persistence.attachments`)
+		attachments.forEach(entry => {
+			client.log(entry)
+			/*if (entry.expiry < now.getMilliseconds()) {
+				client.DB.delete()
+			}*/
+		})
 		const commandFiles = fs.readdirSync("./commands/");
-		client.log(`Loading ${commandFiles.length} events from ${basedir}/commands/`, "INFO");
+		client.log(`Loading ${commandFiles.length} events from ${client.basedir}/commands/`, "INFO");
 		commandFiles.forEach(command => {
 			if (!command.endsWith(".js")) return;
 			var command = command.split(".")[0]; // eslint-disable-line no-redeclare 
@@ -119,7 +127,7 @@ module.exports = (client) => {
 	};
 	client.log = (message, type) => {
 		//info, warn, debug
-		let caller = ((new Error).stack).split(" at ")[2].trim().replace(basedir, ".")
+		let caller = ((new Error).stack).split(" at ")[2].trim().replace(client.basedir, ".")
 		if (!type) type = "INFO";
 		let msg = `[${type}] ${(JSON.stringify(message)).replace(/\"/g, "")}「${caller}」`
 		switch (type) {
@@ -158,7 +166,7 @@ module.exports = (client) => {
 	}
 	client.reloadCommand = (commandName) => {
 		try {
-			delete require.cache[require.resolve(`${basedir} / ${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
+			delete require.cache[require.resolve(`${client.basedir} / ${commandName}.js`)]; //deletes the cached version of the comand, forcing the next execution to re-load the file into memory.
 			client.loadCommand(commandName); //reload the command fully just to be sure.
 		} catch (err) {
 			client.log(`Error in reloading command ${commandName} - \n${err}`, "ERROR");
@@ -203,7 +211,7 @@ module.exports = (client) => {
 		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 	};
 
-	client.defaultConfig = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development.
+	client.defaultConfig = { //used as a template for development
 		commands: {
 			"help": {
 				aliases: ["commands"],
@@ -248,16 +256,8 @@ module.exports = (client) => {
 					10: "tempBan",
 					15: "ban",
 				},
-				antiMention: {
-					enabled: true,
-					protectedIDs: [],
-					penalty: 5,
-				}
 			},
-
-
 		},
-
 		persistence: {
 			messages: [], //channelid:messageid
 			time: [],
