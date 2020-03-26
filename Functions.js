@@ -25,7 +25,7 @@ module.exports = (client) => {
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
 		client.log(`client logging in as ${client.user.tag}`)
-		//client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
+		client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
 
 		if (client.guilds.size == 0) {
 			throw new Error("No Guilds Detected! Please check your token. aborting Init.");
@@ -35,11 +35,11 @@ module.exports = (client) => {
 		}
 		if (client.config.preLoad) {  //if preloading is enabled, iterate over every channel and load messages into bot message cache.
 			client.channels.forEach(channel => {
-				if (channel.type == "category)") {
+				if (channel.type === "category)") {
 					channel.children.forEach(child => {
 						child.fetchMessages({ limit: 100 }).then(c => { return })
 					})
-				} else if (channel.type == "text") {
+				} else if (channel.type === "text") {
 					channel.fetchMessages({ limit: 100 }).then(c => { return })
 				}
 			});
@@ -54,14 +54,29 @@ module.exports = (client) => {
 			client.log(`attempting to load event ${eventName}`)
 			const eventObj = require(`./events/${eventFile}`);
 			client.on(eventName, eventObj.bind(null, client));
+			if (eventObj.defaultConfig) {
+				client.guilds.forEach(guild => {
+					client.DB.ensure(guild.id, eventObj.defaultConfig, `modules.${eventFile.split(".")[0]}`)
+				})
+			}
 			client.log(`Bound ${eventName} to Client Sucessfully!`);
 			delete require.cache[require.resolve(`./events/${eventFile}`)];
+
 		});
 		client.guilds.forEach(guild => {//iterates over each guild that the bot has access to and ensures they are present in the database
 			client.validateGuild(client, guild);
 		});
+		fs.readdir("./cache/", (err, files) => {
+			if (err) throw err;
+			client.log(`Deleting ${files.length} files from cache...`)
+			for (const file of files) {
+				fs.unlink(("./cache/" + file), err => {
+					if (err) throw err;
+				})
+			}
+		})
 		console.timeEnd("init");
-		console.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
+		client.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 		(client.users.get(client.config.ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
 	}
 	/**
@@ -70,32 +85,31 @@ module.exports = (client) => {
 	 * @param  guild 
 	 */
 	client.validateGuild = (client, guild) => { //validates the DB entry for a guild
+		client.DB.set(guild.id, "636959316405911564", "modActionChannel")
+		client.DB.set(guild.id, "636959316405911564", "auditLogChannel")
+		client.DB.set(guild.id, "636959316405911564", "modReportingChannel")
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
-		let reqPermissions = ["SEND_MESSAGES", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL", "VIEW_AUDIT_LOGS", "MANAGE_WEBHOOKS", "MANAGE_GUILD",]
-		client.commands.ensure(guild.id, new Object);
+		guild.roles.forEach(role => { //figure out a better way of doing this! (dynamic eval?)
+			client.log(`Testing role with name ${role.name} for Admin/Mod/Muted availability.`);
+			if (adminRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "adminRoles"); }
+			if (modRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "modRoles"); }
+			if (mutedRdict.includes(role.name)) { client.DB.set(guild.id, role.id, "mutedRole"); }
+		});
+
+		let reqPermissions = ["SEND_MESSAGES", "READ_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL", "MANAGE_GUILD"]
+		client.commands.ensure(guild.id, {});
 		client.trecent.ensure(guild.id, {})
 		client.DB.ensure(guild.id, client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
 		guild.members.forEach(member => { //ensures each server has all it's users initialised correctly
 			client.DB.ensure(guild.id, { xp: 0 }, `users.${member.id}`);
 		});
-		client.log(`Sucessfully Verified/initialised Guild ${guild.name} to DB`, "INFO");
+		client.log(`Sucessfully Verified/initialised Guild ${guild.name} to DB`);
 		client.DB.set(guild.id, guild.owner.user.id, "serverOwnerID");
-		guild.roles.forEach(role => { //figure out a better way of doing this! (dynamic eval?)
-			client.log(`Testing role with name ${role.name} for Admin/Mod/Muted availability.`, "INFO");
-			if (adminRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "adminRoles"); }
-			if (modRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "modRoles"); }
-			if (mutedRdict.includes(role.name)) { client.DB.set(guild.id, role.id, "mutedRole"); }
-		});
-		let now = new Date()
-		let attachments = client.DB.ensure(guild.id, {}, `persistence.attachments`)
-		attachments.forEach(entry => {
-			client.log(entry)
-			/*if (entry.expiry < now.getMilliseconds()) {
-				client.DB.delete()
-			}*/
-		})
+
+
+		//load commands w/ config into guild config
 		const commandFiles = fs.readdirSync("./commands/");
 		client.log(`Loading ${commandFiles.length} events from ${client.basedir}/commands/`, "INFO");
 		commandFiles.forEach(command => {
@@ -107,20 +121,31 @@ module.exports = (client) => {
 		var guildData = client.DB.get(guild.id)
 		Object.keys(guildData.modules).forEach(key => {
 			let Module = guildData.modules[key]
-			if (!Module.defaultConfig) return;
-			Module.defaultConfig.requiredPermissions.forEach(perm => {
-				if (!reqPermissions.has(perm)) { reqPermissions.push(perm) }
+			if (!Module.requiredPermissions) return;
+			Module.requiredPermissions.forEach(perm => {
+				if (!reqPermissions.includes(perm)) { reqPermissions.push(perm) }
 			})
 		});
-		client.log(`required permissions for server ${guild.name} : ${reqPermissions.toString()}`)
+		client.log(`Requested permissions for server ${guild.name} : ${reqPermissions.toString()}`)
 		let missingPerms = reqPermissions.filter(perm => !(guild.members.get(client.user.id).permissions.toArray()).includes(perm))
+		if ((guild.members.get(client.user.id).permissions.toArray()).includes("ADMINISTRATOR")) { missingPerms = [] }
 		if (missingPerms.length >= 1) {
 			client.log(`bot is missing permisions : ${missingPerms.toString()} in guild ${guild.name}`, "ERROR")
 			//send notification to admins or each server? (eg in modAction channel)
 		}
-		guildData.persistence.messages.forEach(message => {
-			client.guilds.get(guild.id).channels.get(message.split(":")[0].toString()).fetchMessage(message.split(":").toString()[1]).catch(err => {
-				guildData.persistence.messages.remove(message)
+		let attachments = client.DB.get(guild.id, "persistence.attachments")
+		client.log(`Verifying Persistence data for guild ${guild.name}`)
+		Object.keys(attachments).forEach(key => {
+			let entry = attachments[key]
+			if (entry.expiry < new Date()) {
+				client.DB.delete(guild.id, `persistence.attachments.${key}`)
+			}
+		})
+		let messages = client.DB.get(guild.id, "persistence.messages")
+		Object.keys(messages).forEach(key => {
+			let messageKey = messages[key].key
+			client.guilds.get(guild.id).channels.get(messageKey.split(":")[0].toString()).fetchMessage(messageKey.split(":").toString()[1]).catch(err => {
+				client.DB.remove(guild.id, `persistence.messages.${key}`)
 			})
 		})
 		client.emit("scheduler", guild.id)
@@ -162,7 +187,7 @@ module.exports = (client) => {
 	};
 	client.schedule = async (action, guildID) => {
 		client.DB.push(guildID, action, "persistence.time")
-		check(client, guildID)
+		client.emit("scheduler", guildID)
 	}
 	client.reloadCommand = (commandName) => {
 		try {
@@ -259,10 +284,11 @@ module.exports = (client) => {
 			},
 		},
 		persistence: {
-			messages: [], //channelid:messageid
+			messages: {}, //channelid:messageid
+			attachments: {},
 			time: [],
 		},
-		blacklist: [],
+		blacklist: {},
 		users: {},
 	};
 

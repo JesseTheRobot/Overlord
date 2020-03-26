@@ -14,29 +14,13 @@ client.DB = new enmap({
 client.trecent = new enmap()
 client.debug = true
 client.config = require("./config.js")
-console.time("init");
 client.timeouts = new Map()
-client.DB.changed((Key, Old, New) => {
-	client.log(Key)
-	client.log(client.diff(Old, New))
-	if (client.setData) {
-		throw new Error()
-	}
-	/**optional debug system to monitor any/all changes to the ENMAP Database */
-	//client.log(`${Key} - ${JSON.stringify(client.diff(Old, New))}`);
-	/*switch (Key) {
-		case ""
-	}*/
-})
-client.log = (message, type) => {
-	//info, warn, debug
-	console.log(message)
-};
+
 
 
 
 //require("./Functions.js")(client);
-delete require.cache[require.resolve(`./Functions.js`)];
+//delete require.cache[require.resolve(`./Functions.js`)];
 
 /*var init = async (client) => {
 
@@ -55,11 +39,10 @@ client.login(require("./config.js").token);
 client.commands = new enmap();
 client.on("ready", () => {
 	client.DB.defer.then(() => {
-		//client.DB.deleteAll()
 		console.log("I am work yes")
-		console.log((new Date().getMilliseconds + (13.5 * 86400000)))
-		client.DB.set("636959316405911564", { attachments: ["a", "b"], expiry: (new Date().getMilliseconds + (13.5 * 86400000)) }, `persistance.attachments.69696969`)
-		console.log(client.DB)
+		client.DB.deleteAll()
+		client.DB.ensure("636959316405911564", {}, "persistence.attachments")
+		client.DB.setProp("636959316405911562", { attachments: ["a", "b"], expiry: (new Date()).setDate((new Date()).getDate() + 14) }, `persistence.attachments.696969696`)
 	})
 });
 
@@ -90,7 +73,7 @@ client.on("message", message => {
 		msg.react("✅").then(() => {
 			msg.awaitReactions((reaction, user) => { return reaction.emoji.name === "✅" && !user.bot }, { max: 1 })
 				.then(collected => {
-
+					console.log(Array.from(collected.get("✅").users)[1][1].id)
 				})
 		})
 	})

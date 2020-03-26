@@ -1,21 +1,33 @@
-module.exports = async (client, message, basedir) => {
+module.exports = async (client, message) => {
 	if (message.author.bot) return;
-	const entry = await message.guild.fetchAuditLogs({ type: "MESSAGE_DELETE" }).then(audit => audit.entries.first());
-	const member = await message.guild.fetchMember(message.author);
-	let executor = "";
+	if (!client.DB.get(message.guild.id).modules.messageDelete.enabled) return
+	let entry = await message.guild.fetchAuditLogs({ type: "MESSAGE_DELETE" }).then(audit => audit.entries.first());
+	let executor = ""; //eslint-disable-line
 	if (entry != undefined
 		&& (entry.extra.channel.id === message.channel.id)
 		&& (entry.target.id === message.author.id)
 		&& (entry.createdTimestamp > (Date.now() - 5000))
 		&& (entry.extra.count >= 1)) {
-		user = entry.executor.username;
+		executor = entry.executor.username || message.author.username
 	} else {
-		user = member.user.username;
-	}
-	let attachments = client.DB.get(message.id, `${message.guild.id}.persistence.attachments`)
-	if (attachments) {
-
-
+		executor = message.author.username
 	}
 
+	let action = {
+		title: `Message deleted in ${message.channel} by ${executor}.`,
+		type: "audit",
+		change: "deleted",
+		data: message.content,
+		attachments: [],
+		executor: "",
+		guildID: message.guild.id,
+	}
+	if (message.attachments) {
+		action.attachments = client.DB.get(message.guild.id, `persistence.attachments.${message.id}`)
+	}
+	client.emit("modActions", action)
+};
+module.exports.defaultConfig = {
+	enabled: true,
+	requiredPermissions: ["VIEW_AUDIT_LOG"],
 }

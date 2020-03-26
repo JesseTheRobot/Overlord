@@ -30,7 +30,6 @@ client.DB = new enmap({
 	name: "DB",
 	autoFetch: true,
 	fetchAll: false,
-	polling: true,
 	ensureProps: true,
 	dataDir: client.config.datadir
 });

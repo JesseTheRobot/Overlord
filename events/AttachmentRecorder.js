@@ -4,13 +4,13 @@ module.exports = async (client, message) => {
 	var atts = []
 	var path = modConfig.storageDir
 	message.attachments.array().forEach(att => {
-		var filename = message.id + "." + att.url.split("/").pop().split(".")[1]; //TODO: change this to the last item to prevent errors.
+		var filename = message.id + "(" + (message.attachments.array().indexOf(att)) + ")" + "." + att.url.split("/").pop().split(".")[1]; //TODO: change this to the last item to prevent errors.
 		var filePath = path + filename
 		client.download(att.url, { directory: path, filename: filename }, function (err) {
 			if (err) client.log(`download of attachment ${att.url} failed!`, "ERROR");
 			else {
 				client.log("download successful!");
-				if (modConfig.NSFWclassifier.enabled) {
+				if (message.settings.modules.NSFWClassifier.enabled) {
 					client.emit("NSFWClassifier", client, message, filename);
 				}
 				if (modConfig.keep) {
@@ -24,15 +24,24 @@ module.exports = async (client, message) => {
 								}
 							});
 							atts.push(link)
+							client.log(`Upload Sucessful! ${link} `)
+							if (modConfig.keep && atts && (message.attachments.array().indexOf(att)) === message.attachments.array().length) {
+								client.DB.set(message.guild.id,
+									{
+										attachments: atts,
+										expiry: (new Date()).setDate((new Date()).getDate() + 14)
+									},
+									`persistence.attachments.${message.id}`)
+							}
+							return;
 						}).catch(function (err) { client.log(err, "ERROR"); });
 				}
 			}
 		});
 	});
-	if (modConfig.keep) { client.DB.set(message.id, { attachments: atts, expiry: (new Date().getMilliseconds + (13.5 * 86400000)) }, `${message.guild.id}.persistance.attachments`) }
-	return;
+
 };
-module.defaultConfig = {
+module.exports.defaultConfig = {
 	enabled: true,
 	storageDir: "./cache/",
 	keep: true,

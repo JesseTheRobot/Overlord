@@ -24,5 +24,4 @@ module.exports.defaultConfig = {
     },
     thresholdExceeders: 3,
     autoRemove: false,
-},
-    module.exports.info = "uses a Layered Neural Net to classify the contents of a message to attempt to determine if the contents fall under a set of categories. it returns a 'certainty' (1 being 100% certain, 0.5 being 50%) and based on the weights in the configuration, flags the message for moderator intervention."
+}

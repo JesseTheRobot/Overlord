@@ -16,6 +16,8 @@ module.exports = async (client, message) => {
 			return message.author.send(`Hi there! ${message.member.displayName}, My prefix in guild ${message.guild.name} is ${prefix || "$"}.`); //sends (DM's) the user the Command Prefix for the guild, or the default prefix if anything "wonky" happens.
 		}
 		var msgHeuristics = ["autoMod", "NSFWClassifier", "toxicClassifier", ""]
+		if (message.attachments) { client.emit("attachmentRecorder", message) }
+		console.log(client.DB)
 
 		//message heuristics time!
 		//antispam, attachments, xp, NN's. (as this is 'unconditional')
