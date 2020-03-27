@@ -7,8 +7,12 @@ module.exports = async (client, message, filename) => {
             try {
                 const imageBuffer = client.fs.readFileSync(`./cache/${img}`);
                 const image = client.tf.node.decodeImage(imageBuffer, 3, undefined, false);
-                client.NSFWmodel.classify(image).then(predictions => {
-                    resolve(predictions);
+                client.NSFWModel.classify(image).then(predictions => {
+                    resolve(predictions)
+                    client.fs.unlink(`./cache/${filename}`, (err) => {
+                        if (err) { client.log(err, "ERROR"); } else { client.log("Unlink successful!"); }
+                    })
+                    return
                 });
             } catch (err) {
                 console.error(err);
@@ -17,6 +21,7 @@ module.exports = async (client, message, filename) => {
     };
 
     classifier(client, filename).then(predictions => {
+        client.log(`file ${filename} has results ${predictions.join(",")}`)
         if (predictions.filter(p => modConfig.classificationWeights[p.class] >= p.probability).length >= modConfig.thresholdExceeders) {
             let preL = [];
             predictions.forEach(p => {
@@ -40,12 +45,13 @@ module.exports = async (client, message, filename) => {
                 }
             }
             client.emit("modActions", client, action)
+
         }
     })
 };
 
 module.exports.defaultConfig = {
-    enabled: false,
+    enabled: true,
     classificationWeights: {
         hentai: 0.7,
         porn: 0.7,

@@ -8,9 +8,9 @@ module.exports = async (client, message) => {
 		&& (entry.target.id === message.author.id)
 		&& (entry.createdTimestamp > (Date.now() - 5000))
 		&& (entry.extra.count >= 1)) {
-		executor = entry.executor.username || message.author.username
+		executor = entry.executor || message.author
 	} else {
-		executor = message.author.username
+		executor = message.author
 	}
 
 	let action = {
@@ -22,8 +22,10 @@ module.exports = async (client, message) => {
 		executor: "",
 		guildID: message.guild.id,
 	}
+	client.log(message.guild.id)
+	client.log(message.id)
 	if (message.attachments) {
-		action.attachments = client.DB.get(message.guild.id, `persistence.attachments.${message.id}`)
+		action.attachments = client.DB.get(message.guild.id, `persistence.attachments.${message.id}`).attachments
 	}
 	client.emit("modActions", action)
 };

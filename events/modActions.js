@@ -38,6 +38,8 @@ module.exports = async (client, action) => {
                             })
                     })
                 })
+            }).catch(err => {
+                client.log(err, "ERROR")
             })
         }
     }
@@ -46,7 +48,10 @@ module.exports = async (client, action) => {
             .setTitle(`Message Change: ${action.change}`)
             .setDescription(action.title)
             .addField("Original Contents", `\`\`\`\n${action.data}\n\`\`\``)
-        audit.send({ embed: embed, attachments: action.attachments }) //eslint-disable-line
+            .addField("Attachments:", `${action.attachments.join("\n")}`)
+        audit.send({ embed: embed }).catch(err => {
+            client.log(err, "ERROR")
+        }) //eslint-disable-line
     }
     const genModReport = async (client, action) => {
         embed
@@ -55,7 +60,9 @@ module.exports = async (client, action) => {
             .setDescription(`Action description: ${JSON.stringify(action.request)}`)
         //colour: cyan
         //'public' report of an action. sent to affected user(s) (if applicable)
-        modReport.send({ embed: embed })
+        modReport.send({ embed: embed }).catch(err => {
+            client.log(err, "ERROR")
+        })
     }
     let actionProcessor = async (client, action) => {
         var guild = client.guilds.get(action.guildID)
