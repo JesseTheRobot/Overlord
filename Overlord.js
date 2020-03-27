@@ -38,7 +38,6 @@ client.commands = new enmap();
 client.trecent = new enmap()
 
 
-
 client.DB.changed((Key, Old, New) => {
 	client.log(Key)
 	/**optional debug system to monitor any/all changes to the ENMAP Database */

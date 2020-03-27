@@ -67,7 +67,7 @@ module.exports = async (client, action) => {
     let actionProcessor = async (client, action) => {
         var guild = client.guilds.get(action.guildID)
         var guildConfig = client.DB.get(action.guildID)
-        let member = guild.members(action.memberID)
+        let member = guild.members.get(action.memberID)
         /**
          * actions: objects containing data to be done 'at some point', whether via a scheduler or otherwise
          * 
