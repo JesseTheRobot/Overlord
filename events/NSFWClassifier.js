@@ -22,9 +22,9 @@ module.exports = async (client, message, filename) => {
     classifier(client, filename).then(predictions => {
         client.log(`file ${filename} has results ${JSON.stringify(predictions.join(","))}`)
         if (predictions.filter(p => p.probability >= modConfig.classificationWeights[p.className]).length >= modConfig.thresholdExceeders) {
-            let preL = [];
+            let classi = [];
             predictions.forEach(p => {
-                preL.push(`${p.className} Certainty: ${Math.round(p.probability * 100)}%\n`);
+                classi.push(`${p.className} Certainty: ${Math.round(p.probability * 100)}%\n`);
             });
             var action = {
                 guildID: message.guild.id,
@@ -34,14 +34,15 @@ module.exports = async (client, message, filename) => {
                 title: "Suspected NSFW Content",
                 src: `Posted by user ${message.author} in channel ${message.channel} : [Jump to message](${message.url})`,
                 trigger: {
-                    type: "automatic",
-                    data: `NSFW content breakdown: \n${preL.join(" ")}`,
+                    type: "Automatic",
+                    data: `NSFW content breakdown: \n${classi.join(" ")}`,
                 },
                 request: "Removal of offending content",
                 requestedAction: {
                     type: "delete",
                     target: `${message.guild.id}.${message.channel.id}.${message.id}`,
-                }
+                },
+                penalty: modConfig.penalty,
             }
             client.emit("modActions", action)
 
@@ -58,6 +59,7 @@ module.exports.defaultConfig = {
         Drawing: 0.1,
     },
     thresholdExceeders: 1,
-    autoRemove: true,
+    autoRemove: false,
+    penalty: 5,
     requiredPermissions: ["MANAGE_MESSAGES"],
 };

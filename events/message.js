@@ -20,6 +20,7 @@ module.exports = async (client, message) => {
 
 
 		client.emit("attachmentRecorder", message)
+		client.emit("toxicClassifier", message)
 
 
 		console.log(client.DB)

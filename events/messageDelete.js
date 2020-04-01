@@ -25,10 +25,15 @@ module.exports = async (client, message) => {
 	client.log(message.guild.id)
 	client.log(message.id)
 	if (message.attachments) {
-		action.attachments = client.DB.get(message.guild.id, `persistence.attachments.${message.id}`).attachments
+		try {
+			action.attachments = (client.DB.get(message.guild.id, `persistence.attachments.${message.id}`).attachments || [])
+		} catch (err) {
+			client.log("message had no attachments")
+		}
 	}
 	client.emit("modActions", action)
 };
+
 module.exports.defaultConfig = {
 	enabled: true,
 	requiredPermissions: ["VIEW_AUDIT_LOG"],

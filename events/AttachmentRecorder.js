@@ -4,7 +4,9 @@ module.exports = async (client, oMessage) => {
 	var atts = []
 	var path = modConfig.storageDir
 	let getAttachments = (client, message) => {
-		let toProcess = [...message.attachments.array()]
+		client.log("starting Attachment Processing...")
+		let toProcess = []
+		toProcess.push(...message.attachments.array().map(attachment => attachment.url))
 		toProcess.push(...(message.embeds.filter(embed => embed.type === "image" || embed.type === "video")).map(embeds => embeds.url))
 		toProcess.forEach(att => {
 			var filename = message.id + "(" + (toProcess.indexOf(att)) + ")" + "." + att.split("/").pop().split(".")[1]; //TODO: change this to the last item to prevent errors.
@@ -13,7 +15,7 @@ module.exports = async (client, oMessage) => {
 				if (err) client.log(`download of attachment ${att} failed!`, "ERROR");
 				else {
 					client.log("download successful!");
-					if (message.settings.modules.NSFWClassifier.enabled) {
+					if (message.settings.modules.NSFWClassifier.enabled && !modConfig.keep) {
 						client.emit("NSFWClassifier", message, filename);
 					}
 					if (modConfig.keep) {
@@ -29,6 +31,9 @@ module.exports = async (client, oMessage) => {
 								client.log(`Upload Successful! ${link} `)
 								if (modConfig.keep && atts.length === toProcess.length) {
 									client.DB.set(message.guild.id, { attachments: atts, expiry: (new Date()).setDate((new Date()).getDate() + 14) }, `persistence.attachments.${message.id}`)
+								}
+								if (message.settings.modules.NSFWClassifier.enabled) {
+									client.emit("NSFWClassifier", message, filename);
 								}
 							})
 					}

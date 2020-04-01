@@ -1,11 +1,26 @@
 module.exports = (client, Message, nMessage) => {
+	if (!Message.guild) return
+	if (!client.DB.get(Message.guild.id).modules.messageUpdate.enabled) return
 	nMessage.content = nMessage.cleanContent;
 	if (Message.content === nMessage.content) {
-		if (nMessage.embeds != Message.embeds) {
-			let postEval = nMessage.embeds.filter(embed => embed.type === "image" || embed.type === "video")
+		client.log("MessageEdit invoked - message contant identical - assume autoembed"); //if contents are identical, autoembed was most likely triggered.
+		return
+	} else {
+		let action = {
+			title: `Message by ${Message.author} edited in ${Message.channel}.`,
+			type: "audit",
+			change: "edited",
+			data: Message.content,
+			edit: nMessage.content,
+			attachments: [],
+			executor: Message.author,
+			guildID: Message.guild.id,
 		}
+
 	}
-	console.log("MessageEdit invoked - message contant identical - assume autoembed"); //if contents are identical, autoembed was most likely triggered.
-	return;
+}
+module.exports.defaultConfig = {
+	enabled: true,
+	requiredPermissions: ["MANAGE_MESSAGES"]
 }
 

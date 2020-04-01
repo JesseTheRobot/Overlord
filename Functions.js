@@ -85,9 +85,9 @@ module.exports = (client) => {
 	 * @param  guild 
 	 */
 	client.validateGuild = (client, guild) => { //validates the DB entry for a guild
-		client.DB.set(guild.id, "636959316405911564", "modActionChannel")
-		client.DB.set(guild.id, "636959316405911564", "auditLogChannel")
-		client.DB.set(guild.id, "636959316405911564", "modReportingChannel")
+		client.DB.set(guild.id, "693427599015411712", "modActionChannel")
+		client.DB.set(guild.id, "693427576965824582", "auditLogChannel")
+		client.DB.set(guild.id, "693427641604374598", "modReportingChannel")
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
@@ -258,31 +258,7 @@ module.exports = (client) => {
 		modActionChannel: 0,
 		modReportingChannel: 0,
 		auditLogChannel: 0,
-		modules: {
-			autoMod: {
-				enabled: true,
-				bannedWords: [],
-				excludedRoles: [],
-				percentCapsLimit: 0,
-				floodPercentLimit: 0,
-				decay: 30000,
-				antiSpam: {
-					enabled: true,
-					interval: 2000,
-					count: 2,
-					penalty: 1,
-				},
-				penalties: {
-					repeatOffenceMultiplier: 2,
-					repeatOffenceTimeout: 10000
-				},
-				punishments: {
-					5: "mute",
-					10: "tempBan",
-					15: "ban",
-				},
-			},
-		},
+		modules: {},
 		persistence: {
 			messages: {}, //channelid:messageid
 			attachments: {},
