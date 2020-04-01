@@ -4,7 +4,6 @@ module.exports = async (client, oMessage) => {
 	var atts = []
 	var path = modConfig.storageDir
 	let getAttachments = (client, message) => {
-		client.log("starting Attachment Processing...")
 		let toProcess = []
 		toProcess.push(...message.attachments.array().map(attachment => attachment.url))
 		toProcess.push(...(message.embeds.filter(embed => embed.type === "image" || embed.type === "video")).map(embeds => embeds.url))

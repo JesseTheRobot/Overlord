@@ -11,7 +11,6 @@ exports.run = async (client, message, args) => {
 
 exports.defaultConfig = {
 	aliases: ["eval"],
-	guildOnly: true,
 	enabled: true,
 	permReq: ["BOT_OWNER"],
 	cooldown: 1000,

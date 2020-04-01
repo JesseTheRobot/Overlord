@@ -21,9 +21,12 @@ let actionProcessor = async (client, guildID, action) => {
         case "roleAdd":
             guild.members.get(action.memberID).roles.addRole(action.roleID)
             break;
+        case "unban":
+            guild.unban(action.memberID)
+            break;
         default:
-            client.log(`unknown Action type/action ${JSON.stringify(action)}`, "WARN")
-            break
+            client.log(`Unknown action type/action ${JSON.stringify(action)}`, "WARN")
+            break;
     }
 }
 

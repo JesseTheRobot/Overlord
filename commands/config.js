@@ -1,5 +1,40 @@
 exports.run = (client, message, args) => {
-	function objIterate(object, stackStr) {
+	//set|get|restore module|command path.to.key [value]
+	data = client.DB.get("message.guild.id")
+
+	switch (args[1]) {
+		case "set":
+
+
+		case "get":
+
+
+		case "restore":
+
+	}
+
+}
+
+	/* cmd keyMap:
+	aliases: array:string
+	enabled: bool
+	permReq: array:permissions
+	cooldown: int
+	allowedChannels: array:ids
+	*/
+
+
+};
+exports.defaultConfig = {
+	aliases: ["config"],
+	enabled: true,
+	permReq: ["ADMINISTRATOR"],
+	cooldown: 1000,
+	allowedChannels: [],
+	exmaple: "set|get|restore module|command   "
+};
+
+/*function objIterate(object, stackStr) {
 		for (var property in object) {
 			if (object.hasOwnProperty(property)) {
 				if (typeof object[property] == "object") {
@@ -14,7 +49,7 @@ exports.run = (client, message, args) => {
 	var keys = client.getGuildSettings(message.guild).config.keys(); //pulls in context guild's configuration keys.
 	const protectedKeys = require(`${process.cwd}\\config.js`).protectedKeys;//["serverOwnerID","config","autoMod","antiSpam"];
 	objIterate(keys, "config");
-	const configOptions = { //key:state/action system. 
+	const configOptions = { //key:state/action system.
 
 	};
 	const getKeyType = (client, message, args) => {
@@ -23,63 +58,4 @@ exports.run = (client, message, args) => {
 			return; //invalid key
 		}
 
-	}
-	var defaultConfig = { //default config for all servers, applied at guild 'creation' or at runtime if something's gone horribly wrong. mainly used as a template for development rn.
-		commands: {
-			"help": {
-				aliases: ["commands"],
-				guildOnly: true,
-				enabled: true,
-				permLevel: 1,
-				cooldown: 1000,
-				allowedChannels: [],
-			},
-		},
-		config: {
-			prefix: "$",
-			mutedRole: 0,
-			welcomeMsg: "Welcome {{user}} to {{guild.name}}!",
-			welcomeChan: 0,
-			modRoles: [],
-			adminRoles: [],
-			serverOwnerID: 0,
-			allowedChannels: [],
-			autoMod: {
-				bannedWords: [],
-				excludedRoles: [],
-				percentCaps: 0,
-				floodPercentLimit: 0,
-				decay: 30000,
-				antiSpam: {
-					interval: 2000,
-					count: 2,
-				},
-				penalties: {
-					spam: 1,
-					bannedWord: 2,
-					repeatOffenceMultiplier: 0.1,
-					repeatOffenceTimeout: 10000 //in ms
-				},
-				punishments: {
-					5: "mute",
-					10: "tempBan",
-					15: "ban",
-				}
-			},
-		},
-		persistence: {
-			messages: {},
-			users: {},
-		},
-		blacklist: {},
-		users: {},
-	};
-};
-exports.defaultConfig = {
-	aliases: ["config"],
-	guildOnly: true,
-	enabled: true,
-	permReq: [],
-	cooldown: 1000,
-	allowedChannels: [],
-};
+	}*/

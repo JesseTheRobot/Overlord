@@ -21,7 +21,6 @@ exports.run = (client, message, args) => {
 };
 exports.defaultConfig = {
 	aliases: ["help", "commands"],
-	guildOnly: true,
 	enabled: true,
 	permReq: [],
 	cooldown: 1000,

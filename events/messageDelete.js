@@ -6,9 +6,9 @@ module.exports = async (client, message) => {
 	if (entry != undefined
 		&& (entry.extra.channel.id === message.channel.id)
 		&& (entry.target.id === message.author.id)
-		&& (entry.createdTimestamp > (Date.now() - 5000))
+		&& (entry.createdTimestamp > (Date.now() - 15000))
 		&& (entry.extra.count >= 1)) {
-		executor = entry.executor || message.author
+		executor = `${entry.executor} - Original Author is ${message.author}`
 	} else {
 		executor = message.author
 	}

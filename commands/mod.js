@@ -1,10 +1,8 @@
 exports.run = (client, message, args) => {
-	console.log("WIP")
 
 };
 exports.defaultConfig = {
-	aliases: ["update"],
-	guildOnly: true,
+	aliases: ["mod", "ban", "mute",],
 	enabled: true,
 	permReq: [],
 	cooldown: 1000,

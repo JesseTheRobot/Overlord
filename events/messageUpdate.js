@@ -15,8 +15,9 @@ module.exports = (client, Message, nMessage) => {
 			attachments: [],
 			executor: Message.author,
 			guildID: Message.guild.id,
+			memberID: Message.author.id
 		}
-
+		client.emit("modActions", action)
 	}
 }
 module.exports.defaultConfig = {

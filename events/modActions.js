@@ -1,16 +1,34 @@
 module.exports = async (client, action) => {
     const discord = require("discord.js")
     let guild = client.guilds.get(action.guildID)
+    let target = guild.members.get(action.memberID)
     let config = client.DB.get(action.guildID)
     let modAction = guild.channels.get(config.modActionChannel)
     let audit = guild.channels.get(config.auditLogChannel)
     let modReport = guild.channels.get(config.modReportingChannel)
     //https://leovoel.github.io/embed-visualizer/
-    /*action:{
-        type: "action/audit/report/",
-        actionDesc:"","
-        data: (...),
+
+    /* example action:
+    {
+        guildID: message.guild.id,
+        memberID: message.member.id,
+        type: "action",
+        autoRemove: modConfig.autoRemove,
+        title: "Suspected Toxic Content",
+        src: `Posted by user ${message.author} in channel ${message.channel} : [Jump to message](${message.url})`,
+        trigger: {
+            type: "Automatic",
+            data: `Toxic content breakdown: \n${classi.join(" ")}`,
+        },
+        request: "Removal of offending content",
+        requestedAction: {
+            type: "delete",
+            target: `${message.guild.id}.${message.channel.id}.${message.id}`,
+        },
+        penalty: modConfig.penalty,
     }*/
+
+
 
     const genModAction = async (client, action) => {
         //colour: amber
@@ -18,7 +36,6 @@ module.exports = async (client, action) => {
             let embed = new discord.RichEmbed()
                 .setAuthor(client.user.username, client.user.avatarURL)
                 .setTimestamp(new Date())
-
                 .setTitle(`Moderator Action requested: ${action.title}`)
                 .setDescription(`source: ${action.src}`)
                 .addField("Trigger type", action.trigger.type)
@@ -51,7 +68,7 @@ module.exports = async (client, action) => {
                 embed.addField("Attachments:", `${action.attachments.join("\n") || "None"}`)
                 break;
             case "edited":
-                embed.addField("Edited Contents:", `\`\`\`\n${action.data}\n\`\`\``)
+                embed.addField("Edited Contents:", `\`\`\`\n${action.edit}\n\`\`\``)
         }
         audit.send({ embed: embed }).catch(err => {
             client.log(err, "ERROR")
@@ -70,14 +87,14 @@ module.exports = async (client, action) => {
         modReport.send({ embed: embed }).catch(err => {
             client.log(err, "ERROR")
         })
-        let affectedUser = guild.members.get(action.memberID)
+
         let notification = new discord.RichEmbed()
         notification
             .setTitle(`Notification of action: ${action.title}`)
             .setDescription(`In server ${guild}\n - ${action.src}.\n Content has been processed via ${action.request}\n
-            Current Penalty for this action is ${action.penalty} demerits. you will be notified if any further action is taken.`)
+            Current Penalty for this action is ${action.penalty} demerit(s). you will be notified if any further action is taken.`)
             .setFooter("Please contact a Moderator if you Wish to appeal this action.")
-        affectedUser.send({ embed: notification })
+        target.send({ embed: notification })
     }
 
 
@@ -85,6 +102,7 @@ module.exports = async (client, action) => {
     let actionProcessor = async (client, action) => {
         var guildConfig = client.DB.get(action.guildID)
         let member = guild.members.get(action.memberID)
+        penaltyMan(client, action)
         /**
          * actions: objects containing data to be done 'at some point', whether via a scheduler or otherwise
          * 
@@ -93,33 +111,44 @@ module.exports = async (client, action) => {
             case "delete":
                 deleteMessage(client, action)
                 break
+            case "mute":
+                mute(client, action)
+                break
+            case "ban":
+                saveUserState(client, action)
+                break
+            case "bulkDelete":
+                bulkDelete(client, action)
+                break
+
             default:
                 client.log(`unknown/invalid action type: ${action.requestedAction.type}`, "WARN")
 
         }
         function saveUserState(client, action) {
             let state = {
-                nick: member.nickname,
-                roles: Array.from(member.roles.keys()),
+                nick: target.nickname,
+                roles: Array.from(target.roles.keys()),
                 TS: new Date()
             }
-            client.DB.set(action.guildID, state, `users.${member.id}.savedState`)
+            client.DB.set(action.guildID, state, `users.${target.id}.savedState`)
+            genModReport(client, action)
         }
         function mute(client, action) {
-            member.roles.addRole(guildConfig.mutedRole)
+            target.roles.addRole(guildConfig.mutedRole)
             client.schedule({
                 type: "roleRemove",
-                memberID: action.memberID,
+                memberID: target.id,
                 roleID: guildConfig.mutedRole,
 
             }, guild.id)
+            genModReport(client, action)
         }
         function restoreUserSate(client, action) {
-            let state = client.DB.get(action.guildID, `users.${action.memberID}.savedState`)
+            let state = client.DB.get(action.guildID, `users.${target.id}.savedState`)
             //declare that a state restore has been performed
-            let user = client.guilds.get(action.guildID).members.get(action.memberID)
-            user.setNickname(state.nick)
-            user.roles.add(state.roles)
+            target.setNickname(state.nick)
+            target.roles.add(state.roles)
         }
         function deleteMessage(client, action) {
             let args = action.requestedAction.target.split(".")
@@ -127,11 +156,24 @@ module.exports = async (client, action) => {
             genModReport(client, action)
 
         }
-        function addDemerits(client, action) {
-            client.DB.get(action.guildID)
+        function ban(client, action) {
+            if (!target.bannable) {
+                client.log(`Cannot Ban user ${target} - I do not have the permissions!`)
+            } else {
+                target.ban({ reason: action.title })
+            }
+            genModReport(client, action)
+
+        }
+        async function bulkDelete(client, action) {
+            let channel = guild.channels.get(action.requestedAction.target.split(".")[1])
+            let toDelete = await ((channel.fetchMessages().then(messages => messages.filter(m => m.author.id === target.id)))) //.splice(0, action.requestedAction.count))))
+            channel.bulkDelete(toDelete.array().splice(0, action.requestedAction.count))
+            genModReport(client, action)
 
         }
     }
+
 
     switch (action.type) {
         case "action":
@@ -148,16 +190,22 @@ module.exports = async (client, action) => {
             break;
     }
 
-    //action : summary, desc, target(?)
-    //send a message to a moderation channel in which moderators
-    // can react to determine if an automated action should be taken or not
-    // (only if the autoremove is disabled in module config, g for the antispam/flood/classifier nets)
-    /*const addPoints = (client, data) => {
-        /*
-        data ={
-            target: GuildID.memberID,
-            number: int
-        }
-        */
+}
+module.exports.defaultConfig = {
+    requiredPermissions: ["MANAGE_MEMBERS", "MANAGE_GUILD"],
+    punishments: {
+        5: {
+            name: "mute",
+            duration: 12
+        },
+        10: {
+            name: "tempBan",
+            duration: 48
 
+        },
+        15: {
+            name: "ban",
+            duration: 9999
+        }
+    },
 }

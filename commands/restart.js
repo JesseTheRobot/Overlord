@@ -1,4 +1,10 @@
 exports.run = (client, message, args) => {
+	if (message.author.id === client.config.ownerID) {
+		message.react("✅")
+		client.emit("gracefulShutdown")
+	} else {
+		message.react("🚫")
+	}
 
 };
 exports.defaultConfig = {
