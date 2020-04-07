@@ -25,7 +25,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
 				client.log('log', `${message.guild.name}/#${message.channel.name} (${message.channel.id}): ${member.user.tag} (${member.user.id}) was banned by ${message.author.tag} (${message.author.id})`, 'CMD');
 			})
 			.catch((err) => {
-				console.log(err);
+				client.log(err, "ERROR");
 			});
 	})
 		.catch(error => message.reply(`Sorry ${message.author} I couldn't ban because of : ${error}`));

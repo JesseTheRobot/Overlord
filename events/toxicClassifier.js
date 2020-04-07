@@ -2,6 +2,7 @@ module.exports = async (client, message) => {
     if (!client.toxicModel) { return }
     let modConfig = message.settings.modules.toxicClassifier
     if (!modConfig.enabled) { return }
+    if (!message.content >= modConfig.ignoreBelowLength) { return }
     let classi = []
     client.toxicModel.classify(message.content).then(predictions => {
         if (predictions.filter(p => p.results[0].probabilities[1] >= modConfig.classificationWeights[p.label]).length >= modConfig.thresholdExceeders) {
@@ -44,6 +45,7 @@ module.exports.defaultConfig = {
     },
     thresholdExceeders: 3,
     autoRemove: false,
+    ignoreBelowLength: 30,
     penalty: 3,
     requiredPermissions: ["MANAGE_MESSAGES"],
 }

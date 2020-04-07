@@ -28,15 +28,13 @@ module.exports = async (client, action) => {
         penalty: modConfig.penalty,
     }*/
 
-
-
     const genModAction = async (client, action) => {
         //colour: amber
         if (action.autoRemove) { actionProcessor(client, action) } else {
             let embed = new discord.RichEmbed()
                 .setAuthor(client.user.username, client.user.avatarURL)
                 .setTimestamp(new Date())
-                .setTitle(`Moderator Action requested: ${action.title}`)
+                .setTitle(`Action requested: ${action.title}`)
                 .setDescription(`source: ${action.src}`)
                 .addField("Trigger type", action.trigger.type)
                 .addField("Trigger description:", action.trigger.data)
@@ -60,9 +58,9 @@ module.exports = async (client, action) => {
         let embed = new discord.RichEmbed()
             .setAuthor(client.user.username, client.user.avatarURL)
             .setTimestamp(new Date())
-            .setTitle(`Message Change: ${action.change}`)
+            .setTitle(`Change: ${action.change}`)
             .setDescription(action.title)
-            .addField("Original Contents", `\`\`\`\n${action.data}\n\`\`\``)
+            .addField("Original:", `\`\`\`\n${action.data}\n\`\`\``)
         switch (action.change) {
             case "deleted":
                 embed.addField("Attachments:", `${action.attachments.join("\n") || "None"}`)
@@ -78,31 +76,37 @@ module.exports = async (client, action) => {
         let embed = new discord.RichEmbed()
             .setAuthor(client.user.username, client.user.avatarURL)
             .setTimestamp(new Date())
-            .setTitle(`Moderator Action: ${action.title}`)
+            .setTitle(`Action: ${action.title}`)
             .setDescription(`Action description: ${JSON.stringify(action.request)}`)
-            .addField(`action trigger: ${action.trigger.type}`, `Executor: ${action.executor} `)
+            .addField(`action trigger: ${action.trigger.type}`, `Executor: ${action.executor}`)
 
         //colour: cyan
         //'public' report of an action. sent to affected user(s) (if applicable)
         modReport.send({ embed: embed }).catch(err => {
             client.log(err, "ERROR")
         })
+    }
+    const genNotification = (client, action) => {
+        return new Promise(resolve => {
+            let notification = new discord.RichEmbed()
+            notification
+                .setTitle(`Notification of action: ${action.request}`)
+                .setDescription(`In server ${guild}\n - ${action.src}.\n trigger: ${action.trigger.type}, executor: ${action.executor}.`)
+                .setFooter("If you wish to dispute this action, please contact an Administrator.")
+            target.send({ embed: notification }).then(() => {
+                resolve("Sent!")
+            })
 
-        let notification = new discord.RichEmbed()
-        notification
-            .setTitle(`Notification of action: ${action.title}`)
-            .setDescription(`In server ${guild}\n - ${action.src}.\n Content has been processed via ${action.request}\n
-            Current Penalty for this action is ${action.penalty} demerit(s). you will be notified if any further action is taken.`)
-            .setFooter("Please contact a Moderator if you Wish to appeal this action.")
-        target.send({ embed: notification })
+        })
     }
 
-
-
     let actionProcessor = async (client, action) => {
-        var guildConfig = client.DB.get(action.guildID)
-        let member = guild.members.get(action.memberID)
-        penaltyMan(client, action)
+        let guildConfig = client.DB.get(guild.id)
+        if (action.penalty) {
+            let data = client.DB.ensure(guild.id, { count: 0, TS: new Date() }, `users.${action.memberID}.demerits`)
+            client.DB.set(guild.id, { count: data.count + action.penalty, TS: new Date() }, `users.${action.memberID}.demerits`)
+            client.schedule(guild.id, { type: "demerit", end: new Date().setTime(new Date().getTime() + 2000), memberID: action.memberID, })
+        }
         /**
          * actions: objects containing data to be done 'at some point', whether via a scheduler or otherwise
          * 
@@ -115,7 +119,7 @@ module.exports = async (client, action) => {
                 mute(client, action)
                 break
             case "ban":
-                saveUserState(client, action)
+                ban(client, action)
                 break
             case "bulkDelete":
                 bulkDelete(client, action)
@@ -125,42 +129,29 @@ module.exports = async (client, action) => {
                 client.log(`unknown/invalid action type: ${action.requestedAction.type}`, "WARN")
 
         }
-        function saveUserState(client, action) {
-            let state = {
-                nick: target.nickname,
-                roles: Array.from(target.roles.keys()),
-                TS: new Date()
-            }
-            client.DB.set(action.guildID, state, `users.${target.id}.savedState`)
-            genModReport(client, action)
-        }
         function mute(client, action) {
-            target.roles.addRole(guildConfig.mutedRole)
-            client.schedule({
-                type: "roleRemove",
-                memberID: target.id,
-                roleID: guildConfig.mutedRole,
-
-            }, guild.id)
+            target.addRole(guildConfig.mutedRole)
+            genNotification(client, action)
             genModReport(client, action)
-        }
-        function restoreUserSate(client, action) {
-            let state = client.DB.get(action.guildID, `users.${target.id}.savedState`)
-            //declare that a state restore has been performed
-            target.setNickname(state.nick)
-            target.roles.add(state.roles)
         }
         function deleteMessage(client, action) {
             let args = action.requestedAction.target.split(".")
             client.guilds.get(args[0]).channels.get(args[1]).messages.get(args[2]).delete()
+            genNotification(client, action)
             genModReport(client, action)
 
         }
-        function ban(client, action) {
+        async function ban(client, action) {
             if (!target.bannable) {
-                client.log(`Cannot Ban user ${target} - I do not have the permissions!`)
+                client.log(`Cannot Ban user ${target} - I do not have the permissions!`, "WARN")
             } else {
-                target.ban({ reason: action.title })
+                try {
+                    genNotification(client, action).then(() => {
+                        target.ban({ reason: action.title })
+                    })
+                } catch (err) {
+                    client.log(err, "ERROR")
+                }
             }
             genModReport(client, action)
 
@@ -169,11 +160,11 @@ module.exports = async (client, action) => {
             let channel = guild.channels.get(action.requestedAction.target.split(".")[1])
             let toDelete = await ((channel.fetchMessages().then(messages => messages.filter(m => m.author.id === target.id)))) //.splice(0, action.requestedAction.count))))
             channel.bulkDelete(toDelete.array().splice(0, action.requestedAction.count))
+            genNotification(client, action)
             genModReport(client, action)
 
         }
     }
-
 
     switch (action.type) {
         case "action":
@@ -185,27 +176,16 @@ module.exports = async (client, action) => {
         case "report":
             genModReport(client, action)
             break;
+        case "actionProcessor":
+            actionProcessor(client, action)
+            break;
         default:
-            client.log(`incorrect action type ${action.type}! event processing failed.`, "FATAL")
+            client.log(`incorrect action type ${action.type}! event processing failed.`, "ERROR")
             break;
     }
 
 }
 module.exports.defaultConfig = {
     requiredPermissions: ["MANAGE_MEMBERS", "MANAGE_GUILD"],
-    punishments: {
-        5: {
-            name: "mute",
-            duration: 12
-        },
-        10: {
-            name: "tempBan",
-            duration: 48
 
-        },
-        15: {
-            name: "ban",
-            duration: 9999
-        }
-    },
 }

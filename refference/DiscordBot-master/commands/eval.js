@@ -40,7 +40,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
 		} else {
 			message.channel.send(`\`ERROR (Check console for error stack)\` \`\`\`xl\n${await client.clean(client, err.message)}\n\nTime taken: ${Date.now() - time}ms\n\`\`\``, { split: true }).catch(console.error);
 		}
-		console.log(err);
+		client.log(err, "ERROR");
 	}
 };
 

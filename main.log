@@ -1,0 +1,325 @@
+2020-04-07 17:37:00: !== Overlord v0.2.0.2032020 Intialisation starting. current date/time is Tue Apr 07 2020 17:37:00 GMT+0100 (British Summer Time) ==! 
+2020-04-07 17:37:03: [INFO] Models loaded!「modelLoad (.\Overlord.js:27:9)」
+2020-04-07 17:37:03: [INFO] client logging in as Overlord#5395「Client.client.init (.\Functions.js:20:10)」
+2020-04-07 17:37:03: [INFO] Loading 15 events from D:\\Dev\\GitHub\\Overlord/events/「Client.client.init (.\Functions.js:43:10)」
+2020-04-07 17:37:03: [INFO] attempting to load event attachmentRecorder「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\attachmentRecorder\:{\enabled\:true,\storageDir\:\./cache/\,\keep\:true,\requiredPermissions\:[\MANAGE_MESSAGES\,\READ_MESSAGE_HISTORY\,\VIEW_CHANNEL\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound attachmentRecorder to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event autoMod「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\autoMod\:{\enabled\:true,\bannedWords\:[],\bannedURLs\:[],\excludedRoles\:[],\punishments\:{\mute\:{\start\:5,\end\:0},\tempBan\:{\start\:10,\end\:5},\ban\:{\start\:15,\end\:0}},\decay\:3,\heuristics\:{\ignoreBelowLength\:20,\charFlood\:{\enabled\:true,\percentLimit\:40},\caps\:{\enabled\:true,\percentLimit\:40}},\antiSpam\:{\enabled\:true,\interval\:3000,\count\:5,\penalty\:1,\autoRemove\:true},\requiredPermissions\:[\MANAGE_MESSAGES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound autoMod to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event guildCreate「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] Bound guildCreate to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event guildMemberAdd「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\guildMemberAdd\:{\enabled\:false,\welcomeChannel\:0,\welcomeMessage\:\welcome {{user}} to {{guildName}}!\}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound guildMemberAdd to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event guildMemberRemove「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\guildMemberRemove\:{\enabled\:true}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound guildMemberRemove to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event guildMemberUpdate「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] Bound guildMemberUpdate to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event guildUpdate「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] Bound guildUpdate to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event message「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] Bound message to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event messageDelete「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\messageDelete\:{\enabled\:true,\requiredPermissions\:[\VIEW_AUDIT_LOG\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound messageDelete to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event messageReactionAdd「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] Bound messageReactionAdd to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event messageUpdate「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\messageUpdate\:{\enabled\:true,\requiredPermissions\:[\MANAGE_MESSAGES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound messageUpdate to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event modActions「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\modActions\:{\requiredPermissions\:[\MANAGE_MEMBERS\,\MANAGE_GUILD\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound modActions to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event NSFWClassifier「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\NSFWClassifier\:{\enabled\:true,\classificationWeights\:{\Hentai\:0.1,\Porn\:0.1,\Sexy\:0.1,\Drawing\:0.1},\thresholdExceeders\:1,\autoRemove\:false,\penalty\:5,\requiredPermissions\:[\MANAGE_MESSAGES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound NSFWClassifier to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event scheduler「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\scheduler\:{\requiredPermissions\:[\MANAGE_MESSAGES\,\MANAGE_ROLES\,\MANAGE_NICKNAMES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound scheduler to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] attempting to load event toxicClassifier「.\Functions.js:47:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modules\:{\toxicClassifier\:{\enabled\:true,\classificationWeights\:{\identity_attack\:0.6,\insult\:0.8,\obscene\:0.8,\severe_toxicity\:0.6,\sexual_explicit\:0.6,\threat\:0.8,\toxicity\:0.7},\thresholdExceeders\:3,\autoRemove\:false,\ignoreBelowLength\:30,\penalty\:3,\requiredPermissions\:[\MANAGE_MESSAGES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Bound toxicClassifier to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modActionChannel\:\693427599015411712\},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\auditLogChannel\:\693427576965824582\},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\modReportingChannel\:\693427641604374598\},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Testing role with name @everyone for Admin/Mod/Muted availability.「.\Functions.js:89:11」
+2020-04-07 17:37:03: [INFO] Testing role with name JTR for Admin/Mod/Muted availability.「.\Functions.js:89:11」
+2020-04-07 17:37:03: [INFO] Testing role with name NickTracker for Admin/Mod/Muted availability.「.\Functions.js:89:11」
+2020-04-07 17:37:03: [INFO] Testing role with name Muted for Admin/Mod/Muted availability.「.\Functions.js:89:11」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\mutedRole\:\697083015242842182\},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\users\:{\150693679500099584\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\users\:{\384086168586813440\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\users\:{\576337826157690891\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\users\:{\646452404316798978\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\users\:{\648959959488397332\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Sucessfully Verified/initialised Guild [NEA]Overlord Dev Server to DB「Client.client.validateGuild (.\Functions.js:100:10)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{},\deleted\:{},\updated\:{\serverOwnerID\:\150693679500099584\}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] Loading 11 events from D:\\Dev\\GitHub\\Overlord/commands/「Client.client.validateGuild (.\Functions.js:105:10)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commands\:{\eval\:{\aliases\:[\eval\],\enabled\:true,\permReq\:[\BOT_OWNER\],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\eval\:\eval\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias eval to command eval in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commands\:{\help\:{\aliases\:[\help\,\commands\],\info\:\lists the commands the user is able to execute in the current server\,\enabled\:true,\permReq\:[],\cooldown\:10000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\help\:\help\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias help to command help in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\commands\:\help\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias commands to command help in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commands\:{\mod\:{\aliases\:[\mod\,\ban\,\mute\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\mod\:\mod\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias mod to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\ban\:\mod\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias ban to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\mute\:\mod\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias mute to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commands\:{\ping\:{\aliases\:[\ping\,\pong\,\test\],\enabled\:true,\permReq\:[],\cooldown\:10000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\ping\:\ping\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias ping to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\pong\:\ping\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias pong to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\test\:\ping\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias test to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commands\:{\poll\:{\aliases\:[\poll\,\vote\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\poll\:\poll\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias poll to command poll in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\vote\:\poll\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:03: [INFO] bound alias vote to command poll in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:03: [INFO] 636959316405911562 - {\added\:{\commands\:{\purge\:{\aliases\:[\purge\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:11: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\purge\:\purge\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] bound alias purge to command purge in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commands\:{\rank\:{\aliases\:[\rank\,\level\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\rank\:\rank\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] bound alias rank to command rank in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\level\:\rank\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] bound alias level to command rank in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commands\:{\reload\:{\aliases\:[\reload\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\reload\:\reload\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] bound alias reload to command reload in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commands\:{\restart\:{\aliases\:[\restart\,\reboot\],\enabled\:true,\permReq\:[\BOT_OWNER\],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\restart\:\restart\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] bound alias restart to command restart in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\reboot\:\restart\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] bound alias reboot to command restart in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commands\:{\sudo\:{\aliases\:[\sudo\],\enabled\:true,\permReq\:[\ADMINISTRATOR\],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\sudo\:\sudo\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:37:15: [INFO] bound alias sudo to command sudo in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:37:15: [INFO] Requested permissions for server [NEA]Overlord Dev Server : SEND_MESSAGES,READ_MESSAGES,MANAGE_MESSAGES,VIEW_CHANNEL,MANAGE_GUILD,READ_MESSAGE_HISTORY,VIEW_AUDIT_LOG,MANAGE_MEMBERS,MANAGE_ROLES,MANAGE_NICKNAMES「Client.client.validateGuild (.\Functions.js:121:10)」
+2020-04-07 17:37:15: [INFO] Verifying Persistence data for guild [NEA]Overlord Dev Server「Client.client.validateGuild (.\Functions.js:130:10)」
+2020-04-07 17:37:15: [INFO] Checking... (timeout = null) Tue Apr 07 2020 17:37:15 GMT+0100 (British Summer Time) 「check (.\events\scheduler.js:127:12)」
+2020-04-07 17:37:15: init: 15127.722ms
+2020-04-07 17:37:15: [INFO] Ready to serve in 5 channels on 1 servers, for a total of 6 users.「Client.client.init (.\Functions.js:72:10)」
+2020-04-07 17:37:15: [INFO] Message with contents test# sent to the Bot Via DM's by user <@150693679500099584>「module.exports (.\events\message.js:98:11)」
+2020-04-07 17:37:15: [INFO] Message with contents test sent to the Bot Via DM's by user <@150693679500099584>「module.exports (.\events\message.js:98:11)」
+2020-04-07 17:37:15: [INFO] Deleting 0 files from cache...「.\Functions.js:64:11」
+2020-04-07 17:38:38: !== Overlord v0.2.0.2032020 Intialisation starting. current date/time is Tue Apr 07 2020 17:38:38 GMT+0100 (British Summer Time) ==! 
+2020-04-07 17:38:41: [INFO] Models loaded!「modelLoad (.\Overlord.js:27:9)」
+2020-04-07 17:38:41: [INFO] client logging in as Overlord#5395「Client.client.init (.\Functions.js:20:10)」
+2020-04-07 17:38:41: [INFO] Loading 15 events from D:\\Dev\\GitHub\\Overlord/events/「Client.client.init (.\Functions.js:43:10)」
+2020-04-07 17:38:41: [INFO] attempting to load event attachmentRecorder「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\attachmentRecorder\:{\enabled\:true,\storageDir\:\./cache/\,\keep\:true,\requiredPermissions\:[\MANAGE_MESSAGES\,\READ_MESSAGE_HISTORY\,\VIEW_CHANNEL\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound attachmentRecorder to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event autoMod「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\autoMod\:{\enabled\:true,\bannedWords\:[],\bannedURLs\:[],\excludedRoles\:[],\punishments\:{\mute\:{\start\:5,\end\:0},\tempBan\:{\start\:10,\end\:5},\ban\:{\start\:15,\end\:0}},\decay\:3,\heuristics\:{\ignoreBelowLength\:20,\charFlood\:{\enabled\:true,\percentLimit\:40},\caps\:{\enabled\:true,\percentLimit\:40}},\antiSpam\:{\enabled\:true,\interval\:3000,\count\:5,\penalty\:1,\autoRemove\:true},\requiredPermissions\:[\MANAGE_MESSAGES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound autoMod to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event guildCreate「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] Bound guildCreate to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event guildMemberAdd「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\guildMemberAdd\:{\enabled\:false,\welcomeChannel\:0,\welcomeMessage\:\welcome {{user}} to {{guildName}}!\}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound guildMemberAdd to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event guildMemberRemove「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\guildMemberRemove\:{\enabled\:true}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound guildMemberRemove to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event guildMemberUpdate「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] Bound guildMemberUpdate to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event guildUpdate「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] Bound guildUpdate to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event message「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] Bound message to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event messageDelete「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\messageDelete\:{\enabled\:true,\requiredPermissions\:[\VIEW_AUDIT_LOG\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound messageDelete to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event messageReactionAdd「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] Bound messageReactionAdd to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event messageUpdate「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\messageUpdate\:{\enabled\:true,\requiredPermissions\:[\MANAGE_MESSAGES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound messageUpdate to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event modActions「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\modActions\:{\requiredPermissions\:[\MANAGE_MEMBERS\,\MANAGE_GUILD\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound modActions to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event NSFWClassifier「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\NSFWClassifier\:{\enabled\:true,\classificationWeights\:{\Hentai\:0.1,\Porn\:0.1,\Sexy\:0.1,\Drawing\:0.1},\thresholdExceeders\:1,\autoRemove\:false,\penalty\:5,\requiredPermissions\:[\MANAGE_MESSAGES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound NSFWClassifier to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event scheduler「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\scheduler\:{\requiredPermissions\:[\MANAGE_MESSAGES\,\MANAGE_ROLES\,\MANAGE_NICKNAMES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound scheduler to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] attempting to load event toxicClassifier「.\Functions.js:47:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modules\:{\toxicClassifier\:{\enabled\:true,\classificationWeights\:{\identity_attack\:0.6,\insult\:0.8,\obscene\:0.8,\severe_toxicity\:0.6,\sexual_explicit\:0.6,\threat\:0.8,\toxicity\:0.7},\thresholdExceeders\:3,\autoRemove\:false,\ignoreBelowLength\:30,\penalty\:3,\requiredPermissions\:[\MANAGE_MESSAGES\]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Bound toxicClassifier to Client Sucessfully!「.\Functions.js:55:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modActionChannel\:\693427599015411712\},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\auditLogChannel\:\693427576965824582\},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\modReportingChannel\:\693427641604374598\},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Testing role with name @everyone for Admin/Mod/Muted availability.「.\Functions.js:89:11」
+2020-04-07 17:38:41: [INFO] Testing role with name JTR for Admin/Mod/Muted availability.「.\Functions.js:89:11」
+2020-04-07 17:38:41: [INFO] Testing role with name NickTracker for Admin/Mod/Muted availability.「.\Functions.js:89:11」
+2020-04-07 17:38:41: [INFO] Testing role with name Muted for Admin/Mod/Muted availability.「.\Functions.js:89:11」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\mutedRole\:\697083015242842182\},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\users\:{\150693679500099584\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\users\:{\384086168586813440\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\users\:{\576337826157690891\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\users\:{\646452404316798978\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\users\:{\648959959488397332\:{\xp\:0}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Sucessfully Verified/initialised Guild [NEA]Overlord Dev Server to DB「Client.client.validateGuild (.\Functions.js:100:10)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{},\deleted\:{},\updated\:{\serverOwnerID\:\150693679500099584\}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] Loading 11 events from D:\\Dev\\GitHub\\Overlord/commands/「Client.client.validateGuild (.\Functions.js:105:10)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\eval\:{\aliases\:[\eval\],\enabled\:true,\permReq\:[\BOT_OWNER\],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\eval\:\eval\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias eval to command eval in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\help\:{\aliases\:[\help\,\commands\],\info\:\lists the commands the user is able to execute in the current server\,\enabled\:true,\permReq\:[],\cooldown\:10000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\help\:\help\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias help to command help in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\commands\:\help\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias commands to command help in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\mod\:{\aliases\:[\mod\,\ban\,\mute\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\mod\:\mod\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias mod to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\ban\:\mod\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias ban to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\mute\:\mod\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias mute to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\ping\:{\aliases\:[\ping\,\pong\,\test\],\enabled\:true,\permReq\:[],\cooldown\:10000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\ping\:\ping\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias ping to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\pong\:\ping\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias pong to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\test\:\ping\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias test to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\poll\:{\aliases\:[\poll\,\vote\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\poll\:\poll\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias poll to command poll in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\vote\:\poll\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias vote to command poll in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\purge\:{\aliases\:[\purge\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\purge\:\purge\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias purge to command purge in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\rank\:{\aliases\:[\rank\,\level\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\rank\:\rank\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias rank to command rank in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\level\:\rank\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias level to command rank in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\reload\:{\aliases\:[\reload\],\enabled\:true,\permReq\:[],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\reload\:\reload\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias reload to command reload in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\restart\:{\aliases\:[\restart\,\reboot\],\enabled\:true,\permReq\:[\BOT_OWNER\],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\restart\:\restart\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias restart to command restart in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\reboot\:\restart\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias reboot to command restart in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commands\:{\sudo\:{\aliases\:[\sudo\],\enabled\:true,\permReq\:[\ADMINISTRATOR\],\cooldown\:1000,\allowedChannels\:[]}}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] 636959316405911562 - {\added\:{\commandsTable\:{\sudo\:\sudo\}},\deleted\:{},\updated\:{}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:38:41: [INFO] bound alias sudo to command sudo in guild [NEA]Overlord Dev Server「.\Functions.js:203:12」
+2020-04-07 17:38:41: [INFO] Requested permissions for server [NEA]Overlord Dev Server : SEND_MESSAGES,READ_MESSAGES,MANAGE_MESSAGES,VIEW_CHANNEL,MANAGE_GUILD,READ_MESSAGE_HISTORY,VIEW_AUDIT_LOG,MANAGE_MEMBERS,MANAGE_ROLES,MANAGE_NICKNAMES「Client.client.validateGuild (.\Functions.js:121:10)」
+2020-04-07 17:38:41: [INFO] Verifying Persistence data for guild [NEA]Overlord Dev Server「Client.client.validateGuild (.\Functions.js:130:10)」
+2020-04-07 17:38:41: [INFO] Checking... (timeout = null) Tue Apr 07 2020 17:38:41 GMT+0100 (British Summer Time) 「check (.\events\scheduler.js:127:12)」
+2020-04-07 17:38:41: init: 2944.308ms
+2020-04-07 17:38:41: [INFO] Ready to serve in 5 channels on 1 servers, for a total of 6 users.「Client.client.init (.\Functions.js:72:10)」
+2020-04-07 17:38:41: [INFO] Deleting 0 files from cache...「.\Functions.js:64:11」
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read property 'prefix' of undefined
+    at module.exports (D:\Dev\GitHub\Overlord\events\message.js:89:55)
+    at Client.emit (events.js:311:20)
+    at MessageCreateHandler.handle (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\packets\handlers\MessageCreate.js:9:34)
+    at WebSocketPacketManager.handle (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\packets\WebSocketPacketManager.js:105:65)
+    at WebSocketConnection.onPacket (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:333:35)
+    at WebSocketConnection.onMessage (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:296:17)
+    at WebSocket.onMessage (D:\Dev\GitHub\Overlord\node_modules\ws\lib\event-target.js:120:16)
+    at WebSocket.emit (events.js:311:20)
+    at Receiver.receiverOnMessage (D:\Dev\GitHub\Overlord\node_modules\ws\lib\websocket.js:789:20)
+    at Receiver.emit (events.js:311:20)
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read property 'prefix' of undefined
+    at module.exports (D:\Dev\GitHub\Overlord\events\message.js:89:55)
+    at Client.emit (events.js:311:20)
+    at MessageCreateHandler.handle (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\packets\handlers\MessageCreate.js:9:34)
+    at WebSocketPacketManager.handle (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\packets\WebSocketPacketManager.js:105:65)
+    at WebSocketConnection.onPacket (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:333:35)
+    at WebSocketConnection.onMessage (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:296:17)
+    at WebSocket.onMessage (D:\Dev\GitHub\Overlord\node_modules\ws\lib\event-target.js:120:16)
+    at WebSocket.emit (events.js:311:20)
+    at Receiver.receiverOnMessage (D:\Dev\GitHub\Overlord\node_modules\ws\lib\websocket.js:789:20)
+    at Receiver.emit (events.js:311:20)
+2020-04-07 17:39:14: [INFO] 636959316405911562 - {\added\:{},\deleted\:{},\updated\:{\users\:{\150693679500099584\:{\xp\:1}}}}「Map.changedCB (.\Overlord.js:43:9)」
+2020-04-07 17:39:14: [INFO] User <@150693679500099584> executed command eval with arguements eval, client in  [NEA]Overlord Dev Server:<#636959316405911564>「module.exports (.\events\message.js:70:13)」
+2020-04-07 17:42:07: !== Overlord v0.2.0.2032020 Intialisation starting. current date/time is Tue Apr 07 2020 17:42:07 GMT+0100 (British Summer Time) ==! 
+2020-04-07 17:42:10: [INFO] client logging in as Overlord#5395「Client.client.init (.\Functions.js:20:10)」
+2020-04-07 17:42:10: [INFO] bound alias eval to command eval in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias help to command help in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias commands to command help in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias mod to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias ban to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias mute to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias ping to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias pong to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias test to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias poll to command poll in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias vote to command poll in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias purge to command purge in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias rank to command rank in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias level to command rank in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias reload to command reload in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias restart to command restart in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias reboot to command restart in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] bound alias sudo to command sudo in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:42:10: [INFO] Checking... (timeout = null) Tue Apr 07 2020 17:42:10 GMT+0100 (British Summer Time) 「check (.\events\scheduler.js:127:12)」
+2020-04-07 17:42:10: init: 2933.730ms
+2020-04-07 17:42:10: [INFO] Ready to serve in 5 channels on 1 servers, for a total of 6 users.「Client.client.init (.\Functions.js:72:10)」
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read property 'prefix' of undefined
+    at module.exports (D:\Dev\GitHub\Overlord\events\message.js:89:55)
+    at Client.emit (events.js:311:20)
+    at MessageCreateHandler.handle (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\packets\handlers\MessageCreate.js:9:34)
+    at WebSocketPacketManager.handle (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\packets\WebSocketPacketManager.js:105:65)
+    at WebSocketConnection.onPacket (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:333:35)
+    at WebSocketConnection.onMessage (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:296:17)
+    at WebSocket.onMessage (D:\Dev\GitHub\Overlord\node_modules\ws\lib\event-target.js:120:16)
+    at WebSocket.emit (events.js:311:20)
+    at Receiver.receiverOnMessage (D:\Dev\GitHub\Overlord\node_modules\ws\lib\websocket.js:789:20)
+    at Receiver.emit (events.js:311:20)
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read property 'prefix' of undefined
+    at module.exports (D:\Dev\GitHub\Overlord\events\message.js:89:55)
+    at Client.emit (events.js:311:20)
+    at MessageCreateHandler.handle (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\packets\handlers\MessageCreate.js:9:34)
+    at WebSocketPacketManager.handle (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\packets\WebSocketPacketManager.js:105:65)
+    at WebSocketConnection.onPacket (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:333:35)
+    at WebSocketConnection.onMessage (D:\Dev\GitHub\Overlord\node_modules\discord.js\src\client\websocket\WebSocketConnection.js:296:17)
+    at WebSocket.onMessage (D:\Dev\GitHub\Overlord\node_modules\ws\lib\event-target.js:120:16)
+    at WebSocket.emit (events.js:311:20)
+    at Receiver.receiverOnMessage (D:\Dev\GitHub\Overlord\node_modules\ws\lib\websocket.js:789:20)
+    at Receiver.emit (events.js:311:20)
+2020-04-07 17:42:41: [INFO] User <@150693679500099584> executed command ping with arguements ping in  [NEA]Overlord Dev Server:<#636959316405911564>「module.exports (.\events\message.js:70:13)」
+2020-04-07 17:43:18: !== Overlord v0.2.0.2032020 Intialisation starting. current date/time is Tue Apr 07 2020 17:43:18 GMT+0100 (British Summer Time) ==! 
+2020-04-07 17:43:20: [INFO] client logging in as Overlord#5395「Client.client.init (.\Functions.js:20:10)」
+2020-04-07 17:43:20: [INFO] bound alias eval to command eval in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:20: [INFO] bound alias help to command help in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:20: [INFO] bound alias commands to command help in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:20: [INFO] bound alias mod to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:20: [INFO] bound alias ban to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias mute to command mod in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias ping to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias pong to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias test to command ping in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias poll to command poll in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias vote to command poll in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias purge to command purge in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias rank to command rank in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias level to command rank in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias reload to command reload in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias restart to command restart in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias reboot to command restart in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] bound alias sudo to command sudo in guild [NEA]Overlord Dev Server「.\Functions.js:202:12」
+2020-04-07 17:43:21: [INFO] Checking... (timeout = null) Tue Apr 07 2020 17:43:21 GMT+0100 (British Summer Time) 「check (.\events\scheduler.js:127:12)」
+2020-04-07 17:43:21: init: 2877.221ms
+2020-04-07 17:43:21: [INFO] Ready to serve in 5 channels on 1 servers, for a total of 6 users.「Client.client.init (.\Functions.js:72:10)」

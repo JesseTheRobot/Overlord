@@ -3,9 +3,8 @@ exports.run = (client, message, args) => {
 };
 exports.defaultConfig = {
 	aliases: ["sudo"],
-	guildOnly: true,
 	enabled: true,
-	permReq: [],
+	permReq: ["ADMINISTRATOR"],
 	cooldown: 1000,
 	allowedChannels: [],
 };

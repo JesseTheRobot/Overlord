@@ -9,9 +9,10 @@ client.fs = require("fs");
 client.diff = require("deep-object-diff").detailedDiff;
 client.transfer = require("transfer-sh");
 client.download = require("download-file");
-client.version = "0.2.0.2032020"; //release.major.minor.date
-client.debug = (process.env.NODE_ENV === "production" ? false : true) //debug flag set if the bot is not run with the enviroment variable "production". if this is not set, the bot ignores all "INFO" tagged logging.
+client.version = "1.0.3.07042020"; //release.major.minor.date
+client.debug = (process.env.NODE_ENV === "production" ? false : true) //debug flag set if the bot is not run with the enviroment variable "production". if this is not set, the bot ignores all non-tagged logging.
 console.log(`!== Overlord v${client.version} Intialisation starting. current date/time is ${new Date()} ==! `);
+
 
 let modelLoad = async (client) => {//loads Models into memory asyncronously
 	if (!client.config.enableModels) return;
@@ -34,7 +35,6 @@ client.DB = new enmap({
 	ensureProps: true,
 	dataDir: client.config.datadir
 });
-client.commands = new enmap();
 client.trecent = new enmap()
 client.cooldown = new enmap()
 
@@ -50,8 +50,8 @@ require("./Functions.js")(client);
  * used an operation 'locking' variable  (client.isShuttingDown) that if true prevents any new commands from being executed. 
  * also uses setImmediate to wait for any I/O operations to prevent things such as DB corruption etc.
  */
-client.on("gracefulShutdown", () => {
-	client.log("Successfully Received Shutdown Request - Bot Process commencing shutdown.", "WARN");
+client.on("gracefulShutdown", (reason) => {
+	client.log(`Successfully Received Shutdown Request - Reason: ${reason} - Bot Process commencing shutdown.`, "WARN");
 	client.isShuttingDown = true
 	setTimeout(() => { setImmediate(() => { process.exit(0); }); }, 5500); //after 5.5 seconds, and after all I/O activity has finished, quit the application.
 })
@@ -64,16 +64,16 @@ setInterval(() => { client.DB.evict(client.DB.keyArray()); }, 120000);
 /** PM2 SIGINT and Message handling for invoking a graceful shutdown through PM2 on both UNIX and windows systems */
 process
 	.on("SIGINT", () => {//unix SIGINT graceful PM2 app shutdown.
-		client.emit("gracefulShutdown")
+		client.emit("gracefulShutdown", "PM2")
 	})
 	.on("message", (msg) => {//Windows "message" graceful PM2 app shutdown. 
 		if (msg === "shutdown") {
-			client.emit("gracefulShutdown")
+			client.emit("gracefulShutdown", "PM2")
 		}
 	})
 	.on("uncaughtException", (err) => {
 		console.dir(err.stack.replace(new RegExp(`${__dirname} / `, "g"), "./")); /** process error catching with custom stacktrace formatting for ease of reading */
-		process.exit(1);
+		client.emit("gracefulShutdown", "Exception")
 	});
 
 /** catches and logs any Discord.js Client errors */
@@ -82,7 +82,7 @@ client
 	/** if the client disconnects, report the disconnection */
 	.on("disconnect", (event) => {
 		client.log("Client disconnected! restarting...\n" + event, "ERROR")
-		client.emit("gracefulShutdown"); /**this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this (note: requires PM2 to restart the process).*/
+		client.emit("gracefulShutdown", "Disconnect"); /**this event signifies that the connection to discord cannot be re-established and will no longer be re-attempted. so we restart the bot process to (hopefully) fix this (note: requires PM2 to restart the process).*/
 	});
 
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. waits for the Database to load into memory, then starts the initialisation. */

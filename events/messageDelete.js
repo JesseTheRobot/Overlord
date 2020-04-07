@@ -22,8 +22,6 @@ module.exports = async (client, message) => {
 		executor: "",
 		guildID: message.guild.id,
 	}
-	client.log(message.guild.id)
-	client.log(message.id)
 	if (message.attachments) {
 		try {
 			action.attachments = (client.DB.get(message.guild.id, `persistence.attachments.${message.id}`).attachments || [])

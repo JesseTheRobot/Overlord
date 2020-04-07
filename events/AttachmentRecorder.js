@@ -48,4 +48,5 @@ module.exports.defaultConfig = {
 	enabled: true,
 	storageDir: "./cache/",
 	keep: true,
+	requiredPermissions: ["MANAGE_MESSAGES", "READ_MESSAGE_HISTORY", "VIEW_CHANNEL"]
 };

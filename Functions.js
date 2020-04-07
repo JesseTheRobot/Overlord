@@ -5,12 +5,6 @@ const fs = require("fs");
  * @exports validateGuild
  * @exports log
  * @exports loadCommand
- * @exports reloadCommand
- * @exports getGuildSettings
- * @exports writeSettings
- * @exports getStatus
- * @exports checkBlacklist
- * @exports getLevel
  * @exports evalClean
  * @exports checkThrottle
  * @exports dStats **LEGACY - Temp ** 
@@ -23,7 +17,7 @@ module.exports = (client) => {
 	 *  it ensures all database data needed is present, sets the RPC status.
 	 *  called after the D.JS client emits 'ready' */
 	client.init = (client) => {
-		client.log(`client logging in as ${client.user.tag}`)
+		client.log(`client logging in as ${client.user.tag}`, "INFO")
 		client.DB.deleteAll();//Temp !!!ENSURE THIS IS REMOVED!!!
 
 		if (client.guilds.size == 0) {
@@ -75,14 +69,19 @@ module.exports = (client) => {
 			}
 		})
 		console.timeEnd("init");
-		client.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
-		(client.users.get(client.config.ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
+		client.log(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`, "INFO");
+		try {
+			(client.users.get(client.config.ownerID)).send(`Ready to serve in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
+		} catch (err) {
+			client.log("I'm not in the guild with the owner - unable to send bootup notification!", "INFO")
+		}
 	}
 	// validates a Guilds's configuration properties and database 'Presence'. called at startup and when a new guild is created
 	client.validateGuild = (client, guild) => { //validates the DB entry for a guild
 		client.DB.set(guild.id, "693427599015411712", "modActionChannel")
 		client.DB.set(guild.id, "693427576965824582", "auditLogChannel")
 		client.DB.set(guild.id, "693427641604374598", "modReportingChannel")
+
 		var adminRdict = ["Admin", "Administrator"]; //Temp
 		var modRdict = ["Mod", "Moderator"]; //Temp
 		var mutedRdict = ["Muted", "Mute"]; //Temp
@@ -92,10 +91,8 @@ module.exports = (client) => {
 			if (modRdict.includes(role.name)) { client.DB.push(guild.id, role.id, "modRoles"); }
 			if (mutedRdict.includes(role.name)) { client.DB.set(guild.id, role.id, "mutedRole"); }
 		});
-
 		client.trecent.ensure(guild.id, {})
 		client.cooldown.ensure(guild.id, {})
-		client.commands.ensure(guild.id, {})
 		client.DB.ensure(guild.id, client.defaultConfig);//ensures each server exists within the DB.(in the odd chance the guildCreate event fails/doesn't trigger correctly)
 		guild.members.forEach(member => { //ensures each server has all it's users initialised correctly
 			client.DB.ensure(guild.id, { xp: 0 }, `users.${member.id}`);
@@ -105,7 +102,7 @@ module.exports = (client) => {
 
 		//load commands w/ config into guild config
 		const commandFiles = fs.readdirSync("./commands/");
-		client.log(`Loading ${commandFiles.length} events from ${client.basedir}/commands/`, "INFO");
+		client.log(`Loading ${commandFiles.length} events from ${client.basedir}/commands/`);
 		commandFiles.forEach(command => {
 			if (!command.endsWith(".js")) return;
 			var command = command.split(".")[0]; // eslint-disable-line no-redeclare 
@@ -127,7 +124,6 @@ module.exports = (client) => {
 		if (missingPerms.length >= 1) {
 			client.log(`bot is missing permisions : ${missingPerms.toString()} in guild ${guild.name}`, "ERROR")
 			guild.channels.get(guildData.modActionChannel).send(`I am missing permisions : ${missingPerms.toString()}!`)
-			//send notification to admins or each server? (eg in modAction channel)
 		}
 		let attachments = client.DB.get(guild.id, "persistence.attachments")
 		client.log(`Verifying Persistence data for guild ${guild.name}`)
@@ -149,7 +145,6 @@ module.exports = (client) => {
 	client.log = (message, type) => {
 		//info, warn, debug
 		let caller = ((new Error).stack).split(" at ")[2].trim().replace(client.basedir, ".")
-		if (!type) type = "INFO";
 		let msg = `[${type}] ${(JSON.stringify(message)).replace(/\"/g, "")}「${caller}」`
 		switch (type) {
 			case "ERROR":
@@ -158,11 +153,40 @@ module.exports = (client) => {
 			case "WARN":
 				console.warn(msg);
 				break;
+			case "INFO":
+				console.log(msg)
+				break;
 			default:
 				if (!client.debug) break
 				console.log(msg)
 		}
 	};
+	client.canExecute = (client, message, cmdName) => { //check if a user can execute a command or not
+		let cmdCfg = message.settings.commands[cmdName]
+		if (message.author.id === client.config.ownerID) {
+			return "passed"
+		}
+		if (!cmdName) { //had to use a set of ifs to evaluate and also report on what area the denial occured for user feedback.
+			return "nonexistant"
+		}
+		else if (!cmdCfg.enabled) { //check the command is enabled (guild-wide)
+			return "disabled"
+		}
+		else if (cmdCfg.permReq.includes("BOT_OWNER") || !message.member.permissions.has(cmdCfg.permReq, true)) {
+			return "perms"
+		}
+		else if (!((cmdCfg.allowedChannels.length === 0) ? true : (cmdCfg.allowedChannels.includes(message.channel.id)))) {
+			return "channel"
+		}
+		else if (client.cooldown.get(message.guild.id, cmdName).filter(u => u === message.member.id).length) {
+			return "cooldown"
+		}
+		else if (Object.keys(client.DB.ensure(message.guild.id, [], `blacklist.${cmdName}`)).includes(message.member.id)) {
+			return "blacklist"
+		} else {
+			return "passed"
+		}
+	}
 
 	client.loadCommand = (command, guildid) => { //loads either a specified command for a guild or loads a command for *all* guilds. 
 		if (!guildid) {
@@ -173,14 +197,14 @@ module.exports = (client) => {
 			client.DB.ensure(guildid, cmdObj.defaultConfig, `commands.${command}`); //ensures each guild has the configuration data required for each command.
 			client.cooldown.ensure(guildid, [], command)
 			client.DB.get(guildid).commands[command].aliases.forEach(alias => {
-				client.commands.ensure(guildid, command, alias)
-				client.log(`bound alias ${alias} to command ${command} in guild ${client.guilds.get(guildid).name}`, "INFO");
+				client.DB.ensure(guildid, command, `commandsTable.${alias}`)
+				client.log(`bound alias ${alias} to command ${command} in guild ${client.guilds.get(guildid).name}`);
 			});
 		} catch (err) {
 			client.log(`Failed to load command ${command}! : ${err}`, "ERROR")
 		}
 	};
-	client.schedule = async (action, guildID) => {
+	client.schedule = async (guildID, action) => {
 		client.DB.push(guildID, action, "persistence.time")
 		client.emit("scheduler", guildID)
 	}
@@ -205,18 +229,6 @@ module.exports = (client) => {
 	}; //full disclosure: this code was copied off Etiket2 (another discord bot) as it is undoubtedly the best way to do this.
 
 
-	client.checkThrottle = (client, message) => {
-
-		//check potential throtlles - eg blacklist or timeout.
-		//per guild - run only for commands - antispam is 'optional',
-	};
-
-	client.checkPermissions = (client, message, command) => {
-		// check that user has prerequisate permissions for command execution.
-		//need to do a role-based permissions system, maybe expand o a target orogin system (eg eval target and origin permisisons to determine action validity.)
-		//role hoist detection?
-	}
-
 	/** returns a random integer between two numbers (max exclusive, min inclusive.)
 	  * @param {int} minimum
 	  * @param {int} maximum
@@ -228,16 +240,7 @@ module.exports = (client) => {
 	};
 
 	client.defaultConfig = { //used as a template for development
-		commands: {
-			"help": {
-				aliases: ["commands"],
-				guildOnly: true,
-				enabled: true,
-				permLevel: 1,
-				cooldown: 1000,
-				allowedChannels: [],
-			},
-		},
+		commands: {},
 		prefix: "$",
 		mutedRole: 0,
 		welcomeMsg: "Welcome {{user}} to {{guildName}}!",

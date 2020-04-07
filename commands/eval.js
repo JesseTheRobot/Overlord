@@ -1,5 +1,5 @@
 exports.run = async (client, message, args) => {
-	const code = args.join(" ");
+	const code = args.slice(1).join(" ");
 	try {
 		var evaled = eval(code);
 		const clean = await client.evalClean(client, evaled);

@@ -1,17 +1,11 @@
 exports.run = (client, message, args) => {
-	if (message.author.id === client.config.ownerID) {
-		message.react("✅")
-		client.emit("gracefulShutdown")
-	} else {
-		message.react("🚫")
-	}
-
+	message.react("✅")
+	client.emit("gracefulShutdown", "Manual")
 };
 exports.defaultConfig = {
 	aliases: ["restart", "reboot"],
-	guildOnly: true,
 	enabled: true,
-	permReq: [],
+	permReq: ["BOT_OWNER"],
 	cooldown: 1000,
 	allowedChannels: [],
 };

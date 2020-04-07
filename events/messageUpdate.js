@@ -3,7 +3,7 @@ module.exports = (client, Message, nMessage) => {
 	if (!client.DB.get(Message.guild.id).modules.messageUpdate.enabled) return
 	nMessage.content = nMessage.cleanContent;
 	if (Message.content === nMessage.content) {
-		client.log("MessageEdit invoked - message contant identical - assume autoembed"); //if contents are identical, autoembed was most likely triggered.
+		client.log("MessageEdit invoked - message content identical - assume autoembed"); //if contents are identical, autoembed was most likely triggered.
 		return
 	} else {
 		let action = {
