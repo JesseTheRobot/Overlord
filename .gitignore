@@ -1,4 +1,7 @@
 node_modules/
 cache/
 .vscode/
-
+.eslintrc.json
+data/
+doc/
+main.log
