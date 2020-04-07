@@ -1,0 +1,6 @@
+node_modules/
+cache/
+.vscode/
+.eslintrc.json
+doc/
+main.log
