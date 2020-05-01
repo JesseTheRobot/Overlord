@@ -1,8 +1,8 @@
 module.exports = {
+	// Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/ - very helpful resource!
 	apps: [{
 		name: "Overlord",
 		script: "./Overlord.js",
-		// Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/ - very helpful resource!
 		instances: 1,
 		autorestart: true,
 		watch: false,

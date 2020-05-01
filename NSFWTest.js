@@ -4,7 +4,7 @@ const tf = require("@tensorflow/tfjs-node");
 const load = require("nsfwjs").load;
 const fs = require("fs");
 const client = new Discord.Client({ autoReconnect: true });
-client.download = require("download-to-file");
+client.download = require("download-file");
 var modConfig = {}
 modConfig.classificationWeights = {
 	hentai: 0.7,
@@ -16,14 +16,6 @@ modConfig.classificationWeights = {
 var toxicity = require("@tensorflow-models/toxicity");
 client.on("ready", () => {
 	console.log("ready!");
-	/*fs.readdir("./cache", (err, images) => {
-		if (err) console.log(err);
-		images.forEach(img => {
-			classifier(client, img).then(predictions => {
-				console.log(`${img}: ${predictions[0].className} with probability ${predictions[0].probability}`);
-			});
-		});
-	});*/
 });
 /**
  * Loads TF GraphModels for NSFW and Toxicity detection.
@@ -55,12 +47,6 @@ var classifier = async (client, img) => {
 	});
 };
 
-
-const toxicClassify = async (input) => {
-	const results = await client.toxicModel.classify(input);
-
-};
-
 client.on("message", async (message) => {
 	if (message.author.bot) return;
 	message.content = message.cleanContent;
@@ -72,18 +58,18 @@ client.on("message", async (message) => {
 			classi.push({ type: result.label, certainty: Math.round(result.results[0].probabilities[1] * 100) });
 		});
 		console.log(...classi);
-		message.reply(classi[6].certainty);
+		message.reply(JSON.stringify(results));
 	});
-	message.delete()
-	message.attachments.array().forEach(att => {
-		var fname = message.id + "." + att.url.split("/").pop().split(".")[1];
-		client.download(att.url, `./cache/${fname}`, function (err, filepath) {
+
+	message.attachments.array().map(att => att.url).forEach(att => {
+		var filename = message.id + "." + att.split("/").pop().split(".")[1];
+		var filePath = "./cache/" + filename
+		client.download(att, { directory: "./cache/", filename: filename, timeout: 999999999 }, function (err) {
 			if (err) {
 				client.log(`download of attachment ${att.url} failed!`, "ERROR");
 			} else {
-				console.log("Download finished:", filepath);
-				console.log(fname);
-				classifier(client, fname).then(predictions => {
+				console.log("Download finished:")
+				classifier(client, filename).then(predictions => {
 					console.log(predictions);
 					predictions.filter(p => modConfig.classificationWeights[p.class] >= p.probability).length
 					let preL = [];
