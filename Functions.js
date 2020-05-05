@@ -48,8 +48,8 @@ module.exports = (client) => {
 		}
 		//status - small message that shows up under the profile of the bot. customisable in config.js.
 		//replace placeholders with specified content
-		var status = client.config.status.replace("{{guilds}}", client.guilds.size).replace("{{version}}", client.version);
-		client.user.setPresence({ activity: { name: status }, status: "active" });
+		var game = client.config.status.replace("{{guilds}}", client.guilds.size).replace("{{version}}", client.version);
+		client.user.setPresence({ game: { name: game, type: "PLAYING" }, status: "active" });
 		//load the files for the events
 		const eventFiles = fs.readdirSync("./events/");
 		client.log(`Loading ${eventFiles.length} events from ${client.basedir}/events/`);
