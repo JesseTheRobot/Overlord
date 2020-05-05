@@ -1,3 +1,6 @@
-SHUTDOWN.txt
 node_modules/
-data/
+cache/
+.vscode/
+.eslintrc.json
+doc/
+main.log
