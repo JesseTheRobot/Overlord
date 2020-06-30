@@ -8,7 +8,7 @@ module.exports = async (client, message) => {
     if (!client.toxicModel) { return } //checks that the Model is loaded.
     let modConfig = message.settings.modules.toxicClassifier //gets the modules's config
     if (!modConfig.enabled) { return }
-    if (!message.content >= modConfig.ignoreBelowLength) { return } //checks ignore length
+    if (!message.content.length >= modConfig.ignoreBelowLength) { return } //checks ignore length
     //classifies the message content using the loaded Model.
     client.toxicModel.classify(message.content).then(predictions => {
         //check the number of results that , if above or equal continue

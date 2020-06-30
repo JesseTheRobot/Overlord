@@ -35,7 +35,7 @@ let actionProcessor = async (client, guildID, action) => {
             break;
         case "demerit":
             let mConf = client.DB.get(guild.id).modules.autoMod
-            let data = client.DB.ensure(guildID, { TS: new Date(), count: 0 } `users.${action.memberID}.demerits`)
+            let data = client.DB.ensure(guildID, { TS: new Date(), count: 0 }, `users.${action.memberID}.demerits`)
             //determine how many decay cycles have occured between this execution and last execution.
             let intervals = Math.max(Math.floor((new Date() - data.TS) / (3600000 * mConf.decay)), 0)
             //determine the new demerit count after the number of cycles, bounding it to be >=0.
