@@ -30,9 +30,9 @@ module.exports = async (client, message) => {
 		//used to check that the message contains *only* the mention of the bot, and nothing else.
 		let BotMentionRegEx = new RegExp(`^<?@!?${client.user.id}>?$`);
 		//checks if the bot, and *only* the bot, is mentioned.
-		if (message.isMentioned(client.user.id) && message.uncleanContent.match(BotMentionRegEx)) {
+		if (message.isMentioned(client.user.id) && message.content.match(BotMentionRegEx)) {
 			//sends (DM's) the user the Command Prefix for the guild, or the default prefix if anything out of scope happens.
-			message.author.send(`Hi there,${message.member.displayName}, My prefix in guild ${message.guild.name} is ${message.settings.prefix || "$"}.\n for help, use the command: ${message.settings.prefix || "$"}help `);
+			message.author.send(`Hi there, ${message.member.displayName}!\n My prefix in guild ${message.guild.name} is \`${message.settings.prefix || "$"}\`.\n For help, use the command: \`${message.settings.prefix || "$"}help\` `);
 			return
 		}
 		//built in method for cleaning message input (eg converting user mentions into a string to prevent issues when returning message content)

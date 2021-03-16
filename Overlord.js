@@ -135,7 +135,7 @@ client
 /** authenticates the bot to the discord backend through useage of a Token via Discord.js. 
  * waits for the Database to load into memory, then starts the initialisation. */
 //client.login(client.config.token);
-client.login("NTc2MzM3ODI2MTU3NjkwODkx.XNVCkg.Yyt4uTJi2FOYeaYPE6iOmIurrwI")
+client.login("NTc2MzM3ODI2MTU3NjkwODkx.XvtZag.Hj89HABX72f3-oljhEyTHYhHY-U")
 //emited when the client is fully prepared and authenticated with Discord.
 client.on("ready", () => {
 	//waits for DB to load fully before initialising (otherwise will try to write to a non-existant database.)

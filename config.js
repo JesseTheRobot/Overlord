@@ -7,10 +7,10 @@
  * @exports preLoad
  */
 module.exports = {
-	ownerID: "646452404316798978", //discord ID of the Bot's Owner.
+	ownerID: "150693679500099584", //discord ID of the Bot's Owner.
 	token:
 		process.env.NODE_ENV === "production" //turnary operator for token selection
-			? "NTc2MzM3ODI2MTU3NjkwODkx.XNVCkg.Yyt4uTJi2FOYeaYPE6iOmIurrwI" //bot's  Production Token (true)
+			? "NTc2MzM3ODI2MTU3NjkwODkx.XvtZag.Hj89HABX72f3-oljhEyTHYhHY-U" //bot's  Production Token (true)
 			: "NjQ4OTU5OTU5NDg4Mzk3MzMy.Xd11Kw.dHib7KEW6nczwGqMs3GUAWmNb3g", //dev token (false)
 	datadir: "./data", //data storage location for the ENMAP-SQLite backend.
 	status: "@ me for help – version {{version}} - now on {{guilds}} guilds!",//status message of the bot.
